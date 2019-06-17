@@ -7,14 +7,16 @@ project (my_client_prj CXX)
 configure_file("version.h.in" "${PROJECT_SOURCE_DIR}/version.h")
 
 # include directories
-INCLUDE_DIRECTORIES(system ../include/)
+INCLUDE_DIRECTORIES(system ../../include/)
 INCLUDE_DIRECTORIES(after  ${PROJECT_SOURCE_DIR})
+INCLUDE_DIRECTORIES(after  ${PROJECT_SOURCE_DIR}/../base/)
 
 
 # 查找当前目录下的所有源文件
 # 并将名称保存到 DIR_SRCS 变量
-file(GLOB_RECURSE SRCS  ${PROJECT_SOURCE_DIR} "*.cc")
-file(GLOB_RECURSE SRCS2  ${PROJECT_SOURCE_DIR} "*.cpp")
+file(GLOB_RECURSE SRCS  ${PROJECT_SOURCE_DIR} "../base/*.cpp")
+#file(GLOB_RECURSE SRCS  ${PROJECT_SOURCE_DIR} "*.cc")
+file(GLOB_RECURSE SRCS2  ${PROJECT_SOURCE_DIR} "*.cc")
 
 # 指定生成目标
 ADD_EXECUTABLE(client  ${SRCS}  ${SRCS2})

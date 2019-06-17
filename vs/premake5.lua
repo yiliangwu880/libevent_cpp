@@ -29,14 +29,17 @@ Project "src"
 	}
 	files {"../*.sh",}
 	
-Project "test_client_prj"
+Project "test"
 	includedirs { 
 		"../include/",
+		"base/",
 	}
 
 	SrcPath { 
-		"../test/client_prj/**",  --**递归所有子目录，指定目录可用 "cc/*.cpp" 或者  "cc/**.cpp"
+		"../test/**",  
 	}
+	
+
 	
 -- Project "server_prj"
 	-- includedirs { 

@@ -7,9 +7,8 @@ project (my_main_prj CXX)
 configure_file("version.h.in" "${PROJECT_SOURCE_DIR}/version.h")
 
 # include directories
-INCLUDE_DIRECTORIES(system ../external/include/)
-INCLUDE_DIRECTORIES(system ../lib_prj/)
-INCLUDE_DIRECTORIES(system ../bus_mgr_lib_prj/)
+INCLUDE_DIRECTORIES(system ../../include/)
+
 INCLUDE_DIRECTORIES(after  ${PROJECT_SOURCE_DIR})
 
 
@@ -22,15 +21,14 @@ file(GLOB_RECURSE SRCS2  ${PROJECT_SOURCE_DIR} "*.cpp")
 ADD_EXECUTABLE(server ${SRCS} ${SRCS2})
 
 #设置依赖
-ADD_DEPENDENCIES(server lib_prj)
-ADD_DEPENDENCIES(server bus_mgr_lib_prj)
+ADD_DEPENDENCIES(server libevent_cpp)
 
 #增加系统依赖库
 ADD_library(pthread SHARED IMPORTED)
 ADD_library(crypto SHARED IMPORTED)
 
 # 设置链接库
-target_link_libraries(server bus_mgr_lib easy_libevent_lib  libevent.a dl)
+target_link_libraries(server libevent_cpp  libevent.a dl)
 
 #cotire设置gcc的预编译头相关			
 set_target_properties(server PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT "stdafx.h")
