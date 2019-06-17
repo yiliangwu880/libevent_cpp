@@ -1,17 +1,12 @@
 #include "stdafx.h"
 #include "version.h"
+#include "include_all.h"
 
-void test_server();
-void test_httpsvr();
-void test_mgr_svr_base();
 
-DebugLog g_logFile("log_server.txt");  //define log file name
 int main(int argc, char* argv[]) 
 {
-	LOG_DEBUG("\n\n");
-	test_server();
-	//test_httpsvr();
-	//test_mgr_svr_base();
+	LIB_LOG_DEBUG("\n\n");
+
 	return 0;
 }
 

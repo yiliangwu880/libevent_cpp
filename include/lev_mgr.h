@@ -18,7 +18,7 @@
 class LibEventMgr
 {
 public:
-	static LibEventMgr &Instance()
+	static LibEventMgr &Obj()
 	{
 		static LibEventMgr d;
 		return d;
@@ -27,7 +27,7 @@ public:
 	bool Init();
 
 
-	void dispatch();
+	void Dispatch();
 	event_base *GetEventBase(){ return m_eb; };
 	bool StopDispatch();
 	void RegSignal(int sig_type, void(*SignalCB)(int sig_type));

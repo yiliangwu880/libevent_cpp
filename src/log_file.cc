@@ -8,7 +8,7 @@
 using namespace std;
 using namespace lbcpp;
 
-void LogMgr::Printf(DebugLogLv lv, const char * file, int line, const char *pFun, const char * pattern, ...)
+void LogMgr::Printf(LLogLv lv, const char * file, int line, const char *pFun, const char * pattern, ...)
 {
 	if (lv > m_log_lv)
 	{
@@ -32,7 +32,7 @@ void LogMgr::Printf(DebugLogLv lv, const char * file, int line, const char *pFun
 	s.append(" ");
 	s.append(GetLogLevelStr(lv));
 	s.append(pattern);
-	if (lv <= LOG_LV_DEBUG)
+	if (lv <= LLV_DEBUG)
 	{
 		s.append("  --");
 		s.append(file);
@@ -58,7 +58,7 @@ void LogMgr::Printf(DebugLogLv lv, const char * file, int line, const char *pFun
 	va_end(vp);
 }
 
-void LogMgr::SetLogLv(DebugLogLv lv)
+void LogMgr::SetLogLv(LLogLv lv)
 {
 	m_log_lv = lv;
 }
@@ -68,36 +68,36 @@ void LogMgr::SetStdOut(bool is_std_out)
 	m_is_std_out = is_std_out;
 }
 
-const char * LogMgr::GetLogLevelStr(DebugLogLv lv) const
+const char * LogMgr::GetLogLevelStr(LLogLv lv) const
 {
 	switch (lv)
 	{
 	default:
 		return "<unknow>";
 		break;
-	case LOG_LV_FATAL:
+	case LLV_FATAL:
 		return "<fatal> ";
 		break;
-	case LOG_LV_ERROR:
+	case LLV_ERROR:
 		return "<error> ";
 		break;
-	case LOG_LV_WARN:
+	case LLV_WARN:
 		return "<warn>  ";
 		break;
-	case LOG_LV_DEBUG:
+	case LLV_DEBUG:
 		return "<debug> ";
 		break;
-	case LOG_LV_INFO:
+	case LLV_INFO:
 		return "<info>  ";
 		break;
-	case LOG_LV_ANY:
+	case LLV_ANY:
 		return "<any>   ";
 		break;
 	}
 	return "<unknow>";
 }
 LogMgr::LogMgr()
-	: m_log_lv(LOG_LV_ANY)
+	: m_log_lv(LLV_ANY)
 	, m_is_std_out(false)
 	, m_iprinter(&DebugLog::GetDefaultLog())
 {

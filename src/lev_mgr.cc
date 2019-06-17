@@ -25,25 +25,25 @@ namespace
 		switch (severity)
 		{
 		case _EVENT_LOG_DEBUG:
-			LOG_DEBUG("lib event log: %s\n", msg);
+			LIB_LOG_DEBUG("lib event log: %s\n", msg);
 			break;
 		case _EVENT_LOG_MSG:
-			LOG_INFO("lib event log: %s\n", msg);
+			LIB_LOG_INFO("lib event log: %s\n", msg);
 			break;
 		case _EVENT_LOG_WARN:
-			LOG_WARN("lib event log: %s\n", msg);
+			LIB_LOG_WARN("lib event log: %s\n", msg);
 			break;
 		case _EVENT_LOG_ERR:
-			LOG_ERROR("lib event log: %s\n", msg);
+			LIB_LOG_ERROR("lib event log: %s\n", msg);
 			break;
 		default:
-			LOG_FATAL("lib event unknow log: %s\n", msg);
+			LIB_LOG_FATAL("lib event unknow log: %s\n", msg);
 			break; /* never reached*/
 		}
 	}
 	void EVENT_FATAL_CB(int err)
 	{
-		LOG_FATAL("EVENT_FATAL_CB %d", err);
+		LIB_LOG_FATAL("EVENT_FATAL_CB %d", err);
 		exit(1);
 	}
 
@@ -52,7 +52,7 @@ bool LibEventMgr::Init()
 {
 	if (nullptr != m_eb)
 	{
-		LOG_ERROR("repeated init");
+		LIB_LOG_ERROR("repeated init");
 		return false;
 	}
 	event_set_log_callback(LIB_EVENT_LOG); //lib库日志输出
@@ -61,7 +61,7 @@ bool LibEventMgr::Init()
 	m_eb = event_base_new();
 	if (!m_eb)
 	{
-		LOG_ERROR("cannot event_base_new libevent ...\n");
+		LIB_LOG_ERROR("cannot event_base_new libevent ...\n");
 		return false;
 	}
 	//为了避免进程退出, 可以捕获SIGPIPE信号, 或者忽略它, 给它设置SIG_IGN信号处理函数:
@@ -70,11 +70,11 @@ bool LibEventMgr::Init()
 	return true;
 }
 
-void LibEventMgr::dispatch()
+void LibEventMgr::Dispatch()
 {
 	if (!m_eb)
 	{
-		LOG_ERROR("LibEventMgr not init\n");
+		LIB_LOG_ERROR("LibEventMgr not init\n");
 		return;
 	}
 	event_base_dispatch(m_eb);
@@ -84,7 +84,7 @@ bool LibEventMgr::StopDispatch()
 {
 	if (!m_eb)
 	{
-		LOG_ERROR("LibEventMgr not init\n");
+		LIB_LOG_ERROR("LibEventMgr not init\n");
 		return false;
 	}
 
@@ -109,7 +109,7 @@ void LibEventMgr::RegSignal(int sig_type, void(*SignalCB)(int sig_type))
 	event* signal_event = evsignal_new(m_eb, sig_type, signal_cb, (void*)SignalCB);
 	if (!signal_event || event_add(signal_event, NULL) < 0)
 	{
-		LOG_ERROR("call evsignal_new fail");
+		LIB_LOG_ERROR("call evsignal_new fail");
 		return;
 	}
 }

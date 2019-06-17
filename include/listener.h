@@ -42,7 +42,7 @@ public:
 		{
 			if (nullptr == v.second)
 			{
-				LOG_FATAL("save null ListenerConnector");
+				LIB_LOG_FATAL("save null ListenerConnector");
 				continue;;
 			}
 			(*cb)(v.second);
@@ -158,10 +158,10 @@ template<class Connect /*= NoUseConnector*/>
 bool Listener<Connect>::Init(const sockaddr_in &addr)
 {
 	m_addr = addr;
-	m_listener = evconnlistener_new_bind(LibEventMgr::Instance().GetEventBase(), Listener::listener_cb, (void*)this, LEV_OPT_REUSEABLE | LEV_OPT_CLOSE_ON_FREE, -1, (struct sockaddr*)&addr, sizeof(addr));
+	m_listener = evconnlistener_new_bind(LibEventMgr::Obj().GetEventBase(), Listener::listener_cb, (void*)this, LEV_OPT_REUSEABLE | LEV_OPT_CLOSE_ON_FREE, -1, (struct sockaddr*)&addr, sizeof(addr));
 	if (!m_listener)
 	{
-		LOG_ERROR("evconnlistener_new_bind fail, addr.port=%d", addr.sin_port);
+		LIB_LOG_ERROR("evconnlistener_new_bind fail, addr.port=%d", addr.sin_port);
 		return false;
 	}
 	evconnlistener_set_error_cb(m_listener, Listener::accept_error_cb);
@@ -186,7 +186,7 @@ template<class Connect>
 void Listener<Connect>::accept_error_cb(evconnlistener* listener, void * ctx)
 {
 	int err = EVUTIL_SOCKET_ERROR();
-	LOG_ERROR("Got an error %d (%s) on the listener. \n", err, evutil_socket_error_to_string(err));
+	LIB_LOG_ERROR("Got an error %d (%s) on the listener. \n", err, evutil_socket_error_to_string(err));
 	//LibEventMgr::Instance().StopDispatch();
 }
 
@@ -197,7 +197,7 @@ void Listener<Connect>::listener_cb(struct evconnlistener* listener, evutil_sock
 {
 	if (nullptr == user_data)
 	{
-		LOG_ERROR("null cb para");
+		LIB_LOG_ERROR("null cb para");
 		return;
 	}
 	Listener* pListener = (Listener*)user_data;
@@ -205,13 +205,13 @@ void Listener<Connect>::listener_cb(struct evconnlistener* listener, evutil_sock
 	ListenerConnector *clientconn = pListener->m_cn_mgr.CreateConnectForListener();
 	if (nullptr == clientconn)
 	{
-		LOG_ERROR("init ListenerConnector fail");
+		LIB_LOG_ERROR("init ListenerConnector fail");
 		return;
 	}
 	clientconn->SetCnMgr(&(pListener->m_cn_mgr));
 	if (!clientconn->AcceptInit(fd, sa, pListener->m_addr))
 	{
-		LOG_ERROR("init ListenerConnector fail");
+		LIB_LOG_ERROR("init ListenerConnector fail");
 		return;
 	}
 }

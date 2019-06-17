@@ -43,7 +43,7 @@ bool BaseLeTimer::StartTimer(unsigned long long millisecond, void *para, bool is
 
 	if (S_WAIT_START_TIMER != m_state)
 	{
-		LOG_ERROR("BaseLeTimer state error");
+		LIB_LOG_ERROR("BaseLeTimer state error");
 		return false;
 	}
 	if (nullptr != m_event)
@@ -56,11 +56,11 @@ bool BaseLeTimer::StartTimer(unsigned long long millisecond, void *para, bool is
 	{
 		ev_type = EV_PERSIST;
 	}
-	m_event = event_new(LibEventMgr::Instance().GetEventBase(), -1, ev_type, TimerCB, this);
+	m_event = event_new(LibEventMgr::Obj().GetEventBase(), -1, ev_type, TimerCB, this);
 
 	if (0 != event_add(m_event, &t))
 	{
-		LOG_ERROR("evtimer_add fail");
+		LIB_LOG_ERROR("evtimer_add fail");
 	}
 	m_state = S_WAIT_TIME_OUT;
 	return true;

@@ -29,7 +29,7 @@ namespace lbcpp
 
 
 	DebugLog::DebugLog(const char *fname, const char *prefix_name)
-		:m_log_lv(LOG_LV_ANY)
+		:m_log_lv(LLV_ANY)
 		, m_file(NULL)
 		, m_is_std_out(true)
 		, m_prefix_name(prefix_name)
@@ -50,7 +50,7 @@ namespace lbcpp
 #endif
 	}
 
-	void DebugLog::printf(DebugLogLv lv, const char * file, int line, const char *pFun, const char * pattern, ...)
+	void DebugLog::printf(LLogLv lv, const char * file, int line, const char *pFun, const char * pattern, ...)
 	{
 		if (lv > m_log_lv)
 		{
@@ -75,7 +75,7 @@ namespace lbcpp
 		s.append(" ");
 		s.append(GetLogLevelStr(lv));
 		s.append(pattern);
-		if (lv <= LOG_LV_DEBUG)
+		if (lv <= LLV_DEBUG)
 		{
 			s.append("  --");
 			s.append(file);
@@ -116,36 +116,36 @@ namespace lbcpp
 		fprintf(m_file, log);
 	}
 
-	const char * DebugLog::GetLogLevelStr(DebugLogLv lv) const
+	const char * DebugLog::GetLogLevelStr(LLogLv lv) const
 	{
 		switch (lv)
 		{
 		default:
 			return "<unknow>";
 			break;
-		case LOG_LV_FATAL:
+		case LLV_FATAL:
 			return "<fatal> ";
 			break;
-		case LOG_LV_ERROR:
+		case LLV_ERROR:
 			return "<error> ";
 			break;
-		case LOG_LV_WARN:
+		case LLV_WARN:
 			return "<warn>  ";
 			break;
-		case LOG_LV_DEBUG:
+		case LLV_DEBUG:
 			return "<debug> ";
 			break;
-		case LOG_LV_INFO:
+		case LLV_INFO:
 			return "<info>  ";
 			break;
-		case LOG_LV_ANY:
+		case LLV_ANY:
 			return "<any>   ";
 			break;
 		}
 		return "<unknow>";
 	}
 
-	void DebugLog::setShowLv(DebugLogLv lv)
+	void DebugLog::setShowLv(LLogLv lv)
 	{
 		m_log_lv = lv;
 	}

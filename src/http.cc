@@ -28,12 +28,12 @@ bool BaseHttpSvr::Init(unsigned short port/*=80*/, const char* ip /*= nullptr*/)
 {
 	if (nullptr != m_evhttp)
 	{
-		LOG_FATAL("repeated init");
+		LIB_LOG_FATAL("repeated init");
 		return false;
 	}
-	m_evhttp = evhttp_new(LibEventMgr::Instance().GetEventBase());
+	m_evhttp = evhttp_new(LibEventMgr::Obj().GetEventBase());
 	if (nullptr == m_evhttp) {
-		LOG_FATAL("init http fail");
+		LIB_LOG_FATAL("init http fail");
 		return false;
 	}
 	if (nullptr == ip)
@@ -43,7 +43,7 @@ bool BaseHttpSvr::Init(unsigned short port/*=80*/, const char* ip /*= nullptr*/)
 	//绑定到指定地址上
 	int ret = evhttp_bind_socket(m_evhttp, ip, port);
 	if (ret != 0) {
-		LOG_FATAL("init http fail");
+		LIB_LOG_FATAL("init http fail");
 		return false;
 	}
 	evhttp_set_gencb(m_evhttp, RevRequestCB, this);
@@ -55,7 +55,7 @@ void BaseHttpSvr::Reply(int code, const char *reason, const std::string str/*=""
 {
 	if (nullptr == m_tmp_req)
 	{
-		LOG_FATAL("error call, repeated call ReplyError or Reply");//ReplyError 或者 Reply 调用两次或者
+		LIB_LOG_FATAL("error call, repeated call ReplyError or Reply");//ReplyError 或者 Reply 调用两次或者
 		return;
 	}
 	//创建要使用的buffer对象
@@ -71,7 +71,7 @@ void BaseHttpSvr::ReplyError(int code, const char *reason)
 {
 	if (nullptr == m_tmp_req)
 	{
-		LOG_FATAL("error call, repeated call ReplyError or Reply");//ReplyError 或者 Reply 调用两次或者
+		LIB_LOG_FATAL("error call, repeated call ReplyError or Reply");//ReplyError 或者 Reply 调用两次或者
 		return;
 	}
 	evhttp_send_error(m_tmp_req, code, reason); //释放资源
@@ -83,7 +83,7 @@ void BaseHttpSvr::RevRequestCB(struct evhttp_request* req, void* arg)
 	BaseHttpSvr *p = (BaseHttpSvr *)arg;
 	if (nullptr != p->m_tmp_req)
 	{
-		LOG_FATAL("nullptr != p->m_tmp_req");
+		LIB_LOG_FATAL("nullptr != p->m_tmp_req");
 	}
 	p->m_tmp_req = req;
 	p->RevRequest();//里面必须调用 evhttp_send_error 或者 evhttp_send_reply 释放资源
@@ -91,7 +91,7 @@ void BaseHttpSvr::RevRequestCB(struct evhttp_request* req, void* arg)
 	{
 		evhttp_send_error(p->m_tmp_req, HTTP_SERVUNAVAIL, "svr have error code");
 		p->m_tmp_req = nullptr;
-		LOG_FATAL("miss call ReplyError or Reply in RevRequest function");
+		LIB_LOG_FATAL("miss call ReplyError or Reply in RevRequest function");
 	}
 	//evhttp_request_free(req);
 }
@@ -100,7 +100,7 @@ const char *BaseHttpSvr::GetUri()
 {
 	if (nullptr == m_tmp_req)
 	{
-		LOG_ERROR("nullptr == p->m_tmp_req");//必须在RevRequest里面，响应前调用，
+		LIB_LOG_ERROR("nullptr == p->m_tmp_req");//必须在RevRequest里面，响应前调用，
 		return nullptr; 
 	}
 	const char *uri = evhttp_request_get_uri(m_tmp_req);
@@ -176,7 +176,7 @@ bool BaseHttpClient::Request(const char *url, evhttp_cmd_type cmd_type, unsigned
 
 
 	// 初始化evdns_base_new
-	m_dnsbase = evdns_base_new(LibEventMgr::Instance().GetEventBase(), 1);
+	m_dnsbase = evdns_base_new(LibEventMgr::Obj().GetEventBase(), 1);
 	if (!m_dnsbase)
 	{
 		ReplyError(500, "Create dns base failed!");
@@ -184,7 +184,7 @@ bool BaseHttpClient::Request(const char *url, evhttp_cmd_type cmd_type, unsigned
 		return false;
 	}
 
-	m_connection = evhttp_connection_base_new(LibEventMgr::Instance().GetEventBase(), m_dnsbase, host, port);
+	m_connection = evhttp_connection_base_new(LibEventMgr::Obj().GetEventBase(), m_dnsbase, host, port);
 	if (!m_connection)
 	{
 		ReplyError(500, "Create evhttp connection failed!");
@@ -228,7 +228,7 @@ void BaseHttpClient::remote_read_callback(struct evhttp_request* remote_rsp, voi
 			int ret_write_len = evbuffer_remove(remote_rsp->input_buffer, write_addr, MAX_LEN);
 			if (input_len != ret_write_len)
 			{
-				LOG_ERROR("read data incomplete %d %d", input_len, ret_write_len);
+				LIB_LOG_ERROR("read data incomplete %d %d", input_len, ret_write_len);
 			}
 			
 			//LOG_DEBUG("%s", write_addr);
@@ -258,7 +258,7 @@ void BaseHttpClient::connection_close_callback(struct evhttp_connection* connect
 	BaseHttpClient *p = (BaseHttpClient *)arg;
 	if (p->m_connection != connection)
 	{
-		LOG_ERROR("p->m_connection != connection %llu %llu", p->m_connection, connection);
+		LIB_LOG_ERROR("p->m_connection != connection %llu %llu", p->m_connection, connection);
 	}
 	p->m_connection = nullptr;
 	//LOG_DEBUG("connection_close_callback");

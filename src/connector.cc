@@ -129,7 +129,7 @@ void BaseConnect::conn_read_callback(bufferevent* bev)
 			int ret_write_len = bufferevent_read(bev, write_addr, write_len);
 			if (ret_write_len != write_len)
 			{
-				LOG_FATAL("ret_write_len != write_len");
+				LIB_LOG_FATAL("ret_write_len != write_len");
 				DisConnect();
 				return;
 			}
@@ -143,7 +143,7 @@ void BaseConnect::conn_read_callback(bufferevent* bev)
 			m_msg.len = htonl(m_msg.len);
 			if (m_msg.len > MAX_MSG_DATA_LEN) //包过大，断开连接
 			{
-				LOG_ERROR("rev msg len too big. %d", m_msg.len);
+				LIB_LOG_ERROR("rev msg len too big. %d", m_msg.len);
 				DisConnect();
 				return;
 			}
@@ -151,7 +151,7 @@ void BaseConnect::conn_read_callback(bufferevent* bev)
 			int need_to_read = m_msg.len + HEAD_LEN - m_msg_write_len;
 			if (need_to_read < 0)
 			{
-				LOG_FATAL("need_to_read < 0");
+				LIB_LOG_FATAL("need_to_read < 0");
 				DisConnect();
 				return;
 			}
@@ -159,7 +159,7 @@ void BaseConnect::conn_read_callback(bufferevent* bev)
 			int ret_write_len = bufferevent_read(bev, write_addr, write_len);
 			if (ret_write_len != write_len)
 			{
-				LOG_FATAL("ret_write_len != write_len");
+				LIB_LOG_FATAL("ret_write_len != write_len");
 				DisConnect();
 				return;
 			}
@@ -192,11 +192,11 @@ void BaseConnect::conn_event_callback(bufferevent* bev, short events)
 		{
 			if (events & BEV_EVENT_EOF)
 			{
-				LOG_DEBUG("event cb:connection closed.\n");
+				LIB_LOG_DEBUG("event cb:connection closed.\n");
 			}
 			else if (events & BEV_EVENT_ERROR)
 			{
-				LOG_DEBUG("event cb:got an error on the connection: %s\n", strerror(errno));
+				LIB_LOG_DEBUG("event cb:got an error on the connection: %s\n", strerror(errno));
 			}
 			else if (events & BEV_EVENT_READING)
 			{
@@ -221,7 +221,7 @@ bool BaseConnect::send_data(const MsgPack &msg)
 {
 	if (!m_is_connect)
 	{
-		LOG_ERROR("is disconnect");
+		LIB_LOG_ERROR("is disconnect");
 		return false;
 	}
 	const char* data = (const char*)&(msg.data);
@@ -229,12 +229,12 @@ bool BaseConnect::send_data(const MsgPack &msg)
 	int net_len = htonl((int)msg.len);
 	if (0 == m_fd)
 	{
-		LOG_ERROR("BaseConnectCom not init. 0 == m_fd");
+		LIB_LOG_ERROR("BaseConnectCom not init. 0 == m_fd");
 		return false;
 	}
 	if (!m_buf_e)
 	{
-		LOG_ERROR("BaseConnectCom not init !m_buf_e");
+		LIB_LOG_ERROR("BaseConnectCom not init !m_buf_e");
 		return false;
 	}
 
@@ -243,13 +243,13 @@ bool BaseConnect::send_data(const MsgPack &msg)
 		struct evbuffer* output = bufferevent_get_output(m_buf_e);
 		if (!output)
 		{
-			LOG_FATAL("unknow error");
+			LIB_LOG_FATAL("unknow error");
 			return false;
 		}
 		size_t output_len = evbuffer_get_length(output);
 		if (output_len > m_msbs)
 		{
-			LOG_ERROR("too much bytes wait to send %ld", output_len);
+			LIB_LOG_ERROR("too much bytes wait to send %ld", output_len);
 			DisConnect();
 			return false;
 		}
@@ -257,12 +257,12 @@ bool BaseConnect::send_data(const MsgPack &msg)
 
 	if (0 != bufferevent_write(m_buf_e, &net_len, sizeof(net_len)))
 	{
-		LOG_ERROR("bufferevent_write fail, len=%d", len);
+		LIB_LOG_ERROR("bufferevent_write fail, len=%d", len);
 		return false;
 	}
 	if (0 != bufferevent_write(m_buf_e, data, len))
 	{
-		LOG_ERROR("bufferevent_write fail, len=%d", len);
+		LIB_LOG_ERROR("bufferevent_write fail, len=%d", len);
 		return false;
 	}
 	return true;
@@ -272,22 +272,22 @@ bool BaseConnect::send_data_no_head(const char* data, int len)
 {
 	if (!m_is_connect)
 	{
-		LOG_ERROR("is disconnect");
+		LIB_LOG_ERROR("is disconnect");
 		return false;
 	}
 	if (0 == m_fd)
 	{
-		LOG_ERROR("BaseConnectCom not init. 0 == m_fd");
+		LIB_LOG_ERROR("BaseConnectCom not init. 0 == m_fd");
 		return false;
 	}
 	if (!m_buf_e)
 	{
-		LOG_ERROR("BaseConnectCom not init !m_buf_e");
+		LIB_LOG_ERROR("BaseConnectCom not init !m_buf_e");
 		return false;
 	}
 	if (nullptr == data)
 	{
-		LOG_ERROR("nullptr == data\n");
+		LIB_LOG_ERROR("nullptr == data\n");
 		return false;
 	}
 
@@ -296,13 +296,13 @@ bool BaseConnect::send_data_no_head(const char* data, int len)
 		struct evbuffer* output = bufferevent_get_output(m_buf_e);
 		if (!output)
 		{
-			LOG_FATAL("unknow error");
+			LIB_LOG_FATAL("unknow error");
 			return false;
 		}
 		size_t output_len = evbuffer_get_length(output);
 		if (output_len > m_msbs)
 		{
-			LOG_ERROR("too much bytes for send %ld", output_len);
+			LIB_LOG_ERROR("too much bytes for send %ld", output_len);
 			DisConnect();
 			return false;
 		}
@@ -310,7 +310,7 @@ bool BaseConnect::send_data_no_head(const char* data, int len)
 
 	if (0 != bufferevent_write(m_buf_e, data, len))
 	{
-		LOG_ERROR("bufferevent_write fail, len=%d", len);
+		LIB_LOG_ERROR("bufferevent_write fail, len=%d", len);
 		return false;
 	}
 	return true;
@@ -319,12 +319,12 @@ void BaseConnect::setwatermark(short events, unsigned int lowmark, unsigned int 
 {
 	if (0 == m_fd)
 	{
-		LOG_ERROR("BaseConnectCom not init. 0 == m_fd");
+		LIB_LOG_ERROR("BaseConnectCom not init. 0 == m_fd");
 		return;
 	}
 	if (!m_buf_e)
 	{
-		LOG_ERROR("BaseConnectCom not init !m_buf_e");
+		LIB_LOG_ERROR("BaseConnectCom not init !m_buf_e");
 		return;
 	}
 	bufferevent_setwatermark(m_buf_e, events, lowmark, highmark);
@@ -341,13 +341,13 @@ bool BaseSvrCon::AcceptInit(evutil_socket_t fd, struct sockaddr* sa)
 {
 	if (0 != m_com.GetFd())
 	{
-		LOG_ERROR("repeated init");
+		LIB_LOG_ERROR("repeated init");
 		return false;
 	}
-	bufferevent* buf_e = bufferevent_socket_new(LibEventMgr::Instance().GetEventBase(), fd, BEV_OPT_CLOSE_ON_FREE); //释放m_buf_e，的时候，库里面会释放m_fd
+	bufferevent* buf_e = bufferevent_socket_new(LibEventMgr::Obj().GetEventBase(), fd, BEV_OPT_CLOSE_ON_FREE); //释放m_buf_e，的时候，库里面会释放m_fd
 	if (!buf_e)
 	{
-		LOG_ERROR("cannot bufferevent_socket_new libevent ...\n");
+		LIB_LOG_ERROR("cannot bufferevent_socket_new libevent ...\n");
 		return false;
 	}
 
@@ -364,12 +364,12 @@ bool BaseClientCon::ConnectInit(const char* connect_ip, unsigned short connect_p
 {
 	if (0 != m_com.GetFd())
 	{
-		LOG_ERROR("repeated init");
+		LIB_LOG_ERROR("repeated init");
 		return false;
 	}
 	if (nullptr == connect_ip)
 	{
-		LOG_ERROR("nullptr == connect_ip");
+		LIB_LOG_ERROR("nullptr == connect_ip");
 		return false;
 	}
 
@@ -382,7 +382,7 @@ bool BaseClientCon::ConnectInit(const sockaddr_in &svr_addr)
 {
 	if (0 != m_com.GetFd())
 	{
-		LOG_ERROR("repeated init");
+		LIB_LOG_ERROR("repeated init");
 		return false;
 	}
 
@@ -396,22 +396,22 @@ bool BaseClientCon::ConnectByAddr()
 	sockaddr_in addr = m_com.GetRemoteAddr();
 	if (0 == addr.sin_port)
 	{
-		LOG_ERROR("m_com.GetRemoteAddr() don't init");
+		LIB_LOG_ERROR("m_com.GetRemoteAddr() don't init");
 		return false;
 	}
 	evutil_socket_t fd = socket(AF_INET, SOCK_STREAM, 0);
 	if (fd < 0)
 	{
-		LOG_ERROR("m_fd < 0");
+		LIB_LOG_ERROR("m_fd < 0");
 		return false;
 	}
-	bufferevent* buf_e = bufferevent_socket_new(LibEventMgr::Instance().GetEventBase(), fd, BEV_OPT_CLOSE_ON_FREE);//提示你提供给bufferevent_socket_new() 的套接字务必是非阻塞模式, 为此LibEvent 提供了便利的方法	evutil_make_socket_nonblocking.
+	bufferevent* buf_e = bufferevent_socket_new(LibEventMgr::Obj().GetEventBase(), fd, BEV_OPT_CLOSE_ON_FREE);//提示你提供给bufferevent_socket_new() 的套接字务必是非阻塞模式, 为此LibEvent 提供了便利的方法	evutil_make_socket_nonblocking.
 	if (nullptr == buf_e)
 	{
-		LOG_ERROR("nullptr == m_buf_e");
+		LIB_LOG_ERROR("nullptr == m_buf_e");
 		if (0 != ::close(fd))
 		{
-			LOG_ERROR("::close fail , fd=%d", fd);
+			LIB_LOG_ERROR("::close fail , fd=%d", fd);
 		}
 		fd = 0;
 		return false;
@@ -424,7 +424,7 @@ bool BaseClientCon::ConnectByAddr()
 		m_com.SetSocketInfo(buf_e, fd);
 		return true;
 	}
-	LOG_ERROR("bufferevent_socket_connect fail"); //这里没跑过，不知道什么情况才跑
+	LIB_LOG_ERROR("bufferevent_socket_connect fail"); //这里没跑过，不知道什么情况才跑
 	return false;
 }
 

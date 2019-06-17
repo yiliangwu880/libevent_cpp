@@ -22,7 +22,7 @@ bool BaseConnectorMgr::CloseConnect(uint64 id)
 	auto it = m_all_connector.find(id);
 	if (it == m_all_connector.end())
 	{
-		LOG_FATAL("free connector can't find. id=%llu", id);
+		LIB_LOG_FATAL("free connector can't find. id=%llu", id);
 		return false;
 	}
 	ListenerConnector *p = it->second;

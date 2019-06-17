@@ -29,32 +29,27 @@ Project "src"
 	}
 	files {"../*.sh",}
 	
-Project "test_client_prj"
+Project "test"
 	includedirs { 
 		"../include/",
+		"base/",
 	}
 
 	SrcPath { 
-		"../test/client_prj/**",  --**递归所有子目录，指定目录可用 "cc/*.cpp" 或者  "cc/**.cpp"
+		"../test/**",  
 	}
 	
--- Project "server_prj"
-	-- includedirs { 
-		-- "../lib_prj/",
-	-- }
-	-- SrcPath	{ 
-		-- "../server_prj/**",  --**递归所有子目录，指定目录可用 "cc/*.cpp" 或者  "cc/**.cpp"
-		-- "../lib_prj/*", 
-	-- }
-    
--- Project "client_prj"
-	-- includedirs { 
-		-- "../lib_prj/",
-	-- }
-	-- SrcPath	{ 
-		-- "../client_prj/**",  --**递归所有子目录，指定目录可用 "cc/*.cpp" 或者  "cc/**.cpp"
-		-- "../lib_prj/*", 
-	-- }
+Project "samples"
+	includedirs { 
+		"../include/",
+		"base/",
+	}
+
+	SrcPath { 
+		"../samples/**",  
+	}
+	
+
 
 
     
