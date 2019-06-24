@@ -17,11 +17,18 @@
 #include <unistd.h>
 #include <arpa/inet.h>  
 #include "log_file.h" 
+#include "timer_mgr.h"
 
 
 class ListenerConnector;
 template<class >
 class Listener;
+
+class DeleteConnTimer : public BaseLeTimer
+{
+private:
+	virtual void OnTimer(void *user_data) override;
+};
 
 //注意，由BaseConnectorMgr管理的 ListenerConnector不用用户代码调用delete.
 //需要断开连接，调用 BaseConnectorMgr::CloseConnect(uint64 id);
@@ -31,19 +38,22 @@ class BaseConnectorMgr
 	friend class Listener;
 	friend class ListenerConnector;
 public:
+	BaseConnectorMgr();
 	virtual ~BaseConnectorMgr();
 	//马上调用delete Connector
-	bool CloseConnect(uint64 id);
-	ListenerConnector *FindConnect(uint64 id);
+	bool PostDelConn(uint64 id);
+	void OnTimerDelConn(); //真正delele对象
+	//建议获取指针只做局部变量用，不要保存，因为BaseConnectorMgr管理ListenerConnector对象的删除
+	ListenerConnector *FindConn(uint64 id);
 	template<class CB>
-	void ForeachConnector(CB cb)
+	void Foreach(CB cb)
 	{
 		for (const auto &v : m_all_connector)
 		{
 			if (nullptr == v.second)
 			{
 				LIB_LOG_FATAL("save null ListenerConnector");
-				continue;;
+				continue;
 			}
 			(*cb)(v.second);
 		}
@@ -55,11 +65,14 @@ private:
 	ListenerConnector *CreateConnectForListener();
 
 private:
+	const static uint32 DELTE_CONNECTOR_INTERVAL = 1000 * 1; //1sec
 	std::map<uint64, ListenerConnector *> m_all_connector;
+	std::vector<ListenerConnector *> m_vwdc; //vec wait delete connector
+	DeleteConnTimer m_timer;
 };
 
 //管理listenner 接收的connector
-template<class Connect>
+template<class Connector>
 class ConnectorMgr : public BaseConnectorMgr
 {
 private:
@@ -95,19 +108,21 @@ private:
 	bool m_ignore_free; //防多次调用FreeSelf函数用，支持 onDisconnected里面不小心写了调用FreeSelf()
 };
 
-
-class NoUseConnector : public ListenerConnector
+class NoUseListenerConnector : public ListenerConnector
 {
 private:
-	virtual void OnRecv(const MsgPack &msg) override{};
-	virtual void OnConnected() override{};
+	virtual void OnRecv(const MsgPack &msg) override {}
+	virtual void OnConnected() override {}
+	virtual void onDisconnected() override {}
 };
 
-
+//管理服务器
 //类 成员只管理 m_listener m_addr， 其他链接管理交给 BaseConnectorMgr处理
-//BaseConnectorMgr 实现分离出去，让Listener做更专注的底层,更简单化。具体管理器让用户选择自定义
-//@para class Connect 必须为 ListenerConnector派生类？
-template<class Connect = NoUseConnector>
+//BaseConnectorMgr 实现分离出去，让Listener做更专注于网络逻辑,更简单化。具体管理器让用户选择自定义
+//@para class Connector 必须为 ListenerConnector派生类
+//有了缺省的NoUseListenerConnector， 你可以这样初始化 Listener<> listener(my_connector_mgr); listener.Init(server_port);
+
+template<class Connector = NoUseListenerConnector>
 class Listener 
 {
 public:
@@ -130,32 +145,31 @@ public:
 	bool Init(unsigned short listen_port, const char *listen_ip = nullptr);
 	bool Init(const sockaddr_in &addr);
 	sockaddr_in GetAddr(){ return m_addr; }
+	BaseConnectorMgr &GetConnMgr() { return m_cn_mgr; }
+
 private:
 	static void accept_error_cb(evconnlistener* listener, void * ctx);
 	static void listener_cb(struct evconnlistener* listener, evutil_socket_t fd, struct sockaddr* sa, int socklen, void* user_data);
 
 private:
 	evconnlistener *m_listener;
-	ConnectorMgr<Connect> m_default_cn_mgr;
+	ConnectorMgr<Connector> m_default_cn_mgr;
 	sockaddr_in m_addr;
-
-public:
 	BaseConnectorMgr &m_cn_mgr; 
-
 };
 
 
 
-template<class Connect>
-ListenerConnector * ConnectorMgr<Connect>::NewConnect()
+template<class Connector>
+ListenerConnector * ConnectorMgr<Connector>::NewConnect()
 {
-	return new Connect;
+	return new Connector;
 }
 
 
 
-template<class Connect /*= NoUseConnector*/>
-bool Listener<Connect>::Init(const sockaddr_in &addr)
+template<class Connector /*= NoUseConnector*/>
+bool Listener<Connector>::Init(const sockaddr_in &addr)
 {
 	m_addr = addr;
 	m_listener = evconnlistener_new_bind(LibEventMgr::Obj().GetEventBase(), Listener::listener_cb, (void*)this, LEV_OPT_REUSEABLE | LEV_OPT_CLOSE_ON_FREE, -1, (struct sockaddr*)&addr, sizeof(addr));
@@ -168,8 +182,8 @@ bool Listener<Connect>::Init(const sockaddr_in &addr)
 	return true;
 }
 
-template<class Connect>
-bool Listener<Connect>::Init(unsigned short listen_port, const char *listen_ip)
+template<class Connector>
+bool Listener<Connector>::Init(unsigned short listen_port, const char *listen_ip)
 {
 	sockaddr_in addr;
 	memset(&addr, 0, sizeof(addr));
@@ -182,8 +196,8 @@ bool Listener<Connect>::Init(unsigned short listen_port, const char *listen_ip)
 	return Init(addr);
 }
 
-template<class Connect>
-void Listener<Connect>::accept_error_cb(evconnlistener* listener, void * ctx)
+template<class Connector>
+void Listener<Connector>::accept_error_cb(evconnlistener* listener, void * ctx)
 {
 	int err = EVUTIL_SOCKET_ERROR();
 	LIB_LOG_ERROR("Got an error %d (%s) on the listener. \n", err, evutil_socket_error_to_string(err));
@@ -192,8 +206,8 @@ void Listener<Connect>::accept_error_cb(evconnlistener* listener, void * ctx)
 
 
 //底层已经调用了accept,获得fd，才回调这个函数
-template<class Connect>
-void Listener<Connect>::listener_cb(struct evconnlistener* listener, evutil_socket_t fd, struct sockaddr* sa, int socklen, void* user_data)
+template<class Connector>
+void Listener<Connector>::listener_cb(struct evconnlistener* listener, evutil_socket_t fd, struct sockaddr* sa, int socklen, void* user_data)
 {
 	if (nullptr == user_data)
 	{
@@ -217,8 +231,8 @@ void Listener<Connect>::listener_cb(struct evconnlistener* listener, evutil_sock
 }
 
 
-template<class Connect>
-Listener<Connect>::~Listener()
+template<class Connector>
+Listener<Connector>::~Listener()
 {
 	if (nullptr != m_listener)
 	{

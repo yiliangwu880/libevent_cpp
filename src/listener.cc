@@ -24,7 +24,7 @@ BaseConnectorMgr::~BaseConnectorMgr()
 	m_all_connector.clear();
 }
 
-bool BaseConnectorMgr::PostCloseConnect(uint64 id)
+bool BaseConnectorMgr::PostDelConn(uint64 id)
 {
 	auto it = m_all_connector.find(id);
 	if (it == m_all_connector.end())
@@ -38,7 +38,7 @@ bool BaseConnectorMgr::PostCloseConnect(uint64 id)
 	return true;
 }
 
-ListenerConnector * BaseConnectorMgr::FindConnect(uint64 id)
+ListenerConnector * BaseConnectorMgr::FindConn(uint64 id)
 {
 	auto it = m_all_connector.find(id);
 	if (it == m_all_connector.end())
@@ -61,7 +61,7 @@ ListenerConnector * BaseConnectorMgr::CreateConnectForListener()
 }
 
 
-void BaseConnectorMgr::DelConnect()
+void BaseConnectorMgr::OnTimerDelConn()
 {
 	for (const auto &v : m_vwdc)
 	{
@@ -96,7 +96,7 @@ bool ListenerConnector::FreeSelf()
 	{
 		return false;
 	}
-	return m_cn_mgr->PostCloseConnect(m_id); 
+	return m_cn_mgr->PostDelConn(m_id); 
 }
 
 void ListenerConnector::on_disconnected()
@@ -111,5 +111,5 @@ void ListenerConnector::on_disconnected()
 void DeleteConnTimer::OnTimer(void *user_data)
 {
 	BaseConnectorMgr *p = (BaseConnectorMgr*)user_data;
-	p->DelConnect();
+	p->OnTimerDelConn();
 }
