@@ -8,6 +8,13 @@
 
 using namespace std;
 
+
+
+BaseConnectorMgr::BaseConnectorMgr()
+{
+	m_timer.StartTimer(DELTE_CONNECTOR_INTERVAL, this);
+}
+
 BaseConnectorMgr::~BaseConnectorMgr()
 {
 	for (const auto &v : m_all_connector)
@@ -17,7 +24,7 @@ BaseConnectorMgr::~BaseConnectorMgr()
 	m_all_connector.clear();
 }
 
-bool BaseConnectorMgr::CloseConnect(uint64 id)
+bool BaseConnectorMgr::PostCloseConnect(uint64 id)
 {
 	auto it = m_all_connector.find(id);
 	if (it == m_all_connector.end())
@@ -27,7 +34,7 @@ bool BaseConnectorMgr::CloseConnect(uint64 id)
 	}
 	ListenerConnector *p = it->second;
 	m_all_connector.erase(it);
-	delete p;
+	m_vwdc.push_back(p);
 	return true;
 }
 
@@ -53,6 +60,14 @@ ListenerConnector * BaseConnectorMgr::CreateConnectForListener()
 	return p;
 }
 
+
+void BaseConnectorMgr::DelConnect()
+{
+	for (const auto &v : m_vwdc)
+	{
+		delete v;
+	}
+}
 
 ListenerConnector::ListenerConnector()
 :m_cn_mgr(nullptr)
@@ -81,7 +96,7 @@ bool ListenerConnector::FreeSelf()
 	{
 		return false;
 	}
-	return m_cn_mgr->CloseConnect(m_id); 
+	return m_cn_mgr->PostCloseConnect(m_id); 
 }
 
 void ListenerConnector::on_disconnected()
@@ -91,4 +106,10 @@ void ListenerConnector::on_disconnected()
 	m_ignore_free = false;
 	FreeSelf();
 	//LOG_DEBUG("ListenerConnector::on_disconnected");
+}
+
+void DeleteConnTimer::OnTimer(void *user_data)
+{
+	BaseConnectorMgr *p = (BaseConnectorMgr*)user_data;
+	p->DelConnect();
 }

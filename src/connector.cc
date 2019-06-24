@@ -11,7 +11,7 @@
 
 using namespace std;
 
-BaseConnect::BaseConnect(IConnect &iconnect)
+ConnectCom::ConnectCom(IConnect &iconnect)
 	:m_buf_e(nullptr)
 	, m_fd(0)
 	, m_msbs(MAX_MAX_SEND_BUF_SIZE)
@@ -23,12 +23,12 @@ BaseConnect::BaseConnect(IConnect &iconnect)
 	memset(&m_addr, 0, sizeof(m_addr));
 }
 
-BaseConnect::~BaseConnect()
+ConnectCom::~ConnectCom()
 {
 	free();
 }
 
-void BaseConnect::free()
+void ConnectCom::free()
 {
 	if (m_buf_e)
 	{
@@ -46,7 +46,7 @@ void BaseConnect::free()
 }
 
 
-bool BaseConnect::SetSocketInfo(bufferevent* buf_e, evutil_socket_t fd, struct sockaddr* sa)
+bool ConnectCom::SetSocketInfo(bufferevent* buf_e, evutil_socket_t fd, struct sockaddr* sa)
 {
 	if (nullptr == buf_e)
 	{
@@ -66,7 +66,7 @@ bool BaseConnect::SetSocketInfo(bufferevent* buf_e, evutil_socket_t fd, struct s
 	return true;
 }
 
-void BaseConnect::SetAddr(const char* connect_ip, unsigned short connect_port)
+void ConnectCom::SetAddr(const char* connect_ip, unsigned short connect_port)
 {
 	memset(&m_addr, 0, sizeof(m_addr));
 	m_addr.sin_family = AF_INET;
@@ -74,45 +74,45 @@ void BaseConnect::SetAddr(const char* connect_ip, unsigned short connect_port)
 	m_addr.sin_port = htons(connect_port);
 }
 
-void BaseConnect::SetAddr(const sockaddr_in &svr_addr)
+void ConnectCom::SetAddr(const sockaddr_in &svr_addr)
 {
 	memset(&m_addr, 0, sizeof(m_addr));
 	m_addr = svr_addr;
 }
 
 
-void BaseConnect::DisConnect()
+void ConnectCom::DisConnect()
 {
 	free();
 	m_iconnect.on_disconnected();
 }
 
-void BaseConnect::writecb(struct bufferevent* bev, void* user_data)
+void ConnectCom::writecb(struct bufferevent* bev, void* user_data)
 {
-	((BaseConnect*)user_data)->conn_write_callback(bev);
+	((ConnectCom*)user_data)->conn_write_callback(bev);
 }
 
-void BaseConnect::eventcb(struct bufferevent* bev, short events, void* user_data)
+void ConnectCom::eventcb(struct bufferevent* bev, short events, void* user_data)
 {
-	((BaseConnect*)user_data)->conn_event_callback(bev, events);
+	((ConnectCom*)user_data)->conn_event_callback(bev, events);
 }
 
-void BaseConnect::readcb(struct bufferevent* bev, void* user_data)
+void ConnectCom::readcb(struct bufferevent* bev, void* user_data)
 {
-	((BaseConnect*)user_data)->conn_read_callback(bev);
+	((ConnectCom*)user_data)->conn_read_callback(bev);
 }
 
-void BaseConnect::conn_write_callback(bufferevent* bev)
+void ConnectCom::conn_write_callback(bufferevent* bev)
 {
 	//如果不用 考虑删掉，
 }
 
-bool BaseConnect::IsWaitCompleteMsg() const
+bool ConnectCom::IsWaitCompleteMsg() const
 {
 	return 0 != m_msg_write_len;
 }
 
-void BaseConnect::conn_read_callback(bufferevent* bev)
+void ConnectCom::conn_read_callback(bufferevent* bev)
 {
 	const static int HEAD_LEN = sizeof(MsgPack::len);
 	int input_len = evbuffer_get_length(bufferevent_get_input(bev));
@@ -179,7 +179,7 @@ void BaseConnect::conn_read_callback(bufferevent* bev)
 }
 
 
-void BaseConnect::conn_event_callback(bufferevent* bev, short events)
+void ConnectCom::conn_event_callback(bufferevent* bev, short events)
 {
 	if (events & BEV_EVENT_CONNECTED)
 	{
@@ -217,7 +217,7 @@ void BaseConnect::conn_event_callback(bufferevent* bev, short events)
 	}
 }
 
-bool BaseConnect::send_data(const MsgPack &msg)
+bool ConnectCom::send_data(const MsgPack &msg)
 {
 	if (!m_is_connect)
 	{
@@ -268,7 +268,7 @@ bool BaseConnect::send_data(const MsgPack &msg)
 	return true;
 }
 
-bool BaseConnect::send_data_no_head(const char* data, int len)
+bool ConnectCom::send_data_no_head(const char* data, int len)
 {
 	if (!m_is_connect)
 	{
@@ -315,7 +315,7 @@ bool BaseConnect::send_data_no_head(const char* data, int len)
 	}
 	return true;
 }
-void BaseConnect::setwatermark(short events, unsigned int lowmark, unsigned int highmark)
+void ConnectCom::setwatermark(short events, unsigned int lowmark, unsigned int highmark)
 {
 	if (0 == m_fd)
 	{
@@ -330,7 +330,7 @@ void BaseConnect::setwatermark(short events, unsigned int lowmark, unsigned int 
 	bufferevent_setwatermark(m_buf_e, events, lowmark, highmark);
 }
 
-void BaseConnect::GetRemoteAddr(std::string &ip, unsigned short &port) const
+void ConnectCom::GetRemoteAddr(std::string &ip, unsigned short &port) const
 {
 	ip = inet_ntoa(m_addr.sin_addr);
 	port = ntohs(m_addr.sin_port);

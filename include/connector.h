@@ -53,6 +53,7 @@ public:
 	virtual void OnRecv(const MsgPack &msg) = 0;
 	virtual void OnConnected() = 0;
 	virtual void OnError(short events) {};
+	//被动删除对象回调，对方断开，或者网络错误
 	//删除本对象， 不会触发on_disconnected了
 	virtual void on_disconnected() = 0;
 
@@ -65,15 +66,15 @@ class BaseClientCon;
 //管理一个socket链接，bufferevent， fd,消息收发处理
 //服务器端，客户端端都可复用的功能
 //要主动关闭连接，删掉对象就可以了。
-class BaseConnect
+class ConnectCom
 {
 	template<class >
 	friend class Listener;
 	friend class BaseSvrCon;
 	friend class BaseClientCon;
 public:
-	BaseConnect(IConnect &iconnect);
-	virtual ~BaseConnect();
+	ConnectCom(IConnect &iconnect);
+	virtual ~ConnectCom();
 	bool IsConnect() const { return m_is_connect; };
 
 	void DisConnect();
@@ -139,7 +140,7 @@ public:
 
 	bool IsConnect() const { return m_com.IsConnect(); }
 public:
-	BaseConnect m_com;
+	ConnectCom m_com;
 
 private:
 };
@@ -163,7 +164,7 @@ private:
 	bool ConnectByAddr();
 
 public:
-	BaseConnect m_com;
+	ConnectCom m_com;
 
 private:
 };
