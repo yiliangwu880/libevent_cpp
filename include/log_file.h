@@ -28,7 +28,7 @@ public:
 class LogMgr
 {
 public:
-	static LogMgr &Instance()
+	static LogMgr &Obj()
 	{
 		static LogMgr d;
 		return d;
@@ -48,8 +48,8 @@ private:
 	ILogPrinter *m_iprinter;
 };
 
-#define LIB_LOG_INFO(x, ...)   LogMgr::Instance().Printf(LLV_INFO, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
-#define LIB_LOG_DEBUG(x, ...)  LogMgr::Instance().Printf(LLV_DEBUG, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
-#define LIB_LOG_ERROR(x, ...)  LogMgr::Instance().Printf(LLV_ERROR, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
-#define LIB_LOG_WARN(x, ...)   LogMgr::Instance().Printf(LLV_WARN, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
-#define LIB_LOG_FATAL(x, ...)  LogMgr::Instance().Printf(LLV_FATAL, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
+#define LIB_LOG_INFO(x, ...)   LogMgr::Obj().Printf(LLV_INFO, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
+#define LIB_LOG_DEBUG(x, ...)  LogMgr::Obj().Printf(LLV_DEBUG, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
+#define LIB_LOG_ERROR(x, ...)  LogMgr::Obj().Printf(LLV_ERROR, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
+#define LIB_LOG_WARN(x, ...)   LogMgr::Obj().Printf(LLV_WARN, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
+#define LIB_LOG_FATAL(x, ...)  LogMgr::Obj().Printf(LLV_FATAL, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);

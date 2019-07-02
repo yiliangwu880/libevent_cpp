@@ -24,12 +24,12 @@
 	};
 	void main()
 	{
-		LibEventMgr::Instance().Init();
+		LibEventMgr::Obj().Init();
 
 		MyConnectClient1 connect1;
 		connect1.ConnectInit(ip, server_port);
 
-		LibEventMgr::Instance().dispatch();
+		LibEventMgr::Obj().dispatch();
 	}
 
 服务器:
@@ -58,12 +58,12 @@
 	//简单模型
 	void main()
 	{
-		LibEventMgr::Instance().Init();
+		LibEventMgr::Obj().Init();
 
 		Listener<Connect2Client> listener;
 		listener.Init(server_port);
 
-		LibEventMgr::Instance().dispatch();
+		LibEventMgr::Obj().dispatch();
 	}
 
 	//指定connector对象分配器模式
@@ -75,12 +75,12 @@
 		virtual ListenerConnector *CreateConnect(){...};
 
 		};
-		LibEventMgr::Instance().Init();
+		LibEventMgr::Obj().Init();
 		ConnectorMgr mgr;
 		Listener<> listener(mgr);
 		listener.Init(server_port);
 
-		LibEventMgr::Instance().dispatch();
+		LibEventMgr::Obj().dispatch();
 	}	
 */
 

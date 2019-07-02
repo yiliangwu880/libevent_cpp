@@ -8,11 +8,11 @@ virtual void OnTimer(void *user_data) override{};
 
 main()
 {
-	LibEventMgr::Instance().Init();
+	LibEventMgr::Obj().Init();
 	MyTimer o;
 	o.StartTimer(1000, &user_data);
 
-	LibEventMgr::Instance().dispatch();
+	LibEventMgr::Obj().dispatch();
 }
 */
 

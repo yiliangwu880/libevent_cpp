@@ -1,3 +1,8 @@
+/*
+和client_prj配合使用
+服务器，接收消息，回发接收的消息。
+*/
+
 
 #include "include_all.h"
 #include "../base/utility.h"
@@ -38,7 +43,7 @@ private:
 
 int main(int argc, char* argv[]) 
 {
-	LogMgr::Instance().SetStdOut(true);
+	LogMgr::Obj().SetStdOut(true);
 	LibEventMgr::Obj().Init();
 
 	Listener<Connect2Client> listener;

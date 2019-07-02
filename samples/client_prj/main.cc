@@ -1,3 +1,8 @@
+/*
+和server_prj配合使用
+发消息。显示接收消息
+*/
+
 #include "version.h"
 #include "include_all.h"
 #include "../base/utility.h"
@@ -32,7 +37,7 @@ private:
 
 int main(int argc, char* argv[]) 
 {
-	LogMgr::Instance().SetStdOut(true);
+	LogMgr::Obj().SetStdOut(true);
 	LibEventMgr::Obj().Init();
 
 	MyConnectClient c;

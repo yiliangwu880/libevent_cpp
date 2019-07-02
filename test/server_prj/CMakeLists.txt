@@ -8,7 +8,6 @@ configure_file("version.h.in" "${PROJECT_SOURCE_DIR}/version.h")
 
 # include directories
 INCLUDE_DIRECTORIES(system ../../include/)
-
 INCLUDE_DIRECTORIES(after  ${PROJECT_SOURCE_DIR})
 
 
@@ -16,9 +15,10 @@ INCLUDE_DIRECTORIES(after  ${PROJECT_SOURCE_DIR})
 # 并将名称保存到 DIR_SRCS 变量
 file(GLOB_RECURSE SRCS  ${PROJECT_SOURCE_DIR} "*.cc")
 file(GLOB_RECURSE SRCS2  ${PROJECT_SOURCE_DIR} "*.cpp")
+file(GLOB_RECURSE SRCS3  ${PROJECT_SOURCE_DIR} "../base/*.cpp")
 
 # 指定生成目标
-ADD_EXECUTABLE(svr_test ${SRCS} ${SRCS2})
+ADD_EXECUTABLE(svr_test ${SRCS} ${SRCS2} ${SRCS3})
 
 #设置依赖
 ADD_DEPENDENCIES(svr_test libevent_cpp)
