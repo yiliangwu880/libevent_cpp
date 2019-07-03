@@ -121,28 +121,28 @@ const char * DebugLog::GetLogLevelStr( DebugLogLv lv ) const
     switch (lv)
     {
     default:
-        return "<unknow>";
+        return "[unknow]";
         break;
     case LOG_LV_FATAL:
-        return "<fatal> ";
+        return "[fatal] ";
         break;
     case LOG_LV_ERROR:
-        return "<error> ";
+        return "[error] ";
         break;
     case LOG_LV_WARN:
-        return "<warn>  ";
+        return "[warn]  ";
         break;
     case LOG_LV_DEBUG:
-        return "<debug> ";
+        return "[debug] ";
         break;
     case LOG_LV_INFO:
-        return "<info>  ";
+        return "[info]  ";
         break;
     case LOG_LV_ANY:
-        return "<any>   ";
+        return "[any]   ";
         break;
     }
-    return "<unknow>";
+    return "[unknow]";
 }
 
 void DebugLog::setShowLv( DebugLogLv lv )

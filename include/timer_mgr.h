@@ -39,7 +39,7 @@ public:
 
 	//para is_loop true表示循环定时器
 	//return, true成功开始定时器，false 已经开始了，不需要设定(可以先stop,再start)
-	bool StartTimer(unsigned long long millisecond, void *para, bool is_loop = false);
+	bool StartTimer(unsigned long long millisecond, void *para = nullptr, bool is_loop = false);
 	//停止正在进行的定时器，
 	//return, false 不需要停止. true 成功操作了停止
 	bool StopTimer();

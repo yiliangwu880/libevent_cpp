@@ -136,7 +136,7 @@ void ConnectCom::conn_read_callback(bufferevent* bev)
 			input_len -= ret_write_len;
 			m_msg_write_len += ret_write_len;
 
-			//LIB_LOG_DEBUG("bufferevent_read len %d %d", htonl(m_msg.len), m_msg_write_len);
+		//	LIB_LOG_DEBUG("bufferevent_read len %d %d", htonl(m_msg.len), m_msg_write_len);
 			continue;
 		}
 		//状态2, msg.len完整，等待读取完整消息
@@ -168,7 +168,7 @@ void ConnectCom::conn_read_callback(bufferevent* bev)
 			input_len -= ret_write_len;
 			m_msg_write_len += ret_write_len;
 
-			//LIB_LOG_DEBUG("bufferevent_read write_addr[0]=%d %d", write_addr[0] , m_msg_write_len);
+		//	LIB_LOG_DEBUG("bufferevent_read write_addr[0]=%d %d", write_addr[0] , m_msg_write_len);
 			if (need_to_read == ret_write_len)// 接收完整
 			{
 				m_iconnect.OnRecv(m_msg);
@@ -312,6 +312,7 @@ bool ConnectCom::send_data_no_head(const char* data, int len)
 		}
 	}
 
+	//LIB_LOG_DEBUG("write data[0]=%d %d %d", data[0], data[1], data[2]);
 	if (0 != bufferevent_write(m_buf_e, data, len))
 	{
 		LIB_LOG_ERROR("bufferevent_write fail, len=%d", len);

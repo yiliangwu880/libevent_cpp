@@ -73,28 +73,28 @@ const char * LogMgr::GetLogLevelStr(LLogLv lv) const
 	switch (lv)
 	{
 	default:
-		return "<unknow>";
+		return "[unknow]";
 		break;
 	case LLV_FATAL:
-		return "<fatal> ";
+		return "[fatal] ";
 		break;
 	case LLV_ERROR:
-		return "<error> ";
+		return "[error] ";
 		break;
 	case LLV_WARN:
-		return "<warn>  ";
+		return "[warn]  ";
 		break;
 	case LLV_DEBUG:
-		return "<debug> ";
+		return "[debug] ";
 		break;
 	case LLV_INFO:
-		return "<info>  ";
+		return "[info]  ";
 		break;
 	case LLV_ANY:
-		return "<any>   ";
+		return "[any]   ";
 		break;
 	}
-	return "<unknow>";
+	return "[unknow]";
 }
 LogMgr::LogMgr()
 	: m_log_lv(LLV_ANY)

@@ -43,7 +43,7 @@ bool BaseLeTimer::StartTimer(unsigned long long millisecond, void *para, bool is
 
 	if (S_WAIT_START_TIMER != m_state)
 	{
-		LIB_LOG_ERROR("BaseLeTimer state error");
+		LIB_LOG_ERROR("BaseLeTimer state error, repeated start timer");
 		return false;
 	}
 	if (nullptr != m_event)
