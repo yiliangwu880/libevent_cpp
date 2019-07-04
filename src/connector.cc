@@ -137,13 +137,13 @@ void ConnectCom::conn_read_callback(bufferevent* bev)
 			input_len -= ret_write_len;
 			m_msg_write_len += ret_write_len;
 
-		//	LIB_LOG_DEBUG("bufferevent_read len %d %d", htonl(m_msg.len), m_msg_write_len);
+		//	LIB_LOG_DEBUG("bufferevent_read, len m_msg_write_len =%d %d", ntohs(m_msg.len), m_msg_write_len);
 			continue;
 		}
 		//状态2, msg.len完整，等待读取完整消息
 		else
 		{
-			m_msg.len = htonl(m_msg.len);
+			m_msg.len = ntohs(m_msg.len);
 			if (m_msg.len > MAX_MSG_DATA_LEN) //包过大，断开连接
 			{
 				LIB_LOG_ERROR("rev msg len too big. %d", m_msg.len);
@@ -169,7 +169,7 @@ void ConnectCom::conn_read_callback(bufferevent* bev)
 			input_len -= ret_write_len;
 			m_msg_write_len += ret_write_len;
 
-		//	LIB_LOG_DEBUG("bufferevent_read write_addr[0]=%d %d", write_addr[0] , m_msg_write_len);
+			//LIB_LOG_DEBUG("bufferevent_read data, m_msg_write_len write_addr[0]=%d %d %d %d %d", m_msg_write_len, write_addr[0], write_addr[1], write_addr[2], write_addr[3]);
 			if (need_to_read == ret_write_len)// 接收完整
 			{
 				m_iconnect.OnRecv(m_msg);
@@ -229,7 +229,7 @@ bool ConnectCom::send_data(const MsgPack &msg)
 		return false;
 	}
 	const char* data = (const char*)&(msg.data);
-	int net_len = htonl((int)msg.len);
+	uint16 net_len = htons((int)msg.len);
 	if (0 == m_fd)
 	{
 		LIB_LOG_ERROR("BaseConnectCom not init. 0 == m_fd");
@@ -269,7 +269,7 @@ bool ConnectCom::send_data(const MsgPack &msg)
 		LIB_LOG_ERROR("bufferevent_write fail, len=%d", msg.len + sizeof(msg.len));
 		return false;
 	}
-	//LIB_LOG_DEBUG("bufferevent_write data[0] =%d", data[0]);
+	//LIB_LOG_DEBUG("bufferevent_write data[0] =%d %d %d %d", data[0], data[1], data[2], data[3]);
 	return true;
 }
 

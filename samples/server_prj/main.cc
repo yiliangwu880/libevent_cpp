@@ -6,13 +6,13 @@
 
 #include "include_all.h"
 #include "../base/utility.h"
+using namespace std;
+using namespace lc;
 namespace
 {
 	const uint16 server_port = 32430;
 
 }
-using namespace std;
-using namespace lc;
 class Connect2Client : public ListenerConnector
 {
 public:

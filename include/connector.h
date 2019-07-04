@@ -32,16 +32,23 @@ BaseSvrCon 使用参考listener.h说明
 #include <vector>
 #include <limits>
 #include "lev_mgr.h"
+#include "src/utility/typedef.h"
+
 namespace lc //libevent cpp
 {
 	class BaseConnectorMgr;
 
-	const static int MAX_MSG_DATA_LEN = 1024 * 4; //4k
+	 
+	const static uint16 MAX_MSG_DATA_LEN = 1024 * 4; //4k
+#pragma pack(push)
+#pragma pack(1)
 	struct MsgPack
 	{
-		int len; //data有效字节数
+		uint16 len; //data有效字节数
 		char data[MAX_MSG_DATA_LEN];
 	};
+#pragma pack(pop)
+
 	template<class >
 	class Listener;
 
