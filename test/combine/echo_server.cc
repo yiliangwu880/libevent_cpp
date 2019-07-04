@@ -10,7 +10,7 @@
 using namespace lc;
 using namespace std;
 namespace {
-	class Connect2Client : public ListenerConnector
+	class Connect2Client : public SvrConnector
 	{
 	public:
 

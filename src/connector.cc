@@ -12,14 +12,13 @@
 using namespace std;
 namespace lc //libevent cpp
 {
-ConnectCom::ConnectCom(IConnect &iconnect)
+ConnectCom::ConnectCom()
 	:m_buf_e(nullptr)
 	, m_fd(0)
 	, m_msbs(MAX_MAX_SEND_BUF_SIZE)
 	, m_is_connect(false)
 	, m_msg_write_len(0)
 	, m_no_ev_cb_log(false)
-	, m_iconnect(iconnect)
 {
 	memset(&m_addr, 0, sizeof(m_addr));
 }
@@ -85,7 +84,7 @@ void ConnectCom::SetAddr(const sockaddr_in &svr_addr)
 void ConnectCom::DisConnect()
 {
 	free();
-	m_iconnect.on_disconnected();
+	on_disconnected();
 }
 
 void ConnectCom::writecb(struct bufferevent* bev, void* user_data)
@@ -172,7 +171,7 @@ void ConnectCom::conn_read_callback(bufferevent* bev)
 			//LIB_LOG_DEBUG("bufferevent_read data, m_msg_write_len write_addr[0]=%d %d %d %d %d", m_msg_write_len, write_addr[0], write_addr[1], write_addr[2], write_addr[3]);
 			if (need_to_read == ret_write_len)// 接收完整
 			{
-				m_iconnect.OnRecv(m_msg);
+				OnRecv(m_msg);
 				//重置m_msg,等下次接收新消息
 				m_msg.len = 0;
 				m_msg_write_len = 0;
@@ -188,7 +187,7 @@ void ConnectCom::conn_event_callback(bufferevent* bev, short events)
 	if (events & BEV_EVENT_CONNECTED)
 	{
 		m_is_connect = true;
-		m_iconnect.OnConnected();
+		OnConnected();
 	}
 	else
 	{
@@ -215,7 +214,7 @@ void ConnectCom::conn_event_callback(bufferevent* bev, short events)
 
 			}
 		}
-		m_iconnect.OnError(events);
+		OnError(events);
 		DisConnect();
 		return; //这里本对象可能已经销毁，别再引用
 	}
@@ -343,32 +342,11 @@ void ConnectCom::GetRemoteAddr(std::string &ip, unsigned short &port) const
 }
 
 /////////////////////////////////////////////////////////
-bool BaseSvrCon::AcceptInit(evutil_socket_t fd, struct sockaddr* sa)
-{
-	if (0 != m_com.GetFd())
-	{
-		LIB_LOG_ERROR("repeated init");
-		return false;
-	}
-	bufferevent* buf_e = bufferevent_socket_new(LibEventMgr::Obj().GetEventBase(), fd, BEV_OPT_CLOSE_ON_FREE); //释放m_buf_e，的时候，库里面会释放m_fd
-	if (!buf_e)
-	{
-		LIB_LOG_ERROR("cannot bufferevent_socket_new libevent ...\n");
-		return false;
-	}
 
-	bufferevent_setcb(buf_e, m_com.readcb, nullptr, m_com.eventcb, &m_com);
-	bufferevent_enable(buf_e, EV_WRITE | EV_READ);
-	m_com.SetSocketInfo(buf_e, fd, sa);
-
-	m_com.SetIsConnect(true);
-	OnConnected();
-	return true;
-}
 
 bool BaseClientCon::ConnectInit(const char* connect_ip, unsigned short connect_port)
 {
-	if (0 != m_com.GetFd())
+	if (0 != GetFd())
 	{
 		LIB_LOG_ERROR("repeated init");
 		return false;
@@ -380,29 +358,29 @@ bool BaseClientCon::ConnectInit(const char* connect_ip, unsigned short connect_p
 	}
 
 
-	m_com.SetAddr(connect_ip, connect_port);
+	SetAddr(connect_ip, connect_port);
 	return ConnectByAddr();
 }
 
 bool BaseClientCon::ConnectInit(const sockaddr_in &svr_addr)
 {
-	if (0 != m_com.GetFd())
+	if (0 != GetFd())
 	{
 		LIB_LOG_ERROR("repeated init");
 		return false;
 	}
 
-	m_com.SetAddr(svr_addr);
+	SetAddr(svr_addr);
 	return ConnectByAddr();
 }
 
 
 bool BaseClientCon::ConnectByAddr()
 {
-	sockaddr_in addr = m_com.GetRemoteAddr();
+	sockaddr_in addr = GetRemoteAddr();
 	if (0 == addr.sin_port)
 	{
-		LIB_LOG_ERROR("m_com.GetRemoteAddr() don't init");
+		LIB_LOG_ERROR("GetRemoteAddr() don't init");
 		return false;
 	}
 	evutil_socket_t fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -422,12 +400,12 @@ bool BaseClientCon::ConnectByAddr()
 		fd = 0;
 		return false;
 	}
-	bufferevent_setcb(buf_e, m_com.readcb, nullptr, m_com.eventcb, &m_com);
+	bufferevent_setcb(buf_e, readcb, nullptr, eventcb, this);
 	bufferevent_enable(buf_e, EV_WRITE | EV_READ);
 	
 	if (bufferevent_socket_connect(buf_e, (struct sockaddr*)&addr, sizeof(addr)) == 0)//连接失败会里面关闭fd
 	{
-		m_com.SetSocketInfo(buf_e, fd);
+		SetSocketInfo(buf_e, fd);
 		return true;
 	}
 	LIB_LOG_ERROR("bufferevent_socket_connect fail"); //这里没跑过，不知道什么情况才跑
@@ -436,7 +414,7 @@ bool BaseClientCon::ConnectByAddr()
 
 bool BaseClientCon::TryReconnect()
 {
-	if (!m_com.IsConnect())
+	if (!IsConnect())
 	{
 		return ConnectByAddr();
 	}

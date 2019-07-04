@@ -21,7 +21,7 @@
 
 namespace lc //libevent cpp
 {
-class ListenerConnector;
+class SvrConnector;
 template<class >
 class Listener;
 
@@ -37,7 +37,7 @@ class BaseConnectorMgr
 {
 	template<class >
 	friend class Listener;
-	friend class ListenerConnector;
+	friend class SvrConnector;
 public:
 	BaseConnectorMgr();
 	virtual ~BaseConnectorMgr();
@@ -45,7 +45,7 @@ public:
 	bool PostDelConn(uint64 id);
 	void OnTimerDelConn(); //真正delele对象
 	//建议获取指针只做局部变量用，不要保存，因为BaseConnectorMgr管理ListenerConnector对象的删除
-	ListenerConnector *FindConn(uint64 id);
+	SvrConnector *FindConn(uint64 id);
 	template<class CB>
 	void Foreach(CB cb)
 	{
@@ -61,14 +61,14 @@ public:
 	}
 
 private:
-	virtual ListenerConnector *NewConnect() = 0; //对象必须用new构建
+	virtual SvrConnector *NewConnect() = 0; //对象必须用new构建
 
-	ListenerConnector *CreateConnectForListener();
+	SvrConnector *CreateConnectForListener();
 
 private:
 	const static uint32 DELTE_CONNECTOR_INTERVAL = 1000 * 1; //1sec
-	std::map<uint64, ListenerConnector *> m_all_connector;
-	std::vector<ListenerConnector *> m_vwdc; //vec wait delete connector
+	std::map<uint64, SvrConnector *> m_all_connector;
+	std::vector<SvrConnector *> m_vwdc; //vec wait delete connector
 	DeleteConnTimer m_timer;
 };
 
@@ -77,21 +77,22 @@ template<class Connector>
 class ConnectorMgr : public BaseConnectorMgr
 {
 private:
-	virtual ListenerConnector *NewConnect();
+	virtual SvrConnector *NewConnect();
 
 };
 
+//管理服务器端链接， 远程端为客户端
 //Listener 创建的connector
-class ListenerConnector : public BaseSvrCon
+class SvrConnector : public ConnectCom
 {
 public:
-	ListenerConnector();
-	~ListenerConnector();
+	SvrConnector();
+	~SvrConnector();
 
 	bool AcceptInit(evutil_socket_t fd, struct sockaddr* sa, const sockaddr_in &svr_addr);
-	void SetCnMgr(BaseConnectorMgr *mgr){ m_cn_mgr = mgr; };
+	void SetCnMgr(BaseConnectorMgr *mgr) { m_cn_mgr = mgr; };
 	uint64 GetId() const { return m_id; }
-	sockaddr_in GetSvrAddr() const{ return m_svr_addr; }
+	sockaddr_in GetSvrAddr() const { return m_svr_addr; }
 	//断开连接，释放自己
 	//注意，调用后，会马上释放自己。后面不要再引用自己了.
 	//不会触发on_disconnected了
@@ -102,6 +103,7 @@ private:
 	virtual void on_disconnected() override final; //派生类不用继承这个函数,用onDisconnected处理被动断开连接
 	virtual void onDisconnected() = 0;
 
+
 private:
 	BaseConnectorMgr *m_cn_mgr;
 	uint64 m_id;
@@ -109,7 +111,8 @@ private:
 	bool m_ignore_free; //防多次调用FreeSelf函数用，支持 onDisconnected里面不小心写了调用FreeSelf()
 };
 
-class NoUseListenerConnector : public ListenerConnector
+
+class NoUseListenerConnector : public SvrConnector
 {
 private:
 	virtual void OnRecv(const MsgPack &msg) override {}
@@ -162,7 +165,7 @@ private:
 
 
 template<class Connector>
-ListenerConnector * ConnectorMgr<Connector>::NewConnect()
+SvrConnector * ConnectorMgr<Connector>::NewConnect()
 {
 	return new Connector;
 }
@@ -217,16 +220,16 @@ void Listener<Connector>::listener_cb(struct evconnlistener* listener, evutil_so
 	}
 	Listener* pListener = (Listener*)user_data;
 
-	ListenerConnector *clientconn = pListener->m_cn_mgr.CreateConnectForListener();
+	SvrConnector *clientconn = pListener->m_cn_mgr.CreateConnectForListener();
 	if (nullptr == clientconn)
 	{
-		LIB_LOG_ERROR("init ListenerConnector fail");
+		LIB_LOG_ERROR("init SvrConnector fail");
 		return;
 	}
 	clientconn->SetCnMgr(&(pListener->m_cn_mgr));
 	if (!clientconn->AcceptInit(fd, sa, pListener->m_addr))
 	{
-		LIB_LOG_ERROR("init ListenerConnector fail");
+		LIB_LOG_ERROR("init SvrConnector fail");
 		return;
 	}
 }

@@ -13,7 +13,7 @@ namespace
 	const uint16 server_port = 32430;
 
 }
-class Connect2Client : public ListenerConnector
+class Connect2Client : public SvrConnector
 {
 public:
 
@@ -31,7 +31,7 @@ private:
 	}
 	virtual void OnConnected() override
 	{
-		m_com.SetEventCbLog(true);
+		SetEventCbLog(true);
 		LIB_LOG_DEBUG("server OnConnected");
 		MsgPack msg;
 		Str2MsgPack("s", msg);

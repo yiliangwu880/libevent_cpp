@@ -112,7 +112,7 @@ public:
 
 		
 		const char *pMsg = (char *)&m_msg;
-		m_com.send_data_no_head(pMsg, 3);
+		send_data_no_head(pMsg, 3);
 
 		SplitMsgTimer *t = new SplitMsgTimer();
 		t->StartTimer(100, this);
@@ -121,7 +121,7 @@ public:
 	{
 		const char *p = (char *)&m_msg;
 		p = p + 3;
-		m_com.send_data_no_head(p, 5);
+		send_data_no_head(p, 5);
 	}
 	int m_cnt;
 	MsgPack m_msg;
@@ -134,8 +134,71 @@ void SplitMsgTimer::OnTimer(void *user_data)
 	delete this;
 }
 
+
+struct ReConnectClient : public BaseClientCon
+{
+	enum State
+	{
+		S_start,
+		S_disconnect,
+		S_reconnect,
+	} state= S_start;
+	BaseLeTimer timer;
+	BaseLeTimer result_timer;
+	bool is_re_con_ok = false;
+	bool is_cb_disconect = false;
+	void Start()
+	{
+		state = S_start;
+		ConnectInit(LOCAL_IP, ECHO_SERVER_PORT);		
+		auto f = std::bind(&ReConnectClient::Result, this);
+		result_timer.StartTimer(1000*3, f);
+	}
+	virtual void OnRecv(const MsgPack &msg) override
+	{
+		LOG_DEBUG("disconnect");
+		DisConnect();
+
+		state = S_disconnect;
+		auto f = std::bind(&ReConnectClient::ReConnect, this);
+		timer.StartTimer(10, f);
+
+	}
+	virtual void OnConnected() override
+	{
+		if (S_start == state)
+		{
+			MsgPack msg;
+			msg.len = 1;
+			send_data(msg);
+		}
+		else if (S_disconnect == state)
+		{
+			LOG_DEBUG("reconnect ok");
+			is_re_con_ok = true;
+			state = S_reconnect;
+		}
+	}
+	virtual void on_disconnected() override
+	{
+		is_cb_disconect = true;
+	}
+
+	void ReConnect()
+	{
+		TryReconnect();
+	}
+	void Result()
+	{
+		UNIT_ASSERT(true == is_re_con_ok);
+		UNIT_ASSERT(true == is_cb_disconect);
+		LOG_DEBUG("==============test reconnect ok==============");
+	}
+};
+
 MyConnectClient *echo_client;
 SplitMsgClient *split_client;
+ReConnectClient *reCon;
 }//namespace{
 
 
@@ -149,4 +212,7 @@ void StartEchoClient()
 	split_client = new SplitMsgClient();
 	split_client->ConnectInit(LOCAL_IP, ECHO_SERVER_PORT);
 
+	//²âÊÔ¶Ï¿ªÖØÁ¬
+	reCon = new ReConnectClient();
+	reCon->Start();
 }

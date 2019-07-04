@@ -49,8 +49,7 @@ namespace lc //libevent cpp
 	};
 #pragma pack(pop)
 
-	template<class >
-	class Listener;
+	template<class > class Listener;
 
 	class IConnect
 	{
@@ -68,20 +67,18 @@ namespace lc //libevent cpp
 
 	};
 
-	class BaseSvrCon;
 	class BaseClientCon;
 
 	//管理一个socket链接，bufferevent， fd,消息收发处理
 	//服务器端，客户端端都可复用的功能
 	//要主动关闭连接，删掉对象就可以了。
-	class ConnectCom
+	class ConnectCom : public IConnect
 	{
-		template<class >
-		friend class Listener;
-		friend class BaseSvrCon;
+		template<class > friend class Listener;
 		friend class BaseClientCon;
+		friend class SvrConnector;
 	public:
-		ConnectCom(IConnect &iconnect);
+		ConnectCom();
 		virtual ~ConnectCom();
 		bool IsConnect() const { return m_is_connect; };
 
@@ -128,53 +125,27 @@ namespace lc //libevent cpp
 		MsgPack m_msg;				//每个接收消息包。
 		int m_msg_write_len;		//m_msg内存写入的字节数
 		bool m_no_ev_cb_log;		//true表示不打印事件回调错误
-		IConnect &m_iconnect;		//引用具体回调实现的对象
 	};
 
 
-	//管理服务器端链接， 远程端为客户端
-	class BaseSvrCon : public IConnect
-	{
-	public:
-		BaseSvrCon() :m_com(*this)
-		{}
-		//让Listener调用的函数，用户别调用
-		//para sa 对方地址
-		//para svr_addr server addr
-		bool AcceptInit(evutil_socket_t fd, struct sockaddr* sa);
-		bool send_data(const MsgPack &msg) {
-			return m_com.send_data(msg);
-		}
 
-		bool IsConnect() const { return m_com.IsConnect(); }
-	public:
-		ConnectCom m_com;
 
-	private:
-	};
 
 	//管理客户端端链接， 远程端为客户端
-	class BaseClientCon : public IConnect
+	class BaseClientCon : public ConnectCom
 	{
 	public:
-		BaseClientCon() :m_com(*this)
+		BaseClientCon() 
 		{}
 		//AConnectInit必须先选其中一个初始化函数调用后，才能使用其他方法
 		//return true代表请求成功，不代表连接成功. 不能连接成功，会回调 on_disconnected  通知
 		bool ConnectInit(const char* connect_ip, unsigned short connect_port);
 		bool ConnectInit(const sockaddr_in &svr_addr);
 		bool TryReconnect();
-		bool send_data(const MsgPack &msg) {
-			return m_com.send_data(msg);
-		}
-		bool IsConnect() const { return m_com.IsConnect(); }
+
+	
 	private:
 		bool ConnectByAddr();
-
-	public:
-		ConnectCom m_com;
-
-	private:
 	};
 
 }//namespace lc //libevent cpp

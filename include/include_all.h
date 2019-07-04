@@ -1,6 +1,7 @@
 /*
 源码地址：
 https://github.com/yiliangwu880/libevent_cpp.git
+有BUG欢迎联系 qq 30390012
 
 只合适单线程用。
 使用实际例子看 test_server.cc test_client.cc
