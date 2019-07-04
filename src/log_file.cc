@@ -8,6 +8,11 @@
 using namespace std;
 using namespace lbcpp;
 
+void LogMgr::SetLogPrinter(ILogPrinter &iprinter)
+{
+	m_iprinter = &iprinter;
+}
+
 void LogMgr::Printf(LLogLv lv, const char * file, int line, const char *pFun, const char * pattern, ...)
 {
 	if (lv > m_log_lv)

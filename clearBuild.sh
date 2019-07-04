@@ -7,5 +7,5 @@ rm -rf *
 cd ..
 sh build.sh
 
-cp build_test.sh ./Debug/bin/test/
-cp build_test.sh ./Debug/bin/sample/
+cp test_build.sh ./Debug/bin/test/build.sh
+cp test_build.sh ./Debug/bin/samples/build.sh

@@ -14,7 +14,7 @@ IUnitTest::IUnitTest(const char *unit_name)
 void UnitTestMgr::Start(UnitTestPrintf *printf)
 {
 	m_print = printf;
-	try
+	//try
 	{
 		for (auto &var : m_vecUnit)
 		{
@@ -22,10 +22,10 @@ void UnitTestMgr::Start(UnitTestPrintf *printf)
 			var->Run();
 		}
 	}
-	catch (std::exception &e)
-	{
+	//catch (std::exception &e)
+	//{
 
-	}
+	//}
 }
 
 void UnitTestMgr::Reg(IUnitTest *p)

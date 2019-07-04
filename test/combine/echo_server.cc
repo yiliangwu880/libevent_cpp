@@ -4,7 +4,7 @@
 
 
 #include "include_all.h"
-
+#include "log_file.h"
 
 
 
@@ -27,28 +27,32 @@ namespace {
 
 
 	Listener<Connect2Client> *listener;
-	class CloseSvrTimer : public BaseLeTimer
+	class CloseTimer : public BaseLeTimer
 	{
 	private:
-		virtual void OnTimer(void *user_data) override 
-		{
-			LOG_DEBUG("del listener");
-			delete listener;
-		};
+		virtual void OnTimer(void *user_data) override;
 	};
 
+	void CloseTimer::OnTimer(void *user_data)
+	{
+		LOG_DEBUG("del listener");
+		delete listener;
+	}
+	CloseTimer ct;
 
 
-	CloseSvrTimer ct;
-
-}
+}//namespace {
 
 void StartEchoClient();
 
+void StartLog();
 UNITTEST(echo_server)
 {
+
+	//回显服务器，定时关闭
 	ct.StartTimer(1000*4);
 	listener = new Listener<Connect2Client>();
 	listener->Init(ECHO_SERVER_PORT);
 	StartEchoClient();
+	StartLog();
 }
