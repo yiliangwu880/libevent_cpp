@@ -12,7 +12,7 @@ namespace
 
 }
 using namespace std;
-
+using namespace lc;
 class Connect2Client : public ListenerConnector
 {
 public:

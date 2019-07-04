@@ -7,7 +7,7 @@
 #include "log_file.h"
 
 
-
+using namespace lc;
 using namespace std;
 
 namespace {

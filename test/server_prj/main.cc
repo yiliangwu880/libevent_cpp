@@ -7,7 +7,7 @@
 #include "logFile.h"
 
 static const int MASS_CON_SVR_PORT = 42011;
-
+using namespace lc;
 using namespace std;
 namespace {
 	class Connect2Client : public ListenerConnector

@@ -52,8 +52,10 @@ use excample2:
 #include <functional>
 
 
-typedef std::function<void(void)> BaseLeTimerCB;
 
+namespace lc //libevent cpp
+{
+	typedef std::function<void(void)> BaseLeTimerCB;
 //里面做创建，销毁定时器，保证不内存泄露, 不回调不存在的BaseTime
 class BaseLeTimer
 {
@@ -85,3 +87,4 @@ private:
 	void *m_para;
 	BaseLeTimerCB m_cb; //选择用，用std::bind方式绑定的回调函数
 };
+}

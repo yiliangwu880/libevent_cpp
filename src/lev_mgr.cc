@@ -16,7 +16,8 @@ using namespace std;
 #define EVENT_LOG_WARN 2
 #define EVENT_LOG_ERR 3
 
-
+namespace lc //libevent cpp
+{
 namespace
 {
 	//注意：回调函数中进行LibEvent 的函数调用是不安全的
@@ -121,3 +122,4 @@ LibEventMgr::~LibEventMgr()
 		event_base_free(m_eb);
 	}
 }
+}//namespace lc //libevent cpp

@@ -7,7 +7,7 @@
 
 
 using namespace std;
-namespace lbcpp
+namespace lc
 {
 	void DebugLog::print(const char * pattern, ...)
 	{

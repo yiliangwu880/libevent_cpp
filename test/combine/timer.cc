@@ -4,7 +4,7 @@
 
 #include "include_all.h"
 
-
+using namespace lc;
 using namespace std;
 using std::placeholders::_1;
 using std::placeholders::_2;

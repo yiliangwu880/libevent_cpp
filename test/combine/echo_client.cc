@@ -5,7 +5,7 @@
 
 #include "include_all.h"
 
-
+using namespace lc;
 using namespace std;
 
 

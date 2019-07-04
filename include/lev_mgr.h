@@ -13,7 +13,8 @@
 #include <string.h>
 #include <vector>
 
-
+namespace lc //libevent cpp
+{
 //单件
 class LibEventMgr
 {
@@ -42,3 +43,4 @@ private:
 private:
 	event_base* m_eb;
 };
+}//namespace lc //libevent cpp

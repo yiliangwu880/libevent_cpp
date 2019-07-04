@@ -6,8 +6,9 @@
 #include <stdarg.h>
 
 using namespace std;
-using namespace lbcpp;
 
+namespace lc //libevent cpp
+{
 void LogMgr::SetLogPrinter(ILogPrinter &iprinter)
 {
 	m_iprinter = &iprinter;
@@ -107,4 +108,5 @@ LogMgr::LogMgr()
 	, m_iprinter(&DebugLog::GetDefaultLog())
 {
 
+}
 }

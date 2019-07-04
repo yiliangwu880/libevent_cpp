@@ -15,7 +15,7 @@ DebugLog g_logFile("log2.txt");  //define log file name
 #include <sstream>
 #include "log_file.h"
 
-namespace lbcpp //lbcpp = libevent_cpp为了和cpputility项目相同命名区分
+namespace lc //lbcpp = libevent_cpp为了和cpputility项目相同命名区分
 {
 	class DebugLog : public ILogPrinter
 	{

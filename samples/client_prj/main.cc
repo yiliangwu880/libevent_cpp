@@ -6,7 +6,7 @@
 #include "version.h"
 #include "include_all.h"
 #include "../base/utility.h"
-
+using namespace lc;
 namespace
 {
 	const uint16 server_port = 32430;

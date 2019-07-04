@@ -5,4 +5,4 @@
 
 
 
-void Str2MsgPack(const std::string str, MsgPack &msg);
+void Str2MsgPack(const std::string str, lc::MsgPack &msg);

@@ -6,7 +6,7 @@
 #include "unit_test.h"
 #include "logFile.h"
 #include "include_all.h"
-
+using namespace lc;
 
 
 static void Printf(const char *log)

@@ -21,6 +21,8 @@ private:
 #include <event2/http_struct.h>
 #include <string>
 
+namespace lc //libevent cpp
+{
 /*
 常用libevent api参考
 const char *uri = evhttp_request_get_uri(req);
@@ -95,3 +97,4 @@ private:
 	struct evhttp_connection* m_connection;
 	bool m_is_request;
 };
+}//namespace lc //libevent cpp

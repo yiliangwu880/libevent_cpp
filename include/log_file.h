@@ -4,7 +4,8 @@
 #pragma once
 #include "src/utility/typedef.h"
 #include <string>
-
+namespace lc //libevent cpp
+{
 enum LLogLv
 {
     //优先级从高到底
@@ -53,3 +54,4 @@ private:
 #define LIB_LOG_ERROR(x, ...)  LogMgr::Obj().Printf(LLV_ERROR, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
 #define LIB_LOG_WARN(x, ...)   LogMgr::Obj().Printf(LLV_WARN, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
 #define LIB_LOG_FATAL(x, ...)  LogMgr::Obj().Printf(LLV_FATAL, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
+}//namespace lc //libevent cpp

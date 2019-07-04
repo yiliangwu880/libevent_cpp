@@ -19,7 +19,8 @@
 #include "log_file.h" 
 #include "timer_mgr.h"
 
-
+namespace lc //libevent cpp
+{
 class ListenerConnector;
 template<class >
 class Listener;
@@ -239,3 +240,5 @@ Listener<Connector>::~Listener()
 		evconnlistener_free(m_listener);
 	}
 }
+
+}//namespace lc //libevent cpp

@@ -1,4 +1,7 @@
 /*
+源码地址：
+https://github.com/yiliangwu880/libevent_cpp.git
+
 只合适单线程用。
 使用实际例子看 test_server.cc test_client.cc
 使用例子：

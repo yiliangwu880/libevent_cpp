@@ -7,7 +7,7 @@
 #include "include_all.h"
 
 using namespace std;
-
+using namespace lc;
 
 namespace {
 	const int MASS_CON_SVR_PORT = 42011;

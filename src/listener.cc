@@ -8,7 +8,8 @@
 
 using namespace std;
 
-
+namespace lc //libevent cpp
+{
 
 BaseConnectorMgr::BaseConnectorMgr()
 {
@@ -113,3 +114,4 @@ void DeleteConnTimer::OnTimer(void *user_data)
 	BaseConnectorMgr *p = (BaseConnectorMgr*)user_data;
 	p->OnTimerDelConn();
 }
+}//namespace lc //libevent cpp

@@ -10,7 +10,8 @@
 #include "include_all.h"
 
 using namespace std;
-
+namespace lc //libevent cpp
+{
 ConnectCom::ConnectCom(IConnect &iconnect)
 	:m_buf_e(nullptr)
 	, m_fd(0)
@@ -444,3 +445,4 @@ bool BaseClientCon::TryReconnect()
 		return true; //不需要重连
 	}
 }
+}//namespace lc //libevent cpp

@@ -8,7 +8,8 @@
 #include "include_all.h"
 #include "log_file.h" //目前调试用，移植删掉
 #include <memory>
-
+namespace lc //libevent cpp
+{
 using namespace std;
 BaseHttpSvr::BaseHttpSvr()
 :m_evhttp(nullptr)
@@ -264,3 +265,4 @@ void BaseHttpClient::connection_close_callback(struct evhttp_connection* connect
 	//LOG_DEBUG("connection_close_callback");
 	//delete p; 这里不需要， 目前发现所有结束流程都会调用 remote_read_callback，再哪里释放就可以了。
 }
+}//namespace lc //libevent cpp
