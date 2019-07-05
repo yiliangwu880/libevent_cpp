@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include "include_all.h"
-
+#include <set>
 
 using namespace std;
 
@@ -13,7 +13,7 @@ namespace lc //libevent cpp
 
 BaseConMgr::BaseConMgr()
 {
-	m_timer.StartTimer(DELTE_CONNECTOR_INTERVAL, std::bind(&BaseConMgr::OnTimerDelConn, this));
+	m_timer.StartTimer(DELTE_CONNECTOR_INTERVAL, std::bind(&BaseConMgr::OnTimerDelConn, this), true);
 }
 
 BaseConMgr::~BaseConMgr()
@@ -36,6 +36,10 @@ bool BaseConMgr::PostDelConn(uint64 id)
 	SvrCon *p = it->second;
 	m_all_connector.erase(it);
 	m_vwdc.push_back(p);
+
+
+
+
 	return true;
 }
 
@@ -57,6 +61,7 @@ SvrCon * BaseConMgr::CreateConnectForListener()
 	{
 		return p;
 	}
+
 	m_all_connector[p->GetId()] = p;
 	return p;
 }
@@ -69,6 +74,7 @@ void BaseConMgr::OnTimerDelConn()
 		//LIB_LOG_DEBUG("run OnTimerDelConn");
 		delete v;
 	}
+	m_vwdc.clear();
 }
 
 SvrCon::SvrCon()
@@ -104,7 +110,12 @@ bool SvrCon::AcceptInit(evutil_socket_t fd, struct sockaddr* sa, const sockaddr_
 
 	bufferevent_setcb(buf_e, readcb, nullptr, eventcb, this);
 	bufferevent_enable(buf_e, EV_WRITE | EV_READ);
-	SetSocketInfo(buf_e, fd, sa);
+	if (false == SetSocketInfo(buf_e, fd, sa))
+	{
+		LIB_LOG_ERROR("SetSocketInfo fail");
+		bufferevent_free(buf_e);
+		return false;
+	}
 
 	SetIsConnect(true);
 	OnConnected();

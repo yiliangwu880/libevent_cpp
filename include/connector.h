@@ -72,6 +72,7 @@ namespace lc //libevent cpp
 	//管理一个socket链接，bufferevent， fd,消息收发处理
 	//服务器端，客户端端都可复用的功能
 	//要主动关闭连接，删掉对象就可以了。
+	//待完成。 重连，复用对象各种状态，太复杂了。禁用该功能。用户可通过创建新对象实现重连
 	class ConCom : public IConnect
 	{
 		template<class > friend class Listener;

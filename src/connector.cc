@@ -53,10 +53,12 @@ bool ConCom::SetSocketInfo(bufferevent* buf_e, evutil_socket_t fd, struct sockad
 {
 	if (nullptr == buf_e)
 	{
+		//LIB_LOG_ERROR("SetSocketInfo fail. nullptr == buf_e");
 		return false;
 	}
 	if (nullptr != m_buf_e)
 	{
+		//LIB_LOG_ERROR("SetSocketInfo fail. nullptr != m_buf_e");
 		return false;
 	}
 
@@ -232,21 +234,22 @@ bool ConCom::send_data(const MsgPack &msg)
 {
 	if (!m_is_connect)
 	{
-		LIB_LOG_ERROR("is disconnect.");
+		LIB_LOG_DEBUG("is disconnect.");
 		return false;
 	}
-	const char* data = (const char*)&(msg.data);
-	uint16 net_len = htons((int)msg.len);
 	if (0 == m_fd)
 	{
-		LIB_LOG_ERROR("BaseConnectCom not init. 0 == m_fd");
+		LIB_LOG_DEBUG("BaseConnectCom not init. 0 == m_fd");
 		return false;
 	}
 	if (!m_buf_e)
 	{
-		LIB_LOG_ERROR("BaseConnectCom not init !m_buf_e");
+		LIB_LOG_DEBUG("BaseConnectCom not init !m_buf_e");
 		return false;
 	}
+
+	const char* data = (const char*)&(msg.data);
+	uint16 net_len = htons((int)msg.len);
 
 	if (m_msbs != 0)
 	{
@@ -411,16 +414,21 @@ bool ClientCon::ConnectByAddr()
 	bufferevent_setcb(buf_e, readcb, nullptr, eventcb, this);
 	bufferevent_enable(buf_e, EV_WRITE | EV_READ);
 	
-	if (bufferevent_socket_connect(buf_e, (struct sockaddr*)&addr, sizeof(addr)) == 0)//连接失败会里面关闭fd
+	if (0 != bufferevent_socket_connect(buf_e, (struct sockaddr*)&addr, sizeof(addr)))//连接失败会里面关闭fd
 	{
-		SetSocketInfo(buf_e, fd);
-		return true;
+		//失败情况：
+		//地址不对
+		//客户端连接8W左右，跑了这里, 应该是fd太多了，超出系统设置
+		LIB_LOG_ERROR("bufferevent_socket_connect fail");
+		return false;
 	}
-	//失败情况：
-	//地址不对
-	//客户端连接8W左右，跑了这里, 应该是fd太多了，超出系统设置
-	LIB_LOG_ERROR("bufferevent_socket_connect fail"); 
-	return false;
+	bool ret= SetSocketInfo(buf_e, fd);
+	if (!ret)
+	{
+		bufferevent_free(buf_e);
+		return false;
+	}
+	return true;
 }
 
 bool ClientCon::TryReconnect()

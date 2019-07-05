@@ -13,7 +13,7 @@ using namespace lc;
 namespace {
 	const int MASS_CON_SVR_PORT = 42011;
 	const uint32 MAX_CON_NUM = 10000*4;
-	const uint32 SEND_INTERVAL_SEC = 2 * 1000;
+	const uint32 Rand_SEND_INTERVAL_SEC = 2 * 1000;
 	const char *LOCAL_IP = "127.0.0.1";
 
 	uint32 total_rev_cnt = 0;
@@ -48,7 +48,7 @@ namespace {
 			if (S_Start == m_state)
 			{
 				auto f = std::bind(&MyConnectClient::OnTimer, this);
-				bool ret = m_timer.StartTimer(SEND_INTERVAL_SEC, f, true);
+				bool ret = m_timer.StartTimer((rand() % Rand_SEND_INTERVAL_SEC), f);
 				UNIT_ASSERT(true == ret);
 			}
 			m_state = S_Connect;
@@ -66,7 +66,7 @@ namespace {
 				if (r<10)
 				{
 					//LOG_DEBUG("disconnect");
-					DisConnect();
+					DisConnect(); //调用这里倒是FD越来越多，释放不了，原因未明
 					return;
 				}
 				++m_cnt;
@@ -86,6 +86,14 @@ namespace {
 			else {
 				LOG_ERROR("unknow state=%d", m_state);
 				UNIT_ASSERT(false);
+			}
+
+			//随机化定时器，让流程更随机
+			{
+				m_timer.StopTimer();
+				auto f = std::bind(&MyConnectClient::OnTimer, this);
+				bool ret = m_timer.StartTimer( (rand() % Rand_SEND_INTERVAL_SEC), f);
+				UNIT_ASSERT(true == ret);
 			}
 		}
 	};
