@@ -38,7 +38,10 @@ void ConCom::free()
 	}
 	if (m_fd != 0)
 	{
-
+		//if (0 != ::close(m_fd))
+		//{
+		//	LIB_LOG_ERROR("::close fail , fd=%d", m_fd);
+		//}
 		//释放m_buf_e，的时候，库里面会释放m_fd
 		m_fd = 0;
 	}
@@ -391,7 +394,7 @@ bool ClientCon::ConnectByAddr()
 	evutil_socket_t fd = socket(AF_INET, SOCK_STREAM, 0);
 	if (fd < 0)
 	{
-		LIB_LOG_ERROR("m_fd < 0");
+		LIB_LOG_ERROR("socket create fail. fd < 0");
 		return false;
 	}
 	bufferevent* buf_e = bufferevent_socket_new(EventMgr::Obj().GetEventBase(), fd, BEV_OPT_CLOSE_ON_FREE);//提示你提供给bufferevent_socket_new() 的套接字务必是非阻塞模式, 为此LibEvent 提供了便利的方法	evutil_make_socket_nonblocking.

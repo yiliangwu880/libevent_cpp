@@ -24,7 +24,7 @@ namespace {
 			int r = rand() % 100;
 			if (r < 10)
 			{
-				DisConnect();
+				DisConnect(); //调用这里，fd会释放不了。 原因未明
 				return;
 			}
 			send_data(msg);

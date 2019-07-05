@@ -12,7 +12,7 @@ using namespace lc;
 
 namespace {
 	const int MASS_CON_SVR_PORT = 42011;
-	const uint32 MAX_CON_NUM = 10000*1;
+	const uint32 MAX_CON_NUM = 10000*4;
 	const uint32 SEND_INTERVAL_SEC = 2 * 1000;
 	const char *LOCAL_IP = "127.0.0.1";
 
