@@ -11,7 +11,7 @@ using std::placeholders::_2;
 using std::placeholders::_3;
 
 namespace{
-class KillTimer : public BaseLeTimer
+class KillTimer : public Timer
 {
 private:
 	virtual void OnTimer(void *user_data) override
@@ -20,15 +20,15 @@ private:
 	};
 };
 
-struct CheckTimer : public BaseLeTimer
+struct CheckTimer : public Timer
 {
 	virtual void OnTimer(void *user_data) override;
 };
 
 struct Test 
 {
-	BaseLeTimer timer;
-	BaseLeTimer timer2;
+	Timer timer;
+	Timer timer2;
 	bool is_fun_run = false;
 	bool is_fun2_run = false;
 	void StartTImer()
@@ -56,8 +56,8 @@ struct Test
 
 struct TestStop
 {
-	BaseLeTimer timer;
-	BaseLeTimer stop_timer;
+	Timer timer;
+	Timer stop_timer;
 	bool is_fun_run = false;
 	void StartTImer()
 	{

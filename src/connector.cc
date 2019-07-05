@@ -12,7 +12,7 @@
 using namespace std;
 namespace lc //libevent cpp
 {
-ConnectCom::ConnectCom()
+ConCom::ConCom()
 	:m_buf_e(nullptr)
 	, m_fd(0)
 	, m_msbs(MAX_MAX_SEND_BUF_SIZE)
@@ -23,12 +23,12 @@ ConnectCom::ConnectCom()
 	memset(&m_addr, 0, sizeof(m_addr));
 }
 
-ConnectCom::~ConnectCom()
+ConCom::~ConCom()
 {
 	free();
 }
 
-void ConnectCom::free()
+void ConCom::free()
 {
 	if (m_buf_e)
 	{
@@ -46,7 +46,7 @@ void ConnectCom::free()
 }
 
 
-bool ConnectCom::SetSocketInfo(bufferevent* buf_e, evutil_socket_t fd, struct sockaddr* sa)
+bool ConCom::SetSocketInfo(bufferevent* buf_e, evutil_socket_t fd, struct sockaddr* sa)
 {
 	if (nullptr == buf_e)
 	{
@@ -66,7 +66,7 @@ bool ConnectCom::SetSocketInfo(bufferevent* buf_e, evutil_socket_t fd, struct so
 	return true;
 }
 
-void ConnectCom::SetAddr(const char* connect_ip, unsigned short connect_port)
+void ConCom::SetAddr(const char* connect_ip, unsigned short connect_port)
 {
 	memset(&m_addr, 0, sizeof(m_addr));
 	m_addr.sin_family = AF_INET;
@@ -74,45 +74,50 @@ void ConnectCom::SetAddr(const char* connect_ip, unsigned short connect_port)
 	m_addr.sin_port = htons(connect_port);
 }
 
-void ConnectCom::SetAddr(const sockaddr_in &svr_addr)
+void ConCom::SetAddr(const sockaddr_in &svr_addr)
 {
 	memset(&m_addr, 0, sizeof(m_addr));
 	m_addr = svr_addr;
 }
 
 
-void ConnectCom::DisConnect()
+void ConCom::DisConnect()
 {
+	if (!m_is_connect)
+	{
+		LIB_LOG_DEBUG("already disconnect. not need to disconnect.");
+		return;
+	}
 	free();
 	on_disconnected();
 }
 
-void ConnectCom::writecb(struct bufferevent* bev, void* user_data)
+void ConCom::writecb(struct bufferevent* bev, void* user_data)
 {
-	((ConnectCom*)user_data)->conn_write_callback(bev);
+	((ConCom*)user_data)->conn_write_callback(bev);
 }
 
-void ConnectCom::eventcb(struct bufferevent* bev, short events, void* user_data)
+void ConCom::eventcb(struct bufferevent* bev, short events, void* user_data)
 {
-	((ConnectCom*)user_data)->conn_event_callback(bev, events);
+	((ConCom*)user_data)->conn_event_callback(bev, events);
 }
 
-void ConnectCom::readcb(struct bufferevent* bev, void* user_data)
+void ConCom::readcb(struct bufferevent* bev, void* user_data)
 {
-	((ConnectCom*)user_data)->conn_read_callback(bev);
+	((ConCom*)user_data)->conn_read_callback(bev);
 }
 
-void ConnectCom::conn_write_callback(bufferevent* bev)
+void ConCom::conn_write_callback(bufferevent* bev)
 {
 	//如果不用 考虑删掉，
 }
 
-bool ConnectCom::IsWaitCompleteMsg() const
+bool ConCom::IsWaitCompleteMsg() const
 {
 	return 0 != m_msg_write_len;
 }
 
-void ConnectCom::conn_read_callback(bufferevent* bev)
+void ConCom::conn_read_callback(bufferevent* bev)
 {
 	const static int HEAD_LEN = sizeof(MsgPack::len);
 	int input_len = evbuffer_get_length(bufferevent_get_input(bev));
@@ -182,7 +187,7 @@ void ConnectCom::conn_read_callback(bufferevent* bev)
 }
 
 
-void ConnectCom::conn_event_callback(bufferevent* bev, short events)
+void ConCom::conn_event_callback(bufferevent* bev, short events)
 {
 	if (events & BEV_EVENT_CONNECTED)
 	{
@@ -195,11 +200,11 @@ void ConnectCom::conn_event_callback(bufferevent* bev, short events)
 		{
 			if (events & BEV_EVENT_EOF)
 			{
-				LIB_LOG_DEBUG("event cb:connection closed.\n");
+				//LIB_LOG_DEBUG("event cb:connection closed.\n");
 			}
 			else if (events & BEV_EVENT_ERROR)
 			{
-				LIB_LOG_DEBUG("event cb:got an error on the connection: %s\n", strerror(errno));
+				//LIB_LOG_DEBUG("event cb:got an error on the connection: %s\n", strerror(errno));
 			}
 			else if (events & BEV_EVENT_READING)
 			{
@@ -220,11 +225,11 @@ void ConnectCom::conn_event_callback(bufferevent* bev, short events)
 	}
 }
 
-bool ConnectCom::send_data(const MsgPack &msg)
+bool ConCom::send_data(const MsgPack &msg)
 {
 	if (!m_is_connect)
 	{
-		LIB_LOG_ERROR("is disconnect");
+		LIB_LOG_ERROR("is disconnect.");
 		return false;
 	}
 	const char* data = (const char*)&(msg.data);
@@ -272,7 +277,7 @@ bool ConnectCom::send_data(const MsgPack &msg)
 	return true;
 }
 
-bool ConnectCom::send_data_no_head(const char* data, int len)
+bool ConCom::send_data_no_head(const char* data, int len)
 {
 	if (!m_is_connect)
 	{
@@ -320,7 +325,7 @@ bool ConnectCom::send_data_no_head(const char* data, int len)
 	}
 	return true;
 }
-void ConnectCom::setwatermark(short events, unsigned int lowmark, unsigned int highmark)
+void ConCom::setwatermark(short events, unsigned int lowmark, unsigned int highmark)
 {
 	if (0 == m_fd)
 	{
@@ -335,7 +340,7 @@ void ConnectCom::setwatermark(short events, unsigned int lowmark, unsigned int h
 	bufferevent_setwatermark(m_buf_e, events, lowmark, highmark);
 }
 
-void ConnectCom::GetRemoteAddr(std::string &ip, unsigned short &port) const
+void ConCom::GetRemoteAddr(std::string &ip, unsigned short &port) const
 {
 	ip = inet_ntoa(m_addr.sin_addr);
 	port = ntohs(m_addr.sin_port);
@@ -344,7 +349,7 @@ void ConnectCom::GetRemoteAddr(std::string &ip, unsigned short &port) const
 /////////////////////////////////////////////////////////
 
 
-bool BaseClientCon::ConnectInit(const char* connect_ip, unsigned short connect_port)
+bool ClientCon::ConnectInit(const char* connect_ip, unsigned short connect_port)
 {
 	if (0 != GetFd())
 	{
@@ -362,7 +367,7 @@ bool BaseClientCon::ConnectInit(const char* connect_ip, unsigned short connect_p
 	return ConnectByAddr();
 }
 
-bool BaseClientCon::ConnectInit(const sockaddr_in &svr_addr)
+bool ClientCon::ConnectInit(const sockaddr_in &svr_addr)
 {
 	if (0 != GetFd())
 	{
@@ -375,7 +380,7 @@ bool BaseClientCon::ConnectInit(const sockaddr_in &svr_addr)
 }
 
 
-bool BaseClientCon::ConnectByAddr()
+bool ClientCon::ConnectByAddr()
 {
 	sockaddr_in addr = GetRemoteAddr();
 	if (0 == addr.sin_port)
@@ -389,7 +394,7 @@ bool BaseClientCon::ConnectByAddr()
 		LIB_LOG_ERROR("m_fd < 0");
 		return false;
 	}
-	bufferevent* buf_e = bufferevent_socket_new(LibEventMgr::Obj().GetEventBase(), fd, BEV_OPT_CLOSE_ON_FREE);//提示你提供给bufferevent_socket_new() 的套接字务必是非阻塞模式, 为此LibEvent 提供了便利的方法	evutil_make_socket_nonblocking.
+	bufferevent* buf_e = bufferevent_socket_new(EventMgr::Obj().GetEventBase(), fd, BEV_OPT_CLOSE_ON_FREE);//提示你提供给bufferevent_socket_new() 的套接字务必是非阻塞模式, 为此LibEvent 提供了便利的方法	evutil_make_socket_nonblocking.
 	if (nullptr == buf_e)
 	{
 		LIB_LOG_ERROR("nullptr == m_buf_e");
@@ -408,11 +413,14 @@ bool BaseClientCon::ConnectByAddr()
 		SetSocketInfo(buf_e, fd);
 		return true;
 	}
-	LIB_LOG_ERROR("bufferevent_socket_connect fail"); //这里没跑过，不知道什么情况才跑
+	//失败情况：
+	//地址不对
+	//客户端连接8W左右，跑了这里, 应该是fd太多了，超出系统设置
+	LIB_LOG_ERROR("bufferevent_socket_connect fail"); 
 	return false;
 }
 
-bool BaseClientCon::TryReconnect()
+bool ClientCon::TryReconnect()
 {
 	if (!IsConnect())
 	{

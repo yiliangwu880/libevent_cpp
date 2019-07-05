@@ -10,7 +10,7 @@
 using namespace lc;
 using namespace std;
 namespace {
-	class Connect2Client : public SvrConnector
+	class Connect2Client : public SvrCon
 	{
 	public:
 
@@ -27,7 +27,7 @@ namespace {
 
 
 	Listener<Connect2Client> *listener;
-	class CloseTimer : public BaseLeTimer
+	class CloseTimer : public Timer
 	{
 	private:
 		virtual void OnTimer(void *user_data) override;

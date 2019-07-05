@@ -49,7 +49,7 @@ namespace
 	}
 
 }
-bool LibEventMgr::Init()
+bool EventMgr::Init()
 {
 	if (nullptr != m_eb)
 	{
@@ -71,7 +71,7 @@ bool LibEventMgr::Init()
 	return true;
 }
 
-void LibEventMgr::Dispatch()
+void EventMgr::Dispatch()
 {
 	if (!m_eb)
 	{
@@ -81,7 +81,7 @@ void LibEventMgr::Dispatch()
 	event_base_dispatch(m_eb);
 }
 
-bool LibEventMgr::StopDispatch()
+bool EventMgr::StopDispatch()
 {
 	if (!m_eb)
 	{
@@ -105,7 +105,7 @@ namespace
 	}
 }
 
-void LibEventMgr::RegSignal(int sig_type, void(*SignalCB)(int sig_type))
+void EventMgr::RegSignal(int sig_type, void(*SignalCB)(int sig_type))
 {
 	event* signal_event = evsignal_new(m_eb, sig_type, signal_cb, (void*)SignalCB);
 	if (!signal_event || event_add(signal_event, NULL) < 0)
@@ -115,7 +115,7 @@ void LibEventMgr::RegSignal(int sig_type, void(*SignalCB)(int sig_type))
 	}
 }
 
-LibEventMgr::~LibEventMgr()
+EventMgr::~EventMgr()
 {
 	if (nullptr != m_eb)
 	{

@@ -19,9 +19,9 @@ int main(int argc, char* argv[])
 	LOG_DEBUG("start run");
 	LogMgr::Obj().SetStdOut(true);
 
-	LibEventMgr::Obj().Init();
+	EventMgr::Obj().Init();
 	UnitTestMgr::Obj().Start(Printf);
-	LibEventMgr::Obj().Dispatch();
+	EventMgr::Obj().Dispatch();
 
 	LOG_DEBUG("end run");
 	return 0;

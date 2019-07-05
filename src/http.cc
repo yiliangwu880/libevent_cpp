@@ -32,7 +32,7 @@ bool BaseHttpSvr::Init(unsigned short port/*=80*/, const char* ip /*= nullptr*/)
 		LIB_LOG_FATAL("repeated init");
 		return false;
 	}
-	m_evhttp = evhttp_new(LibEventMgr::Obj().GetEventBase());
+	m_evhttp = evhttp_new(EventMgr::Obj().GetEventBase());
 	if (nullptr == m_evhttp) {
 		LIB_LOG_FATAL("init http fail");
 		return false;
@@ -177,7 +177,7 @@ bool BaseHttpClient::Request(const char *url, evhttp_cmd_type cmd_type, unsigned
 
 
 	// ≥ı ºªØevdns_base_new
-	m_dnsbase = evdns_base_new(LibEventMgr::Obj().GetEventBase(), 1);
+	m_dnsbase = evdns_base_new(EventMgr::Obj().GetEventBase(), 1);
 	if (!m_dnsbase)
 	{
 		ReplyError(500, "Create dns base failed!");
@@ -185,7 +185,7 @@ bool BaseHttpClient::Request(const char *url, evhttp_cmd_type cmd_type, unsigned
 		return false;
 	}
 
-	m_connection = evhttp_connection_base_new(LibEventMgr::Obj().GetEventBase(), m_dnsbase, host, port);
+	m_connection = evhttp_connection_base_new(EventMgr::Obj().GetEventBase(), m_dnsbase, host, port);
 	if (!m_connection)
 	{
 		ReplyError(500, "Create evhttp connection failed!");

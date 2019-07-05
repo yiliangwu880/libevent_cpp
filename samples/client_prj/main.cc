@@ -13,7 +13,7 @@ namespace
 	const char *ip = "127.0.0.1";
 }
 
-class MyConnectClient : public BaseClientCon
+class MyConnectClient : public ClientCon
 {
 private:
 	virtual void OnRecv(const MsgPack &msg) override
@@ -38,12 +38,12 @@ private:
 int main(int argc, char* argv[]) 
 {
 	LogMgr::Obj().SetStdOut(true);
-	LibEventMgr::Obj().Init();
+	EventMgr::Obj().Init();
 
 	MyConnectClient c;
 	c.ConnectInit(ip, server_port);
 
-	LibEventMgr::Obj().Dispatch();
+	EventMgr::Obj().Dispatch();
 	return 0;
 }
 

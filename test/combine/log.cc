@@ -12,7 +12,7 @@ using namespace std;
 
 namespace {
 
-	class CloseTimer : public BaseLeTimer
+	class CloseTimer : public Timer
 	{
 	private:
 		virtual void OnTimer(void *user_data) override;

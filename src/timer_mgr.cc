@@ -14,14 +14,14 @@ using namespace std;
 namespace lc //libevent cpp
 {
 
-	BaseLeTimer::BaseLeTimer()
+	Timer::Timer()
 		:m_event(nullptr)
 		, m_state(S_WAIT_START_TIMER)
 		, m_para(nullptr)
 	{
 	}
 
-	BaseLeTimer::~BaseLeTimer()
+	Timer::~Timer()
 	{
 		if (nullptr != m_event)
 		{
@@ -30,13 +30,13 @@ namespace lc //libevent cpp
 	}
 
 
-	void BaseLeTimer::TimerCB(evutil_socket_t, short, void* para)
+	void Timer::OnTimerCB(evutil_socket_t, short, void* para)
 	{
-		BaseLeTimer *p = (BaseLeTimer *)para;
+		Timer *p = (Timer *)para;
 		p->OnTimer(p->m_para);
 	}
 
-	bool BaseLeTimer::StartTimer(unsigned long long millisecond, void *para, bool is_loop)
+	bool Timer::StartTimer(unsigned long long millisecond, void *para, bool is_loop)
 	{
 		timeval t;
 		t.tv_sec = millisecond / 1000;
@@ -57,7 +57,7 @@ namespace lc //libevent cpp
 		{
 			ev_type = EV_PERSIST;
 		}
-		m_event = event_new(LibEventMgr::Obj().GetEventBase(), -1, ev_type, TimerCB, this);
+		m_event = event_new(EventMgr::Obj().GetEventBase(), -1, ev_type, OnTimerCB, this);
 
 		if (0 != event_add(m_event, &t))
 		{
@@ -69,13 +69,13 @@ namespace lc //libevent cpp
 
 
 
-	void BaseLeTimer::TimerCB_StdBind(evutil_socket_t, short, void* para)
+	void Timer::TimerCB_StdBind(evutil_socket_t, short, void* para)
 	{
-		BaseLeTimer *p = (BaseLeTimer *)para;
+		Timer *p = (Timer *)para;
 		p->m_cb();
 	}
 
-	bool BaseLeTimer::StartTimer(unsigned long long millisecond, const BaseLeTimerCB &cb, bool is_loop /*= false*/)
+	bool Timer::StartTimer(unsigned long long millisecond, const TimerCB &cb, bool is_loop /*= false*/)
 	{
 		timeval t;
 		t.tv_sec = millisecond / 1000;
@@ -97,7 +97,7 @@ namespace lc //libevent cpp
 		{
 			ev_type = EV_PERSIST;
 		}
-		m_event = event_new(LibEventMgr::Obj().GetEventBase(), -1, ev_type, TimerCB_StdBind, this);
+		m_event = event_new(EventMgr::Obj().GetEventBase(), -1, ev_type, TimerCB_StdBind, this);
 
 		if (0 != event_add(m_event, &t))
 		{
@@ -107,7 +107,7 @@ namespace lc //libevent cpp
 		return true;
 	}
 
-	bool BaseLeTimer::StopTimer()
+	bool Timer::StopTimer()
 	{
 		if (nullptr == m_event)
 		{

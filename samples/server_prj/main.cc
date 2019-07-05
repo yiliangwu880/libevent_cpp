@@ -13,7 +13,7 @@ namespace
 	const uint16 server_port = 32430;
 
 }
-class Connect2Client : public SvrConnector
+class Connect2Client : public SvrCon
 {
 public:
 
@@ -44,12 +44,12 @@ private:
 int main(int argc, char* argv[]) 
 {
 	LogMgr::Obj().SetStdOut(true);
-	LibEventMgr::Obj().Init();
+	EventMgr::Obj().Init();
 
 	Listener<Connect2Client> listener;
 	listener.Init(server_port);
 
-	LibEventMgr::Obj().Dispatch();
+	EventMgr::Obj().Dispatch();
 	return 0;
 }
 

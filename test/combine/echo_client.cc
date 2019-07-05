@@ -13,7 +13,7 @@ static const char *LOCAL_IP = "127.0.0.1";
 
 namespace{
 
-class MyConnectClient : public BaseClientCon
+class MyConnectClient : public ClientCon
 {
 public:
 	MyConnectClient()
@@ -64,7 +64,7 @@ private:
 };
 
 
-class SplitMsgTimer : public BaseLeTimer
+class SplitMsgTimer : public Timer
 {
 private:
 	virtual void OnTimer(void *user_data) override;
@@ -72,7 +72,7 @@ private:
 
 
 //分割字符串发网络消息
-class SplitMsgClient : public BaseClientCon
+class SplitMsgClient : public ClientCon
 {
 public:
 	SplitMsgClient()
@@ -135,7 +135,7 @@ void SplitMsgTimer::OnTimer(void *user_data)
 }
 
 
-struct ReConnectClient : public BaseClientCon
+struct ReConnectClient : public ClientCon
 {
 	enum State
 	{
@@ -143,8 +143,8 @@ struct ReConnectClient : public BaseClientCon
 		S_disconnect,
 		S_reconnect,
 	} state= S_start;
-	BaseLeTimer timer;
-	BaseLeTimer result_timer;
+	Timer timer;
+	Timer result_timer;
 	bool is_re_con_ok = false;
 	bool is_cb_disconect = false;
 	void Start()

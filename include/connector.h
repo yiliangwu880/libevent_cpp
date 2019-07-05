@@ -36,7 +36,7 @@ BaseSvrCon 使用参考listener.h说明
 
 namespace lc //libevent cpp
 {
-	class BaseConnectorMgr;
+	class BaseConMgr;
 
 	 
 	const static uint16 MAX_MSG_DATA_LEN = 1024 * 4; //4k
@@ -67,19 +67,19 @@ namespace lc //libevent cpp
 
 	};
 
-	class BaseClientCon;
+	class ClientCon;
 
 	//管理一个socket链接，bufferevent， fd,消息收发处理
 	//服务器端，客户端端都可复用的功能
 	//要主动关闭连接，删掉对象就可以了。
-	class ConnectCom : public IConnect
+	class ConCom : public IConnect
 	{
 		template<class > friend class Listener;
-		friend class BaseClientCon;
-		friend class SvrConnector;
+		friend class ClientCon;
+		friend class SvrCon;
 	public:
-		ConnectCom();
-		virtual ~ConnectCom();
+		ConCom();
+		virtual ~ConCom();
 		bool IsConnect() const { return m_is_connect; };
 
 		void DisConnect();
@@ -132,10 +132,10 @@ namespace lc //libevent cpp
 
 
 	//管理客户端端链接， 远程端为客户端
-	class BaseClientCon : public ConnectCom
+	class ClientCon : public ConCom
 	{
 	public:
-		BaseClientCon() 
+		ClientCon() 
 		{}
 		//AConnectInit必须先选其中一个初始化函数调用后，才能使用其他方法
 		//return true代表请求成功，不代表连接成功. 不能连接成功，会回调 on_disconnected  通知

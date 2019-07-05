@@ -16,17 +16,16 @@
 namespace lc //libevent cpp
 {
 //单件
-class LibEventMgr
+class EventMgr
 {
 public:
-	static LibEventMgr &Obj()
+	static EventMgr &Obj()
 	{
-		static LibEventMgr d;
+		static EventMgr d;
 		return d;
 	}
 	//使用libevent 任何功能前，必须先调用这个初始化函数
 	bool Init();
-
 
 	void Dispatch();
 	event_base *GetEventBase(){ return m_eb; };
@@ -34,11 +33,11 @@ public:
 	void RegSignal(int sig_type, void(*SignalCB)(int sig_type));
 
 private:
-	LibEventMgr()
+	EventMgr()
 		:m_eb(nullptr)
 	{
 	}
-	~LibEventMgr();
+	~EventMgr();
 
 private:
 	event_base* m_eb;

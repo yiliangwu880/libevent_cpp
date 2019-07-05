@@ -11,12 +11,12 @@ using namespace std;
 namespace lc //libevent cpp
 {
 
-BaseConnectorMgr::BaseConnectorMgr()
+BaseConMgr::BaseConMgr()
 {
-	m_timer.StartTimer(DELTE_CONNECTOR_INTERVAL, this);
+	m_timer.StartTimer(DELTE_CONNECTOR_INTERVAL, std::bind(&BaseConMgr::OnTimerDelConn, this));
 }
 
-BaseConnectorMgr::~BaseConnectorMgr()
+BaseConMgr::~BaseConMgr()
 {
 	for (const auto &v : m_all_connector)
 	{
@@ -25,7 +25,7 @@ BaseConnectorMgr::~BaseConnectorMgr()
 	m_all_connector.clear();
 }
 
-bool BaseConnectorMgr::PostDelConn(uint64 id)
+bool BaseConMgr::PostDelConn(uint64 id)
 {
 	auto it = m_all_connector.find(id);
 	if (it == m_all_connector.end())
@@ -33,13 +33,13 @@ bool BaseConnectorMgr::PostDelConn(uint64 id)
 		LIB_LOG_FATAL("free connector can't find. id=%llu", id);
 		return false;
 	}
-	SvrConnector *p = it->second;
+	SvrCon *p = it->second;
 	m_all_connector.erase(it);
 	m_vwdc.push_back(p);
 	return true;
 }
 
-SvrConnector * BaseConnectorMgr::FindConn(uint64 id)
+SvrCon * BaseConMgr::FindConn(uint64 id)
 {
 	auto it = m_all_connector.find(id);
 	if (it == m_all_connector.end())
@@ -50,9 +50,9 @@ SvrConnector * BaseConnectorMgr::FindConn(uint64 id)
 }
 
 
-SvrConnector * BaseConnectorMgr::CreateConnectForListener()
+SvrCon * BaseConMgr::CreateConnectForListener()
 {
-	SvrConnector *p = NewConnect();
+	SvrCon *p = NewConnect();
 	if (nullptr == p)
 	{
 		return p;
@@ -62,60 +62,16 @@ SvrConnector * BaseConnectorMgr::CreateConnectForListener()
 }
 
 
-void BaseConnectorMgr::OnTimerDelConn()
+void BaseConMgr::OnTimerDelConn()
 {
 	for (const auto &v : m_vwdc)
 	{
+		//LIB_LOG_DEBUG("run OnTimerDelConn");
 		delete v;
 	}
 }
-//
-//ListenerConnector::ListenerConnector()
-//:m_cn_mgr(nullptr)
-//, m_id(0)
-//, m_ignore_free(false)
-//{
-//	static uint64 id_seed = 0;//大量重复连接就会重复，实际上不会产生那么大量
-//	m_id = ++id_seed;
-//	memset(&m_svr_addr, 0, sizeof(m_svr_addr));
-//}
-//
-//ListenerConnector::~ListenerConnector()
-//{
-//	m_cn_mgr = nullptr; //析构后清除指针，防错误代码产生野指针。
-//}
-//
-//bool ListenerConnector::AcceptInit(evutil_socket_t fd, struct sockaddr* sa, const sockaddr_in &svr_addr)
-//{
-//	m_svr_addr = svr_addr;
-//	return BaseSvrCon::AcceptInit(fd, sa);
-//}
-//
-//bool ListenerConnector::FreeSelf()
-//{
-//	if (m_ignore_free)
-//	{
-//		return false;
-//	}
-//	return m_cn_mgr->PostDelConn(m_id); 
-//}
-//
-//void ListenerConnector::on_disconnected()
-//{
-//	m_ignore_free = true;
-//	onDisconnected();
-//	m_ignore_free = false;
-//	FreeSelf();
-//	//LOG_DEBUG("ListenerConnector::on_disconnected");
-//}
 
-void DeleteConnTimer::OnTimer(void *user_data)
-{
-	BaseConnectorMgr *p = (BaseConnectorMgr*)user_data;
-	p->OnTimerDelConn();
-}
-
-SvrConnector::SvrConnector()
+SvrCon::SvrCon()
 	:m_cn_mgr(nullptr)
 	, m_id(0)
 	, m_ignore_free(false)
@@ -125,12 +81,12 @@ SvrConnector::SvrConnector()
 	memset(&m_svr_addr, 0, sizeof(m_svr_addr));
 }
 
-SvrConnector::~SvrConnector()
+SvrCon::~SvrCon()
 {
 	m_cn_mgr = nullptr; //析构后清除指针，防错误代码产生野指针。
 }
 
-bool SvrConnector::AcceptInit(evutil_socket_t fd, struct sockaddr* sa, const sockaddr_in &svr_addr)
+bool SvrCon::AcceptInit(evutil_socket_t fd, struct sockaddr* sa, const sockaddr_in &svr_addr)
 {
 	m_svr_addr = svr_addr;
 
@@ -139,7 +95,7 @@ bool SvrConnector::AcceptInit(evutil_socket_t fd, struct sockaddr* sa, const soc
 		LIB_LOG_ERROR("repeated init");
 		return false;
 	}
-	bufferevent* buf_e = bufferevent_socket_new(LibEventMgr::Obj().GetEventBase(), fd, BEV_OPT_CLOSE_ON_FREE); //释放m_buf_e，的时候，库里面会释放m_fd
+	bufferevent* buf_e = bufferevent_socket_new(EventMgr::Obj().GetEventBase(), fd, BEV_OPT_CLOSE_ON_FREE); //释放m_buf_e，的时候，库里面会释放m_fd
 	if (!buf_e)
 	{
 		LIB_LOG_ERROR("cannot bufferevent_socket_new libevent ...\n");
@@ -155,7 +111,7 @@ bool SvrConnector::AcceptInit(evutil_socket_t fd, struct sockaddr* sa, const soc
 	return true;
 }
 
-bool SvrConnector::FreeSelf()
+bool SvrCon::FreeSelf()
 {
 	if (m_ignore_free)
 	{
@@ -164,7 +120,7 @@ bool SvrConnector::FreeSelf()
 	return m_cn_mgr->PostDelConn(m_id);
 }
 
-void SvrConnector::on_disconnected()
+void SvrCon::on_disconnected()
 {
 	m_ignore_free = true;
 	onDisconnected();

@@ -1,4 +1,8 @@
-//联合Client_prj测试， 大量连接
+/* 
+联合Client_prj测试， 大量连接
+
+接收消息随机行为：回显， 主动关闭连接
+*/
 
 #include "stdafx.h"
 #include "version.h"
@@ -10,24 +14,32 @@ static const int MASS_CON_SVR_PORT = 42011;
 using namespace lc;
 using namespace std;
 namespace {
-	class Connect2Client : public SvrConnector
+	class Connect2Client : public SvrCon
 	{
 	public:
 
 	private:
 		virtual void OnRecv(const MsgPack &msg) override
 		{
+			int r = rand() % 100;
+			if (r < 10)
+			{
+				DisConnect();
+				return;
+			}
 			send_data(msg);
 		}
 		virtual void OnConnected() override
 		{
 		}
-		virtual void onDisconnected() override {}
+		virtual void onDisconnected() override {
+
+		}
 	};
 
 
 	Listener<Connect2Client> *listener=nullptr;
-	class CloseTimer : public BaseLeTimer
+	class CloseTimer : public Timer
 	{
 	private:
 		virtual void OnTimer(void *user_data) override;
@@ -47,11 +59,11 @@ UNITTEST(mass_con_svr)
 {
 	LogMgr::Obj().SetStdOut(true);
 
-	LibEventMgr::Obj().Init();
-	ct.StartTimer(1000 * 60);
+	EventMgr::Obj().Init();
+	//ct.StartTimer(1000 * 60);
 	listener = new Listener<Connect2Client>();
 	listener->Init(MASS_CON_SVR_PORT);
-	LibEventMgr::Obj().Dispatch();
+	EventMgr::Obj().Dispatch();
 }
 
 int main(int argc, char* argv[]) 
