@@ -90,7 +90,7 @@ void ConCom::DisConnect()
 {
 	if (!m_is_connect)
 	{
-		LIB_LOG_DEBUG("already disconnect. not need to disconnect.");
+		//LIB_LOG_DEBUG("already disconnect. not need to disconnect.");
 		return;
 	}
 	free();
@@ -234,7 +234,7 @@ bool ConCom::send_data(const MsgPack &msg)
 {
 	if (!m_is_connect)
 	{
-		LIB_LOG_DEBUG("is disconnect.");
+		//LIB_LOG_DEBUG("is disconnect.");
 		return false;
 	}
 	if (0 == m_fd)
