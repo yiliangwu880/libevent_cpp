@@ -29,7 +29,7 @@ namespace lc
 
 
 	DebugLog::DebugLog(const char *fname, const char *prefix_name)
-		:m_log_lv(LLV_ANY)
+		:m_log_lv(LL_ANY)
 		, m_file(NULL)
 		, m_is_std_out(true)
 		, m_prefix_name(prefix_name)
@@ -50,7 +50,7 @@ namespace lc
 #endif
 	}
 
-	void DebugLog::printf(LLogLv lv, const char * file, int line, const char *pFun, const char * pattern, ...)
+	void DebugLog::printf(LogLv lv, const char * file, int line, const char *pFun, const char * pattern, ...)
 	{
 		if (lv > m_log_lv)
 		{
@@ -75,7 +75,7 @@ namespace lc
 		s.append(" ");
 		s.append(GetLogLevelStr(lv));
 		s.append(pattern);
-		if (lv <= LLV_DEBUG)
+		if (lv <= LL_DEBUG)
 		{
 			s.append("  --");
 			s.append(file);
@@ -116,36 +116,36 @@ namespace lc
 		fprintf(m_file, log);
 	}
 
-	const char * DebugLog::GetLogLevelStr(LLogLv lv) const
+	const char * DebugLog::GetLogLevelStr(LogLv lv) const
 	{
 		switch (lv)
 		{
 		default:
 			return "<unknow>";
 			break;
-		case LLV_FATAL:
+		case LL_FATAL:
 			return "<fatal> ";
 			break;
-		case LLV_ERROR:
+		case LL_ERROR:
 			return "<error> ";
 			break;
-		case LLV_WARN:
+		case LL_WARN:
 			return "<warn>  ";
 			break;
-		case LLV_DEBUG:
+		case LL_DEBUG:
 			return "<debug> ";
 			break;
-		case LLV_INFO:
+		case LL_INFO:
 			return "<info>  ";
 			break;
-		case LLV_ANY:
+		case LL_ANY:
 			return "<any>   ";
 			break;
 		}
 		return "<unknow>";
 	}
 
-	void DebugLog::setShowLv(LLogLv lv)
+	void DebugLog::setShowLv(LogLv lv)
 	{
 		m_log_lv = lv;
 	}

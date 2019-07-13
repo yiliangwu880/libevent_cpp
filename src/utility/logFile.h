@@ -1,4 +1,5 @@
 /*
+缺省日志输出类
 use example:
 
 //use defualt log
@@ -26,18 +27,18 @@ namespace lc //lbcpp = libevent_cpp为了和cpputility项目相同命名区分
 		//para:const char *prefix_name每天日志前缀字符串,通常是文件名简写
 		explicit DebugLog(const char *fname, const char *prefix_name = "");
 		~DebugLog();
-		void printf(LLogLv lv, const char * file, int line, const char *pFun, const char * pattern, ...);
-		void setShowLv(LLogLv lv);
+		void printf(LogLv lv, const char * file, int line, const char *pFun, const char * pattern, ...);
+		void setShowLv(LogLv lv);
 		//print log in std out.
 		void setStdOut(bool is_std_out);
 		void flush();
 		virtual void printf(const char * log);
 	private:
-		const char *GetLogLevelStr(LLogLv lv) const;
+		const char *GetLogLevelStr(LogLv lv) const;
 
 		void print(const char * pattern, ...);
 	private:
-		LLogLv m_log_lv;
+		LogLv m_log_lv;
 		FILE *m_file;
 		bool m_is_std_out;
 		std::string m_prefix_name;

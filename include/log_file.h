@@ -6,16 +6,16 @@
 #include <string>
 namespace lc //libevent cpp
 {
-enum LLogLv
+enum LogLv
 {
     //优先级从高到底
-    LLV_FATAL,
-    LLV_ERROR,
-    LLV_WARN,
-    LLV_DEBUG,
+    LL_FATAL,
+    LL_ERROR,
+    LL_WARN,
+    LL_DEBUG,
     //下面的级别，不输出文件位置信息
-    LLV_INFO,
-    LLV_ANY
+    LL_INFO,
+    LL_ANY
 };
 
 //打印log接口
@@ -35,23 +35,23 @@ public:
 		return d;
 	}
 	void SetLogPrinter(ILogPrinter &iprinter);
-	void Printf(LLogLv lv, const char * file, int line, const char *pFun, const char * pattern, ...);
-	void SetLogLv(LLogLv lv); 
+	void Printf(LogLv lv, const char * file, int line, const char *pFun, const char * pattern, ...);
+	void SetLogLv(LogLv lv); 
 	void SetStdOut(bool is_std_out); //true可以标准输出
 
 private:
 	LogMgr();
-	const char * GetLogLevelStr(LLogLv lv) const;
+	const char * GetLogLevelStr(LogLv lv) const;
 
 private:
-	LLogLv m_log_lv;
+	LogLv m_log_lv;
 	bool m_is_std_out;
 	ILogPrinter *m_iprinter;
 };
 
-#define LIB_LOG_INFO(x, ...)   LogMgr::Obj().Printf(LLV_INFO, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
-#define LIB_LOG_DEBUG(x, ...)  LogMgr::Obj().Printf(LLV_DEBUG, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
-#define LIB_LOG_ERROR(x, ...)  LogMgr::Obj().Printf(LLV_ERROR, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
-#define LIB_LOG_WARN(x, ...)   LogMgr::Obj().Printf(LLV_WARN, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
-#define LIB_LOG_FATAL(x, ...)  LogMgr::Obj().Printf(LLV_FATAL, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
+#define LIB_LOG_INFO(x, ...)   LogMgr::Obj().Printf(LL_INFO, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
+#define LIB_LOG_DEBUG(x, ...)  LogMgr::Obj().Printf(LL_DEBUG, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
+#define LIB_LOG_ERROR(x, ...)  LogMgr::Obj().Printf(LL_ERROR, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
+#define LIB_LOG_WARN(x, ...)   LogMgr::Obj().Printf(LL_WARN, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
+#define LIB_LOG_FATAL(x, ...)  LogMgr::Obj().Printf(LL_FATAL, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
 }//namespace lc //libevent cpp

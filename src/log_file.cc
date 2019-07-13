@@ -14,7 +14,7 @@ void LogMgr::SetLogPrinter(ILogPrinter &iprinter)
 	m_iprinter = &iprinter;
 }
 
-void LogMgr::Printf(LLogLv lv, const char * file, int line, const char *pFun, const char * pattern, ...)
+void LogMgr::Printf(LogLv lv, const char * file, int line, const char *pFun, const char * pattern, ...)
 {
 	if (lv > m_log_lv)
 	{
@@ -38,7 +38,7 @@ void LogMgr::Printf(LLogLv lv, const char * file, int line, const char *pFun, co
 	s.append(" ");
 	s.append(GetLogLevelStr(lv));
 	s.append(pattern);
-	if (lv <= LLV_DEBUG)
+	if (lv <= LL_DEBUG)
 	{
 		s.append("  --");
 		s.append(file);
@@ -64,7 +64,7 @@ void LogMgr::Printf(LLogLv lv, const char * file, int line, const char *pFun, co
 	va_end(vp);
 }
 
-void LogMgr::SetLogLv(LLogLv lv)
+void LogMgr::SetLogLv(LogLv lv)
 {
 	m_log_lv = lv;
 }
@@ -74,36 +74,36 @@ void LogMgr::SetStdOut(bool is_std_out)
 	m_is_std_out = is_std_out;
 }
 
-const char * LogMgr::GetLogLevelStr(LLogLv lv) const
+const char * LogMgr::GetLogLevelStr(LogLv lv) const
 {
 	switch (lv)
 	{
 	default:
 		return "[unknow]";
 		break;
-	case LLV_FATAL:
+	case LL_FATAL:
 		return "[fatal] ";
 		break;
-	case LLV_ERROR:
+	case LL_ERROR:
 		return "[error] ";
 		break;
-	case LLV_WARN:
+	case LL_WARN:
 		return "[warn]  ";
 		break;
-	case LLV_DEBUG:
+	case LL_DEBUG:
 		return "[debug] ";
 		break;
-	case LLV_INFO:
+	case LL_INFO:
 		return "[info]  ";
 		break;
-	case LLV_ANY:
+	case LL_ANY:
 		return "[any]   ";
 		break;
 	}
 	return "[unknow]";
 }
 LogMgr::LogMgr()
-	: m_log_lv(LLV_ANY)
+	: m_log_lv(LL_ANY)
 	, m_is_std_out(false)
 	, m_iprinter(&DebugLog::GetDefaultLog())
 {
