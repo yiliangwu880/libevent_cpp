@@ -5,8 +5,7 @@
 #include <stdarg.h>
 
 using namespace std;
-namespace lc
-{
+
 void LogMgr::SetLogPrinter(ILogPrinter &iprinter)
 {
 	m_iprinter = &iprinter;
@@ -139,4 +138,4 @@ const char * DefaultLog::GetLogLevelStr(LogLv lv) const
 }
 
 
- }
+

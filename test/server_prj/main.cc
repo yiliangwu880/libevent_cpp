@@ -8,7 +8,7 @@
 #include "version.h"
 #include "include_all.h"
 #include "unit_test.h"
-#include "logFile.h"
+#include "log_file.h"
 
 static const int MASS_CON_SVR_PORT = 42011;
 using namespace lc;
@@ -47,7 +47,7 @@ namespace {
 
 	void CloseTimer::OnTimer(void *user_data)
 	{
-		LOG_DEBUG("del svr");
+		L_DEBUG("del svr");
 		delete listener;
 	}
 	CloseTimer ct;
@@ -57,7 +57,6 @@ namespace {
 
 UNITTEST(mass_con_svr)
 {
-	LogMgr::Obj().SetStdOut(true);
 
 	EventMgr::Obj().Init();
 	//ct.StartTimer(1000 * 60);
@@ -68,7 +67,7 @@ UNITTEST(mass_con_svr)
 
 int main(int argc, char* argv[]) 
 {
-	LIB_LOG_DEBUG("\n\n");
+	L_DEBUG("\n\n");
 	UnitTestMgr::Obj().Start();
 	return 0;
 }

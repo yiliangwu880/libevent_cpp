@@ -3,7 +3,7 @@
 #include "stdafx.h"
 #include "version.h"
 #include "unit_test.h"
-#include "logFile.h"
+#include "log_file.h"
 #include "include_all.h"
 #include <stdlib.h>
 
@@ -93,7 +93,7 @@ namespace {
 				TryReconnect();
 			}
 			else {
-				LOG_ERROR("unknow state=%d", m_state);
+				L_ERROR("unknow state=%d", m_state);
 				UNIT_ASSERT(false);
 			}
 
@@ -197,8 +197,8 @@ namespace {
 
 void OnLog()
 {
-	LOG_DEBUG("total_rev_cnt = %dw", total_rev_cnt / 10000);
-	LOG_DEBUG("total_recon_cnt = %dw",  total_recon_cnt / 10000);
+	L_DEBUG("total_rev_cnt = %dw", total_rev_cnt / 10000);
+	L_DEBUG("total_recon_cnt = %dw",  total_recon_cnt / 10000);
 }
 
 UNITTEST(mass_con_client)
@@ -222,10 +222,9 @@ UNITTEST(mass_con_client)
 
 int main(int argc, char* argv[]) 
 {
-	LOG_DEBUG("start run");
-	LogMgr::Obj().SetStdOut(true);
+	L_DEBUG("start run");
 	UnitTestMgr::Obj().Start();
-	LOG_DEBUG("end run");
+	L_DEBUG("end run");
 	return 0;
 }
 

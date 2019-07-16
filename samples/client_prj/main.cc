@@ -18,12 +18,12 @@ class MyConnectClient : public ClientCon
 private:
 	virtual void OnRecv(const MsgPack &msg) override
 	{
-		LIB_LOG_DEBUG("1 OnRecv %s", &msg.data);
+		L_DEBUG("1 OnRecv %s", &msg.data);
 
 	}
 	virtual void OnConnected() override
 	{
-		LIB_LOG_DEBUG("1 OnConnected, send first msg");
+		L_DEBUG("1 OnConnected, send first msg");
 		MsgPack msg;
 		Str2MsgPack("1 msg", msg);
 		send_data(msg);
@@ -31,13 +31,12 @@ private:
 	virtual void on_disconnected() override
 	{
 
-		LIB_LOG_DEBUG("disconnect");
+		L_DEBUG("disconnect");
 	}
 };
 
 int main(int argc, char* argv[]) 
 {
-	LogMgr::Obj().SetStdOut(true);
 	EventMgr::Obj().Init();
 
 	MyConnectClient c;

@@ -100,7 +100,7 @@ void CheckTimer::OnTimer(void *user_data)
 	UNIT_ASSERT(true == g_test->is_fun_run);
 	UNIT_ASSERT(true == g_test->is_fun2_run);
 	UNIT_ASSERT(false == g_stop->is_fun_run);
-	LOG_DEBUG("=========timer test ok==============");
+	L_DEBUG("=========timer test ok==============");
 }
 
 //std::bindÀı×Ó´úÂë

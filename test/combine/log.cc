@@ -19,13 +19,14 @@ namespace {
 	};
 	CloseTimer ct;
 
+	DefaultLog my_log("test_log_log.txt");
 	class MyLog : public ILogPrinter
 	{
 	public:
-		virtual void printf(const char * log)
+		virtual void Printf(LogLv lv, const char * file, int line, const char *fun, const char * pattern, va_list vp)
 		{
 			m_is_run = true;
-			DebugLog::GetDefaultLog().printf(log);
+			my_log.Printf(LL_DEBUG, file, line, fun, pattern, vp);
 		}
 		bool m_is_run; 
 	};
@@ -34,7 +35,7 @@ namespace {
 	void CloseTimer::OnTimer(void *user_data)
 	{
 		UNIT_ASSERT(true == g_my_log.m_is_run);
-		LOG_DEBUG("=========log test ok=========");
+		L_DEBUG("=========log test ok=========");
 	}
 
 }//namespace {

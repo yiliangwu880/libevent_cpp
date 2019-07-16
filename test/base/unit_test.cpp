@@ -14,18 +14,11 @@ IUnitTest::IUnitTest(const char *unit_name)
 void UnitTestMgr::Start(UnitTestPrintf *printf)
 {
 	m_print = printf;
-	//try
+	for (auto &var : m_vecUnit)
 	{
-		for (auto &var : m_vecUnit)
-		{
-			UNIT_INFO_LOG("=========[%s]========", var->m_unit_name);
-			var->Run();
-		}
+		UNIT_INFO("=========[%s]========", var->m_unit_name);
+		var->Run();
 	}
-	//catch (std::exception &e)
-	//{
-
-	//}
 }
 
 void UnitTestMgr::Reg(IUnitTest *p)
@@ -37,8 +30,18 @@ void UnitTestMgr::Reg(IUnitTest *p)
 	m_vecUnit.push_back(p);
 }
 
-void UnitTestMgr::Printf(bool is_error, const char * file, int line, const char *pFun, const char * pattern, ...)
+void UnitTestMgr::Printf(bool is_error, const char * file, int line, const char *fun, const char * pattern, ...)
 {
+	if (m_print)
+	{
+		va_list vp;
+		va_start(vp, pattern);
+		(*m_print)(is_error, file, line, fun, pattern, vp);
+		va_end(vp);
+		return;
+	}
+
+
 	char line_str[10];
 	snprintf(line_str, sizeof(line_str), "%d", line);
 
@@ -70,7 +73,7 @@ void UnitTestMgr::Printf(bool is_error, const char * file, int line, const char 
 		s.append(":");
 		s.append(line_str);
 		s.append(" ");
-		s.append(pFun);
+		s.append(fun);
 	
 	s.append("\n");
 
@@ -80,10 +83,7 @@ void UnitTestMgr::Printf(bool is_error, const char * file, int line, const char 
 	char out_str[1000 + 1];
 	out_str[1000] = 0;
 	vsnprintf(out_str, sizeof(out_str) - 1, s.c_str(), vp);
-	if (m_print)
-	{
-		(*m_print)(out_str);
-	}
+
 	::printf(out_str);
 
 	va_end(vp);

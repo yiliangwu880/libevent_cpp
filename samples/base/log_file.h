@@ -21,8 +21,6 @@ int main(int argc, char* argv[])
 #pragma once
 #include <string>
 
-namespace lc
-{
 enum LogLv
 {
     //优先级从高到底
@@ -132,4 +130,4 @@ private:
 	}while(0)
 
 
- }
+

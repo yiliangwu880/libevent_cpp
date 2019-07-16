@@ -26,25 +26,25 @@ namespace
 		switch (severity)
 		{
 		case _EVENT_LOG_DEBUG:
-			LIB_LOG_DEBUG("lib event log: %s\n", msg);
+			L_DEBUG("lib event log: %s\n", msg);
 			break;
 		case _EVENT_LOG_MSG:
-			LIB_LOG_INFO("lib event log: %s\n", msg);
+			L_INFO("lib event log: %s\n", msg);
 			break;
 		case _EVENT_LOG_WARN:
-			LIB_LOG_WARN("lib event log: %s\n", msg);
+			L_WARN("lib event log: %s\n", msg);
 			break;
 		case _EVENT_LOG_ERR:
-			LIB_LOG_ERROR("lib event log: %s\n", msg);
+			L_ERROR("lib event log: %s\n", msg);
 			break;
 		default:
-			LIB_LOG_FATAL("lib event unknow log: %s\n", msg);
+			L_FATAL("lib event unknow log: %s\n", msg);
 			break; /* never reached*/
 		}
 	}
 	void EVENT_FATAL_CB(int err)
 	{
-		LIB_LOG_FATAL("EVENT_FATAL_CB %d", err);
+		L_FATAL("EVENT_FATAL_CB %d", err);
 		exit(1);
 	}
 
@@ -53,7 +53,7 @@ bool EventMgr::Init()
 {
 	if (nullptr != m_eb)
 	{
-		LIB_LOG_ERROR("repeated init");
+		L_ERROR("repeated init");
 		return false;
 	}
 	event_set_log_callback(LIB_EVENT_LOG); //lib库日志输出
@@ -62,7 +62,7 @@ bool EventMgr::Init()
 	m_eb = event_base_new();
 	if (!m_eb)
 	{
-		LIB_LOG_ERROR("cannot event_base_new libevent ...\n");
+		L_ERROR("cannot event_base_new libevent ...\n");
 		return false;
 	}
 	//为了避免进程退出, 可以捕获SIGPIPE信号, 或者忽略它, 给它设置SIG_IGN信号处理函数:
@@ -75,7 +75,7 @@ void EventMgr::Dispatch()
 {
 	if (!m_eb)
 	{
-		LIB_LOG_ERROR("LibEventMgr not init\n");
+		L_ERROR("LibEventMgr not init\n");
 		return;
 	}
 	event_base_dispatch(m_eb);
@@ -85,7 +85,7 @@ bool EventMgr::StopDispatch()
 {
 	if (!m_eb)
 	{
-		LIB_LOG_ERROR("LibEventMgr not init\n");
+		L_ERROR("LibEventMgr not init\n");
 		return false;
 	}
 
@@ -110,7 +110,7 @@ void EventMgr::RegSignal(int sig_type, void(*SignalCB)(int sig_type))
 	event* signal_event = evsignal_new(m_eb, sig_type, signal_cb, (void*)SignalCB);
 	if (!signal_event || event_add(signal_event, NULL) < 0)
 	{
-		LIB_LOG_ERROR("call evsignal_new fail");
+		L_ERROR("call evsignal_new fail");
 		return;
 	}
 }

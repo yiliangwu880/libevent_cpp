@@ -20,11 +20,11 @@ public:
 private:
 	virtual void OnRecv(const MsgPack &msg) override
 	{
-		LIB_LOG_DEBUG("OnRecv %s", &msg.data);
+		L_DEBUG("OnRecv %s", &msg.data);
 		send_data(msg);
 		if (msg.data == string("del"))
 		{//some time do this destory connect
-			LIB_LOG_DEBUG("req del connect");
+			L_DEBUG("req del connect");
 			FreeSelf();
 		}
 
@@ -32,7 +32,7 @@ private:
 	virtual void OnConnected() override
 	{
 		SetEventCbLog(true);
-		LIB_LOG_DEBUG("server OnConnected");
+		L_DEBUG("server OnConnected");
 		MsgPack msg;
 		Str2MsgPack("s", msg);
 		send_data(msg);
@@ -43,7 +43,6 @@ private:
 
 int main(int argc, char* argv[]) 
 {
-	LogMgr::Obj().SetStdOut(true);
 	EventMgr::Obj().Init();
 
 	Listener<Connect2Client> listener;

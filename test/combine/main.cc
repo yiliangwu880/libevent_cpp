@@ -4,26 +4,30 @@
 #include "stdafx.h"
 #include "version.h"
 #include "unit_test.h"
-#include "logFile.h"
+#include "log_file.h"
 #include "include_all.h"
 using namespace lc;
 
-
-static void Printf(const char *log)
+DefaultLog my_log("my_log.txt");
+static void Printf(bool is_error, const char * file, int line, const char *fun, const char * pattern, va_list vp)
 {
-	DebugLog::GetDefaultLog().printf(log);
+	LogLv lv = LL_DEBUG;
+	if (is_error)
+	{
+		lv = LL_ERROR;
+	} 
+	my_log.Printf(lv, file, line, fun, pattern, vp);
 }
 
 int main(int argc, char* argv[]) 
 {
-	LOG_DEBUG("start run");
-	LogMgr::Obj().SetStdOut(true);
+	L_DEBUG("start run");
 
 	EventMgr::Obj().Init();
 	UnitTestMgr::Obj().Start(Printf);
 	EventMgr::Obj().Dispatch();
 
-	LOG_DEBUG("end run");
+	L_DEBUG("end run");
 	return 0;
 }
 

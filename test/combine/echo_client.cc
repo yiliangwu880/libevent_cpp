@@ -45,7 +45,7 @@ private:
 		++m_cnt;
 		if (m_cnt>=3000)
 		{
-			LOG_DEBUG("free client");
+			L_DEBUG("free client");
 			delete this;
 			return;
 		}
@@ -82,7 +82,7 @@ public:
 	}
 	~SplitMsgClient()
 	{
-		LOG_DEBUG("del SplitMsgClient");
+		L_DEBUG("del SplitMsgClient");
 	}
 
 	virtual void OnRecv(const MsgPack &msg) override
@@ -90,7 +90,7 @@ public:
 		int *p = (int *)msg.data;
 		UNIT_ASSERT(*p == m_cnt);
 		UNIT_ASSERT(msg.len == sizeof(m_cnt));
-		LOG_DEBUG("SplitMsgClient rev ok. m_cnt=%d", m_cnt);
+		L_DEBUG("SplitMsgClient rev ok. m_cnt=%d", m_cnt);
 	}
 	virtual void OnConnected() override
 	{
@@ -156,7 +156,7 @@ struct ReConnectClient : public ClientCon
 	}
 	virtual void OnRecv(const MsgPack &msg) override
 	{
-		LOG_DEBUG("disconnect");
+		L_DEBUG("disconnect");
 		DisConnect();
 
 		state = S_disconnect;
@@ -174,7 +174,7 @@ struct ReConnectClient : public ClientCon
 		}
 		else if (S_disconnect == state)
 		{
-			LOG_DEBUG("reconnect ok");
+			L_DEBUG("reconnect ok");
 			is_re_con_ok = true;
 			state = S_reconnect;
 		}
@@ -192,7 +192,7 @@ struct ReConnectClient : public ClientCon
 	{
 		UNIT_ASSERT(true == is_re_con_ok);
 		UNIT_ASSERT(true == is_cb_disconect);
-		LOG_DEBUG("==============test reconnect ok==============");
+		L_DEBUG("==============test reconnect ok==============");
 	}
 };
 

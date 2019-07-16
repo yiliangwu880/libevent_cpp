@@ -30,7 +30,7 @@ bool BaseConMgr::PostDelConn(uint64 id)
 	auto it = m_all_connector.find(id);
 	if (it == m_all_connector.end())
 	{
-		LIB_LOG_FATAL("free connector can't find. id=%llu", id);
+		L_FATAL("free connector can't find. id=%llu", id);
 		return false;
 	}
 	SvrCon *p = it->second;
@@ -71,7 +71,7 @@ void BaseConMgr::OnTimerDelConn()
 {
 	for (const auto &v : m_vwdc)
 	{
-		//LIB_LOG_DEBUG("run OnTimerDelConn");
+		//L_DEBUG("run OnTimerDelConn");
 		delete v;
 	}
 	m_vwdc.clear();
@@ -98,13 +98,13 @@ bool SvrCon::AcceptInit(evutil_socket_t fd, struct sockaddr* sa, const sockaddr_
 
 	if (0 != GetFd())
 	{
-		LIB_LOG_ERROR("repeated init");
+		L_ERROR("repeated init");
 		return false;
 	}
 	bufferevent* buf_e = bufferevent_socket_new(EventMgr::Obj().GetEventBase(), fd, BEV_OPT_CLOSE_ON_FREE); //释放m_buf_e，的时候，库里面会释放m_fd
 	if (!buf_e)
 	{
-		LIB_LOG_ERROR("cannot bufferevent_socket_new libevent ...\n");
+		L_ERROR("cannot bufferevent_socket_new libevent ...\n");
 		return false;
 	}
 
@@ -112,7 +112,7 @@ bool SvrCon::AcceptInit(evutil_socket_t fd, struct sockaddr* sa, const sockaddr_
 	bufferevent_enable(buf_e, EV_WRITE | EV_READ);
 	if (false == SetSocketInfo(buf_e, fd, sa))
 	{
-		LIB_LOG_ERROR("SetSocketInfo fail");
+		L_ERROR("SetSocketInfo fail");
 		bufferevent_free(buf_e);
 		return false;
 	}
