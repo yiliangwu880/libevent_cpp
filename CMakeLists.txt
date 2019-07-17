@@ -13,7 +13,7 @@ INCLUDE(cotire)
 
 # include directories
 INCLUDE_DIRECTORIES(system ./include/)
-INCLUDE_DIRECTORIES(system ./libevent-2.1.8-stable/out/include)
+INCLUDE_DIRECTORIES(system ./External/libevent-2.1.8-stable/out/include)
 INCLUDE_DIRECTORIES(after  ${PROJECT_SOURCE_DIR})
 
 #运行cmake输出终端消息，调试可以用
@@ -26,7 +26,7 @@ LINK_DIRECTORIES(
 
   #项目引用第三方库
  # ${PROJECT_SOURCE_DIR}/external/lib
-  ${PROJECT_SOURCE_DIR}/libevent-2.1.8-stable/out/lib
+  ${PROJECT_SOURCE_DIR}/External/libevent-2.1.8-stable/out/lib
 
   #系统目录
   /usr/local/lib
