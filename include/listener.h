@@ -90,20 +90,16 @@ public:
 	sockaddr_in GetSvrAddr() const { return m_svr_addr; }
 	//断开连接，释放自己
 	//注意，调用后，不会马上释放自己。
-	//不会触发on_disconnected了
-	bool FreeSelf();
+	bool DisConnect();
 private:
 	virtual void OnRecv(const MsgPack &msg) override = 0;
 	virtual void OnConnected() override = 0;
-	virtual void on_disconnected() override final; //派生类不用继承这个函数,用onDisconnected处理被动断开连接
-	virtual void onDisconnected() = 0;
-
+	virtual void on_disconnected() override final; //派生类不需要继承这个函数,用析构函数处理被动断开连接逻辑
 
 private:
 	BaseConMgr *m_cn_mgr;
 	uint64 m_id;
 	sockaddr_in m_svr_addr;
-	bool m_ignore_free; //防多次调用FreeSelf函数用，支持 onDisconnected里面不小心写了调用FreeSelf()
 };
 
 
@@ -112,7 +108,6 @@ class NoUseListenerConnector : public SvrCon
 private:
 	virtual void OnRecv(const MsgPack &msg) override {}
 	virtual void OnConnected() override {}
-	virtual void onDisconnected() override {}
 };
 
 //管理服务器

@@ -22,7 +22,6 @@ namespace {
 		virtual void OnConnected() override
 		{
 		}
-		virtual void onDisconnected() override {}
 	};
 
 

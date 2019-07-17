@@ -61,6 +61,7 @@ namespace lc //libevent cpp
 		virtual void OnConnected() = 0;
 		virtual void OnError(short events) {};
 		//被动删除对象回调，对方断开，或者网络错误
+		//被调用的时候， fd, bufferevent 资源已经释放
 		//删除本对象， 不会触发on_disconnected了
 		virtual void on_disconnected() = 0;
 

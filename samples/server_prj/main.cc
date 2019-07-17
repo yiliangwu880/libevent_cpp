@@ -25,7 +25,7 @@ private:
 		if (msg.data == string("del"))
 		{//some time do this destory connect
 			L_DEBUG("req del connect");
-			FreeSelf();
+			DisConnect();
 		}
 
 	}
@@ -37,7 +37,6 @@ private:
 		Str2MsgPack("s", msg);
 		send_data(msg);
 	}
-	virtual void onDisconnected() override {}
 };
 
 

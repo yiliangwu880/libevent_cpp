@@ -30,15 +30,12 @@ bool BaseConMgr::PostDelConn(uint64 id)
 	auto it = m_all_connector.find(id);
 	if (it == m_all_connector.end())
 	{
-		L_FATAL("free connector can't find. id=%llu", id);
+		//L_FATAL("free connector can't find. id=%llu", id);
 		return false;
 	}
 	SvrCon *p = it->second;
 	m_all_connector.erase(it);
 	m_vwdc.push_back(p);
-
-
-
 
 	return true;
 }
@@ -80,7 +77,6 @@ void BaseConMgr::OnTimerDelConn()
 SvrCon::SvrCon()
 	:m_cn_mgr(nullptr)
 	, m_id(0)
-	, m_ignore_free(false)
 {
 	static uint64 id_seed = 0;//大量重复连接就会重复，实际上不会产生那么大量
 	m_id = ++id_seed;
@@ -122,20 +118,14 @@ bool SvrCon::AcceptInit(evutil_socket_t fd, struct sockaddr* sa, const sockaddr_
 	return true;
 }
 
-bool SvrCon::FreeSelf()
+bool SvrCon::DisConnect()
 {
-	if (m_ignore_free)
-	{
-		return false;
-	}
-	return m_cn_mgr->PostDelConn(m_id);
+	ConCom::DisConnect();
+	return m_cn_mgr->PostDelConn(m_id); //延时 delete对象
 }
 
 void SvrCon::on_disconnected()
 {
-	m_ignore_free = true;
-	onDisconnected();
-	m_ignore_free = false;
-	FreeSelf();
+	m_cn_mgr->PostDelConn(m_id); //延时 delete对象
 }
 }//namespace lc //libevent cpp

@@ -15,6 +15,7 @@ namespace {
 	const uint32 MAX_CON_NUM = 10000*4;
 	const uint32 Rand_SEND_INTERVAL_SEC = 2 * 1000;
 	const uint32 RECON_INTERVAL_SEC = 2 * 1000;
+	const uint32 LOG_INTERVAL_SEC = 60;
 	const char *LOCAL_IP = "127.0.0.1";
 
 	uint32 total_rev_cnt = 0;
@@ -195,8 +196,10 @@ namespace {
 	};
 }//namespace
 
+
 void OnLog()
 {
+	system("cat /proc/sys/fs/file-nr");
 	L_DEBUG("total_rev_cnt = %dw", total_rev_cnt / 10000);
 	L_DEBUG("total_recon_cnt = %dw",  total_recon_cnt / 10000);
 }
@@ -216,7 +219,7 @@ UNITTEST(mass_con_client)
 		ClientReconByDelCtr *ctrl = new ClientReconByDelCtr();
 		UNIT_ASSERT(nullptr != ctrl);
 	}
-	log_timer.StartTimer(1000 * 10, std::bind(&OnLog), true);
+	log_timer.StartTimer(1000 * LOG_INTERVAL_SEC, std::bind(&OnLog), true);
 	EventMgr::Obj().Dispatch();
 }
 

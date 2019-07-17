@@ -225,18 +225,16 @@ void ConCom::conn_event_callback(bufferevent* bev, short events)
 			}
 		}
 		OnError(events);
-		DisConnect();
+		DisConnect(); //里面的回调函数，可以操作delete对象
 		return; //这里本对象可能已经销毁，别再引用
 	}
 }
 
 bool ConCom::send_data(const MsgPack &msg)
 {
-	if (!m_is_connect)
-	{
-		//L_DEBUG("is disconnect.");
-		return false;
-	}
+	COND(m_is_connect, false);
+	//L_COND(m_is_connect, false, "is disconnect.");
+
 	if (0 == m_fd)
 	{
 		L_DEBUG("BaseConnectCom not init. 0 == m_fd");
@@ -333,6 +331,7 @@ bool ConCom::send_data_no_head(const char* data, int len)
 }
 void ConCom::setwatermark(short events, unsigned int lowmark, unsigned int highmark)
 {
+	COND_VOID(m_is_connect);
 	if (0 == m_fd)
 	{
 		L_ERROR("BaseConnectCom not init. 0 == m_fd");
