@@ -36,7 +36,7 @@ private:
 	{
 		SendCnt();
 	}
-	virtual void on_disconnected() override
+	virtual void onDisconnected() override
 	{
 
 	}
@@ -96,7 +96,7 @@ public:
 	{
 		SendCnt();
 	}
-	virtual void on_disconnected() override
+	virtual void onDisconnected() override
 	{
 
 	}
@@ -179,7 +179,7 @@ struct ReConnectClient : public ClientCon
 			state = S_reconnect;
 		}
 	}
-	virtual void on_disconnected() override
+	virtual void onDisconnected() override
 	{
 		is_cb_disconect = true;
 	}

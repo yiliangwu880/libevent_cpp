@@ -16,7 +16,15 @@ vs浏览代码：
 	执行libevent_cpp\vs\run.bat,生成sln文件
 
 
-
+目录结构：
+	Debug		             ==cmake编译目录
+	include		             ==用户用的头文件
+	lib                      ==用户用的静态库
+	libevent-2.1.8-stable	 == 第三方开源库
+	samples					 == 使用例子
+	src						 ==源码
+	test					 ==测试用例
+	vs                       == vs浏览工具
 
 
 

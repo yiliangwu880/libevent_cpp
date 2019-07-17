@@ -22,7 +22,7 @@ https://github.com/yiliangwu880/libevent_cpp.git
 			...≥ı ºªØmsg
 			send_data(msg);
 		}
-		virtual void on_disconnected() override
+		virtual void onDisconnected() override
 		{
 		}
 	};

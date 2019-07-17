@@ -55,7 +55,7 @@ namespace {
 			}
 			m_state = S_Connect;
 		}
-		virtual void on_disconnected() override
+		virtual void onDisconnected() override
 		{
 			m_state = S_DisConnect;
 		}
@@ -138,7 +138,7 @@ namespace {
 			send_data(msg);
 			
 		}
-		virtual void on_disconnected() override
+		virtual void onDisconnected() override
 		{
 
 		}
@@ -222,9 +222,10 @@ UNITTEST(mass_con_client)
 	log_timer.StartTimer(1000 * LOG_INTERVAL_SEC, std::bind(&OnLog), true);
 	EventMgr::Obj().Dispatch();
 }
-
+DefaultLog client_log("log_client_prj.txt");
 int main(int argc, char* argv[]) 
 {
+	LogMgr::Obj().SetLogPrinter(client_log);
 	L_DEBUG("start run");
 	UnitTestMgr::Obj().Start();
 	L_DEBUG("end run");

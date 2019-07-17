@@ -124,7 +124,7 @@ bool SvrCon::DisConnect()
 	return m_cn_mgr->PostDelConn(m_id); //延时 delete对象
 }
 
-void SvrCon::on_disconnected()
+void SvrCon::onDisconnected()
 {
 	m_cn_mgr->PostDelConn(m_id); //延时 delete对象
 }

@@ -28,7 +28,7 @@ private:
 		Str2MsgPack("1 msg", msg);
 		send_data(msg);
 	}
-	virtual void on_disconnected() override
+	virtual void onDisconnected() override
 	{
 
 		L_DEBUG("disconnect");

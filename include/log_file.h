@@ -81,9 +81,13 @@ public:
 
 private:
 	LogMgr();
+	static DefaultLog &GetDefualtLog()
+	{
+		static DefaultLog d("log.txt");
+		return d;
+	}
 
 private:
-	DefaultLog m_log;
 	ILogPrinter *m_iprinter;
 };
 

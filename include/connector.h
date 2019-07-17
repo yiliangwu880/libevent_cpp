@@ -62,8 +62,8 @@ namespace lc //libevent cpp
 		virtual void OnError(short events) {};
 		//被动删除对象回调，对方断开，或者网络错误
 		//被调用的时候， fd, bufferevent 资源已经释放
-		//删除本对象， 不会触发on_disconnected了
-		virtual void on_disconnected() = 0;
+		//删除本对象， 不会触发onDisconnected了
+		virtual void onDisconnected() = 0;
 
 
 	};
@@ -140,7 +140,7 @@ namespace lc //libevent cpp
 		ClientCon() 
 		{}
 		//AConnectInit必须先选其中一个初始化函数调用后，才能使用其他方法
-		//return true代表请求成功，不代表连接成功. 不能连接成功，会回调 on_disconnected  通知
+		//return true代表请求成功，不代表连接成功. 不能连接成功，会回调 onDisconnected  通知
 		bool ConnectInit(const char* connect_ip, unsigned short connect_port);
 		bool ConnectInit(const sockaddr_in &svr_addr);
 		bool TryReconnect();

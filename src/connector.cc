@@ -94,7 +94,7 @@ void ConCom::DisConnect()
 		return;
 	}
 	free();
-	on_disconnected();
+	onDisconnected();
 }
 
 void ConCom::writecb(struct bufferevent* bev, void* user_data)

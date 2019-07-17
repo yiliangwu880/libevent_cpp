@@ -88,13 +88,13 @@ public:
 	void SetCnMgr(BaseConMgr *mgr) { m_cn_mgr = mgr; };
 	uint64 GetId() const { return m_id; }
 	sockaddr_in GetSvrAddr() const { return m_svr_addr; }
-	//断开连接，释放自己
+	//断开连接，post释放自己
 	//注意，调用后，不会马上释放自己。
 	bool DisConnect();
 private:
 	virtual void OnRecv(const MsgPack &msg) override = 0;
 	virtual void OnConnected() override = 0;
-	virtual void on_disconnected() override final; //派生类不需要继承这个函数,用析构函数处理被动断开连接逻辑
+	virtual void onDisconnected() override final; //派生类不需要继承这个函数,用析构函数处理被动断开连接逻辑
 
 private:
 	BaseConMgr *m_cn_mgr;

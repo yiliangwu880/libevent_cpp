@@ -14,6 +14,10 @@ void LogMgr::SetLogPrinter(ILogPrinter &iprinter)
 
 void LogMgr::Printf(LogLv lv, const char * file, int line, const char *fun, const char * pattern, ...)
 {
+	if (nullptr == m_iprinter)
+	{
+		m_iprinter = &GetDefualtLog();
+	}
 	va_list vp;
 	va_start(vp, pattern);
 	m_iprinter->Printf(lv, file, line, fun, pattern, vp);
@@ -21,10 +25,8 @@ void LogMgr::Printf(LogLv lv, const char * file, int line, const char *fun, cons
 }
 
 LogMgr::LogMgr()
-	:m_log("log.txt")
-	, m_iprinter(nullptr)
+	:m_iprinter(nullptr)
 {
-	m_iprinter = &m_log;
 }
 
 void DefaultLog::flush()

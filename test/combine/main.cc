@@ -8,7 +8,7 @@
 #include "include_all.h"
 using namespace lc;
 
-DefaultLog my_log("my_log.txt");
+DefaultLog my_log("log_combine.txt");
 static void Printf(bool is_error, const char * file, int line, const char *fun, const char * pattern, va_list vp)
 {
 	LogLv lv = LL_DEBUG;
@@ -21,6 +21,7 @@ static void Printf(bool is_error, const char * file, int line, const char *fun, 
 
 int main(int argc, char* argv[]) 
 {
+	LogMgr::Obj().SetLogPrinter(my_log);
 	L_DEBUG("start run");
 
 	EventMgr::Obj().Init();
