@@ -1,7 +1,7 @@
 /*
-待加个接口：类似下面
-	auto fun = std::bind(obj, obj::member_fun)
-	time.StartTimter(1000, fun) //时间过期，自动调用 obj::member_fun， 用户自己保证obj生存期  > time，不然野指针
+实际项目不建议生成大量lc::Timer. 因为这个是底层libevent timer.量大出错，资源泄漏难跟踪。
+可以设置一个循环lc::Timer来驱动用户自定义的timer系统。
+
 
 use excample:
 	class MyTimer : public BaseLeTimer
@@ -56,35 +56,35 @@ use excample2:
 namespace lc //libevent cpp
 {
 	typedef std::function<void(void)> TimerCB;
-//里面做创建，销毁定时器，保证不内存泄露, 不回调不存在的BaseTime
-class Timer
-{
-
-public:
-	Timer();
-	virtual ~Timer();
-
-	//para is_loop true表示循环定时器
-	//return, true成功开始定时器，false 已经开始了，不需要设定(可以先stop,再start)
-	bool StartTimer(unsigned long long millisecond, void *para = nullptr, bool is_loop = false);
-	bool StartTimer(unsigned long long millisecond, const TimerCB &cb, bool is_loop = false);
-	//停止正在进行的定时器，
-	//return, false 不需要停止. true 成功操作了停止
-	bool StopTimer();
-
-	virtual void OnTimer(void *para) {};
-private:
-	static void OnTimerCB(evutil_socket_t, short, void* para);
-	static void TimerCB_StdBind(evutil_socket_t, short, void* para);
-private:
-	enum State
+	//里面做创建，销毁定时器，保证不内存泄露, 不回调不存在的Timer
+	class Timer
 	{
-		S_WAIT_START_TIMER,
-		S_WAIT_TIME_OUT,
+
+	public:
+		Timer();
+		virtual ~Timer();
+
+		//para is_loop true表示循环定时器
+		//return, true成功开始定时器，false 已经开始了，不需要设定(可以先stop,再start)
+		bool StartTimer(unsigned long long millisecond, void *para = nullptr, bool is_loop = false);
+		bool StartTimer(unsigned long long millisecond, const TimerCB &cb, bool is_loop = false);
+		//停止正在进行的定时器，
+		//return, false 不需要停止. true 成功操作了停止
+		bool StopTimer();
+
+		virtual void OnTimer(void *para) {};
+	private:
+		static void OnTimerCB(evutil_socket_t, short, void* para);
+		static void TimerCB_StdBind(evutil_socket_t, short, void* para);
+	private:
+		enum State
+		{
+			S_WAIT_START_TIMER,
+			S_WAIT_TIME_OUT,
+		};
+		event* m_event;
+		State m_state;
+		void *m_para;
+		TimerCB m_cb; //选择用，用std::bind方式绑定的回调函数
 	};
-	event* m_event;
-	State m_state;
-	void *m_para;
-	TimerCB m_cb; //选择用，用std::bind方式绑定的回调函数
-};
 }

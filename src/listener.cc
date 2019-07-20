@@ -78,8 +78,14 @@ SvrCon::SvrCon()
 	:m_cn_mgr(nullptr)
 	, m_id(0)
 {
-	static uint64 id_seed = 0;//大量重复连接就会重复，实际上不会产生那么大量
-	m_id = ++id_seed;
+	//  1秒内，产生少于4亿多(32位最大数)，就能保证唯一
+	//一般几行代码，重复跑4亿次，都要十几秒了。 所以实际情况不会重复
+	static uint32 seed = 0;
+	time_t sec;
+	time(&sec);
+	seed++;
+	m_id = sec << 32;
+	m_id = m_id | seed;
 	memset(&m_svr_addr, 0, sizeof(m_svr_addr));
 }
 
