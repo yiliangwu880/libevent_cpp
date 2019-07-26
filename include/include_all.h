@@ -33,7 +33,7 @@ https://github.com/yiliangwu880/libevent_cpp.git
 		MyConnectClient1 connect1;
 		connect1.ConnectInit(ip, server_port);
 
-		EventMgr::Obj().dispatch();
+		EventMgr::Obj().Dispatch();
 	}
 
 服务器:
@@ -67,7 +67,7 @@ https://github.com/yiliangwu880/libevent_cpp.git
 		Listener<Connect2Client> listener;
 		listener.Init(server_port);
 
-		EventMgr::Obj().dispatch();
+		EventMgr::Obj().Dispatch();
 	}
 
 	//指定connector对象分配器模式
@@ -84,7 +84,7 @@ https://github.com/yiliangwu880/libevent_cpp.git
 		Listener<> listener(mgr);
 		listener.Init(server_port);
 
-		EventMgr::Obj().dispatch();
+		EventMgr::Obj().Dispatch();
 	}	
 */
 

@@ -48,7 +48,7 @@ public:
 		{
 			if (nullptr == v.second)
 			{
-				L_FATAL("save null ListenerConnector");
+				LB_FATAL("save null ListenerConnector");
 				continue;
 			}
 			(*cb)(v.second);
@@ -169,7 +169,7 @@ bool Listener<Connector>::Init(const sockaddr_in &addr)
 	m_listener = evconnlistener_new_bind(EventMgr::Obj().GetEventBase(), Listener::listener_cb, (void*)this, LEV_OPT_REUSEABLE | LEV_OPT_CLOSE_ON_FREE, -1, (struct sockaddr*)&addr, sizeof(addr));
 	if (!m_listener)
 	{
-		L_ERROR("evconnlistener_new_bind fail, addr.port=%d", addr.sin_port);
+		LB_ERROR("evconnlistener_new_bind fail, addr.port=%d", addr.sin_port);
 		return false;
 	}
 	evconnlistener_set_error_cb(m_listener, Listener::accept_error_cb);
@@ -194,7 +194,7 @@ template<class Connector>
 void Listener<Connector>::accept_error_cb(evconnlistener* listener, void * ctx)
 {
 	int err = EVUTIL_SOCKET_ERROR();
-	L_ERROR("Got an error %d (%s) on the listener. \n", err, evutil_socket_error_to_string(err));
+	LB_ERROR("Got an error %d (%s) on the listener. \n", err, evutil_socket_error_to_string(err));
 	//EventMgr::Obj().StopDispatch();
 }
 
@@ -205,7 +205,7 @@ void Listener<Connector>::listener_cb(struct evconnlistener* listener, evutil_so
 {
 	if (nullptr == user_data)
 	{
-		L_ERROR("null cb para");
+		LB_ERROR("null cb para");
 		return;
 	}
 	Listener* pListener = (Listener*)user_data;
@@ -213,13 +213,13 @@ void Listener<Connector>::listener_cb(struct evconnlistener* listener, evutil_so
 	SvrCon *clientconn = pListener->m_cn_mgr.CreateConnectForListener();
 	if (nullptr == clientconn)
 	{
-		L_ERROR("init SvrConnector fail");
+		LB_ERROR("init SvrConnector fail");
 		return;
 	}
 	clientconn->SetCnMgr(&(pListener->m_cn_mgr));
 	if (!clientconn->AcceptInit(fd, sa, pListener->m_addr))
 	{
-		L_ERROR("init SvrConnector fail");
+		LB_ERROR("init SvrConnector fail");
 		return;
 	}
 }

@@ -16,7 +16,7 @@ use excample:
 		MyTimer o;
 		o.StartTimer(1000, &user_data);
 
-		EventMgr::Obj().dispatch();
+		EventMgr::Obj().Dispatch();
 	}
 
 use excample2:

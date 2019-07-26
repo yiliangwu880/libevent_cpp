@@ -35,7 +35,7 @@ namespace {
 	//void CloseTimer::OnTimer(void *user_data)
 	//{
 	//	UNIT_ASSERT(true == g_my_log.m_is_run);
-	//	L_DEBUG("=========log test ok=========");
+	//	LB_DEBUG("=========log test ok=========");
 	//}
 
 }//namespace {

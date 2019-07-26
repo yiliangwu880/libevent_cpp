@@ -22,13 +22,13 @@ static void Printf(bool is_error, const char * file, int line, const char *fun, 
 int main(int argc, char* argv[]) 
 {
 	LogMgr::Obj().SetLogPrinter(my_log);
-	L_DEBUG("start run");
+	LB_DEBUG("start run");
 
 	EventMgr::Obj().Init();
 	UnitTestMgr::Obj().Start(Printf);
 	EventMgr::Obj().Dispatch();
 
-	L_DEBUG("end run");
+	LB_DEBUG("end run");
 	return 0;
 }
 

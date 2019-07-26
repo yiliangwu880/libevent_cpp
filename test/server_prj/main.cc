@@ -44,7 +44,7 @@ namespace {
 
 	void CloseTimer::OnTimer(void *user_data)
 	{
-		L_DEBUG("del svr");
+		LB_DEBUG("del svr");
 		delete listener;
 	}
 	CloseTimer ct;
@@ -65,7 +65,7 @@ DefaultLog client_log("log_server_prj.txt");
 int main(int argc, char* argv[])
 {
 	LogMgr::Obj().SetLogPrinter(client_log);
-	L_DEBUG("\n\n");
+	LB_DEBUG("\n\n");
 	UnitTestMgr::Obj().Start();
 	return 0;
 }

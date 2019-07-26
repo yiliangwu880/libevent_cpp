@@ -20,11 +20,11 @@ public:
 private:
 	virtual void OnRecv(const MsgPack &msg) override
 	{
-		L_DEBUG("OnRecv %s", &msg.data);
+		LB_DEBUG("OnRecv %s", &msg.data);
 		send_data(msg);
 		if (msg.data == string("del"))
 		{//some time do this destory connect
-			L_DEBUG("req del connect");
+			LB_DEBUG("req del connect");
 			DisConnect();
 		}
 
@@ -32,7 +32,7 @@ private:
 	virtual void OnConnected() override
 	{
 		SetEventCbLog(true);
-		L_DEBUG("server OnConnected");
+		LB_DEBUG("server OnConnected");
 		MsgPack msg;
 		Str2MsgPack("s", msg);
 		send_data(msg);

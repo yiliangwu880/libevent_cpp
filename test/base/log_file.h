@@ -85,14 +85,14 @@ private:
 	ILogPrinter *m_iprinter;
 };
 
-#define L_FATAL(x, ...)  LogMgr::Obj().Printf(LL_FATAL, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
-#define L_ERROR(x, ...)  LogMgr::Obj().Printf(LL_ERROR, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
-#define L_WARN(x, ...)   LogMgr::Obj().Printf(LL_WARN, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
-#define L_DEBUG(x, ...)  LogMgr::Obj().Printf(LL_DEBUG, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
-#define L_INFO(x, ...)   LogMgr::Obj().Printf(LL_INFO, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
+#define LB_FATAL(x, ...)  LogMgr::Obj().Printf(LL_FATAL, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
+#define LB_ERROR(x, ...)  LogMgr::Obj().Printf(LL_ERROR, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
+#define LB_WARN(x, ...)   LogMgr::Obj().Printf(LL_WARN, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
+#define LB_DEBUG(x, ...)  LogMgr::Obj().Printf(LL_DEBUG, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
+#define LB_INFO(x, ...)   LogMgr::Obj().Printf(LL_INFO, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
 
 //ºÚªØif”Ôæ‰–¥∑®
-#define L_COND(cond, ret, x, ...)\
+#define LB_COND(cond, ret, x, ...)\
 	do{\
 	if(!(cond)){\
 	LogMgr::Obj().Printf(LL_ERROR, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__); \
@@ -100,7 +100,7 @@ private:
 	}	\
 	}while(0)
 
-#define L_COND_VOID(cond, x, ...)\
+#define LB_COND_VOID(cond, x, ...)\
 	do{\
 	if(!(cond))	\
 	{\
@@ -109,20 +109,20 @@ private:
 	}\
 	}while(0)
 
-#define COND(cond, ret)\
+#define B_COND(cond, ret)\
 	do{\
 	if(!(cond)){\
 	return ret;\
 	}	\
 	}while(0)
 
-#define COND_VOID(cond)\
+#define B_COND_VOID(cond)\
 	do{\
 	if(!(cond))	\
 	return; \
 	}while(0)
 
-#define L_ASSERT(cond)\
+#define LB_ASSERT(cond)\
 	do{\
 	if(!(cond)){\
 	LogMgr::Obj().Printf(LL_ERROR, __FILE__, __LINE__, __FUNCTION__, "assert error"); \

@@ -94,7 +94,7 @@ namespace {
 				TryReconnect();
 			}
 			else {
-				L_ERROR("unknow state=%d", m_state);
+				LB_ERROR("unknow state=%d", m_state);
 				UNIT_ASSERT(false);
 			}
 
@@ -200,8 +200,8 @@ namespace {
 void OnLog()
 {
 	system("cat /proc/sys/fs/file-nr");
-	L_DEBUG("total_rev_cnt = %dw", total_rev_cnt / 10000);
-	L_DEBUG("total_recon_cnt = %dw",  total_recon_cnt / 10000);
+	LB_DEBUG("total_rev_cnt = %dw", total_rev_cnt / 10000);
+	LB_DEBUG("total_recon_cnt = %dw",  total_recon_cnt / 10000);
 }
 
 UNITTEST(mass_con_client)
@@ -226,9 +226,9 @@ DefaultLog client_log("log_client_prj.txt");
 int main(int argc, char* argv[]) 
 {
 	LogMgr::Obj().SetLogPrinter(client_log);
-	L_DEBUG("start run");
+	LB_DEBUG("start run");
 	UnitTestMgr::Obj().Start();
-	L_DEBUG("end run");
+	LB_DEBUG("end run");
 	return 0;
 }
 

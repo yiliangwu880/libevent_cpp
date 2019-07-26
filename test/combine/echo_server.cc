@@ -34,7 +34,7 @@ namespace {
 
 	void CloseTimer::OnTimer(void *user_data)
 	{
-		L_DEBUG("del listener");
+		LB_DEBUG("del listener");
 		delete listener;
 	}
 	CloseTimer ct;
