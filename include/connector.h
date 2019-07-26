@@ -32,7 +32,7 @@ BaseSvrCon 使用参考listener.h说明
 #include <vector>
 #include <limits>
 #include "lev_mgr.h"
-#include "src/utility/typedef.h"
+#include "typedef.h"
 
 namespace lc //libevent cpp
 {
@@ -44,6 +44,8 @@ namespace lc //libevent cpp
 #pragma pack(1)
 	struct MsgPack
 	{
+		MsgPack():len(0)
+		{}
 		uint16 len; //data有效字节数
 		char data[MAX_MSG_DATA_LEN];
 	};

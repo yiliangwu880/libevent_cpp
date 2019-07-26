@@ -2,7 +2,6 @@
 brief:常用基本类型定义
 */
 #pragma once
-#include "linux_simulate_def.h"
 namespace lc //libevent cpp
 {
 #ifndef uint32

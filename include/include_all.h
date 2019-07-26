@@ -28,12 +28,12 @@ https://github.com/yiliangwu880/libevent_cpp.git
 	};
 	void main()
 	{
-		LibEventMgr::Obj().Init();
+		EventMgr::Obj().Init();
 
 		MyConnectClient1 connect1;
 		connect1.ConnectInit(ip, server_port);
 
-		LibEventMgr::Obj().dispatch();
+		EventMgr::Obj().dispatch();
 	}
 
 服务器:
@@ -62,12 +62,12 @@ https://github.com/yiliangwu880/libevent_cpp.git
 	//简单模型
 	void main()
 	{
-		LibEventMgr::Obj().Init();
+		EventMgr::Obj().Init();
 
 		Listener<Connect2Client> listener;
 		listener.Init(server_port);
 
-		LibEventMgr::Obj().dispatch();
+		EventMgr::Obj().dispatch();
 	}
 
 	//指定connector对象分配器模式
@@ -79,12 +79,12 @@ https://github.com/yiliangwu880/libevent_cpp.git
 		virtual ListenerConnector *CreateConnect(){...};
 
 		};
-		LibEventMgr::Obj().Init();
+		EventMgr::Obj().Init();
 		ConnectorMgr mgr;
 		Listener<> listener(mgr);
 		listener.Init(server_port);
 
-		LibEventMgr::Obj().dispatch();
+		EventMgr::Obj().dispatch();
 	}	
 */
 

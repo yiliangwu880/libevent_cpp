@@ -195,7 +195,7 @@ void Listener<Connector>::accept_error_cb(evconnlistener* listener, void * ctx)
 {
 	int err = EVUTIL_SOCKET_ERROR();
 	L_ERROR("Got an error %d (%s) on the listener. \n", err, evutil_socket_error_to_string(err));
-	//LibEventMgr::Obj().StopDispatch();
+	//EventMgr::Obj().StopDispatch();
 }
 
 
