@@ -32,7 +32,7 @@ BaseSvrCon 使用参考listener.h说明
 #include <vector>
 #include <limits>
 #include "lev_mgr.h"
-#include "typedef.h"
+#include "lc_typedef.h"
 
 namespace lc //libevent cpp
 {

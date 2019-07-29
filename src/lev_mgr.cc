@@ -8,6 +8,7 @@
 #include "connector.h"
 #include "log_file.h"
 #include <signal.h>
+#include "log_file.h"
 
 using namespace std;
 
@@ -49,13 +50,18 @@ namespace
 	}
 
 }
-bool EventMgr::Init()
+bool EventMgr::Init(ILogPrinter *iprinter)
 {
 	if (nullptr != m_eb)
 	{
 		LB_ERROR("repeated init");
 		return false;
 	}
+	if (nullptr != iprinter)
+	{
+		LogMgr::Obj().SetLogPrinter(*iprinter);
+	}
+
 	event_set_log_callback(LIB_EVENT_LOG); //libø‚»’÷æ ‰≥ˆ
 	event_set_fatal_callback(EVENT_FATAL_CB);
 	//LOG_DEBUG("libevent version:%s", event_get_version());

@@ -169,7 +169,7 @@ bool Listener<Connector>::Init(const sockaddr_in &addr)
 	m_listener = evconnlistener_new_bind(EventMgr::Obj().GetEventBase(), Listener::listener_cb, (void*)this, LEV_OPT_REUSEABLE | LEV_OPT_CLOSE_ON_FREE, -1, (struct sockaddr*)&addr, sizeof(addr));
 	if (!m_listener)
 	{
-		LB_ERROR("evconnlistener_new_bind fail, addr.port=%d", addr.sin_port);
+		LB_ERROR("evconnlistener_new_bind fail,port=%d", addr.sin_port);
 		return false;
 	}
 	evconnlistener_set_error_cb(m_listener, Listener::accept_error_cb);

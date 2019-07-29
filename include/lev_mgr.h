@@ -15,31 +15,32 @@
 
 namespace lc //libevent cpp
 {
-//单件
-class EventMgr
-{
-public:
-	static EventMgr &Obj()
+	class ILogPrinter;
+	//单件
+	class EventMgr
 	{
-		static EventMgr d;
-		return d;
-	}
-	//使用libevent 任何功能前，必须先调用这个初始化函数
-	bool Init();
+	public:
+		static EventMgr &Obj()
+		{
+			static EventMgr d;
+			return d;
+		}
+		//使用libevent 任何功能前，必须先调用这个初始化函数
+		bool Init(ILogPrinter *iprinter = nullptr);
 
-	void Dispatch();
-	event_base *GetEventBase(){ return m_eb; };
-	bool StopDispatch();
-	void RegSignal(int sig_type, void(*SignalCB)(int sig_type));
+		void Dispatch();
+		event_base *GetEventBase() { return m_eb; };
+		bool StopDispatch();
+		void RegSignal(int sig_type, void(*SignalCB)(int sig_type));
 
-private:
-	EventMgr()
-		:m_eb(nullptr)
-	{
-	}
-	~EventMgr();
+	private:
+		EventMgr()
+			:m_eb(nullptr)
+		{
+		}
+		~EventMgr();
 
-private:
-	event_base* m_eb;
-};
+	private:
+		event_base* m_eb;
+	};
 }//namespace lc //libevent cpp
