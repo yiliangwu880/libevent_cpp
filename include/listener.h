@@ -26,6 +26,8 @@ template<class >
 class Listener;
 
 
+
+typedef std::function<void(SvrCon &)> SvrConForeachCB;
 //注意，由BaseConnectorMgr管理的 ListenerConnector不用用户代码调用delete.
 //需要断开连接，调用 BaseConnectorMgr::CloseConnect(uint64 id);
 class BaseConMgr
@@ -41,22 +43,12 @@ public:
 	void OnTimerDelConn(); //真正delele对象
 	//建议获取指针只做局部变量用，不要保存，因为BaseConnectorMgr管理ListenerConnector对象的删除
 	SvrCon *FindConn(uint64 id);
-	template<class CB>
-	void Foreach(CB cb)
-	{
-		for (const auto &v : m_all_connector)
-		{
-			if (nullptr == v.second)
-			{
-				LB_FATAL("save null ListenerConnector");
-				continue;
-			}
-			(*cb)(v.second);
-		}
-	}
+
+	void Foreach(const SvrConForeachCB &cb);
 
 private:
-	virtual SvrCon *NewConnect() = 0; //对象必须用new构建
+	virtual SvrCon *NewConnect() = 0;
+	virtual void DelConnect(SvrCon *) = 0;
 
 	SvrCon *CreateConnectForListener();
 
@@ -72,9 +64,11 @@ template<class Connector>
 class ConnectorMgr : public BaseConMgr
 {
 private:
-	virtual SvrCon *NewConnect();
-
+	virtual SvrCon *NewConnect() override;
+	virtual void DelConnect(SvrCon *p) override;
 };
+
+
 
 //管理服务器端链接， 远程端为客户端
 //Listener 创建的connector
@@ -94,7 +88,7 @@ public:
 private:
 	virtual void OnRecv(const MsgPack &msg) override = 0;
 	virtual void OnConnected() override = 0;
-	virtual void onDisconnected() override final; //派生类不需要继承这个函数,用析构函数处理被动断开连接逻辑
+	virtual void OnDisconnected() override final; //派生类不需要继承这个函数,用析构函数处理被动断开连接逻辑
 
 private:
 	BaseConMgr *m_cn_mgr;
@@ -159,7 +153,11 @@ SvrCon * ConnectorMgr<Connector>::NewConnect()
 {
 	return new Connector;
 }
-
+template<class Connector>
+void lc::ConnectorMgr<Connector>::DelConnect(SvrCon *p)
+{
+	delete p;
+}
 
 
 template<class Connector /*= NoUseConnector*/>

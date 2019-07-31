@@ -55,7 +55,7 @@ namespace {
 			}
 			m_state = S_Connect;
 		}
-		virtual void onDisconnected() override
+		virtual void OnDisconnected() override
 		{
 			m_state = S_DisConnect;
 		}
@@ -85,7 +85,7 @@ namespace {
 				msg.len = sizeof(m_cnt);
 				int *p = (int *)msg.data;
 				*p = m_cnt;
-				send_data(msg);
+				SendData(msg);
 			}
 			else if (S_DisConnect == m_state)
 			{
@@ -135,10 +135,10 @@ namespace {
 			msg.len = sizeof(m_cnt);
 			int *p = (int *)msg.data;
 			*p = m_cnt;
-			send_data(msg);
+			SendData(msg);
 			
 		}
-		virtual void onDisconnected() override
+		virtual void OnDisconnected() override
 		{
 
 		}

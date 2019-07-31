@@ -51,6 +51,19 @@ SvrCon * BaseConMgr::FindConn(uint64 id)
 }
 
 
+void BaseConMgr::Foreach(const SvrConForeachCB &cb)
+{
+	for (const auto &v : m_all_connector)
+	{
+		if (nullptr == v.second)
+		{
+			LB_FATAL("save null ListenerConnector");
+			continue;
+		}
+		(cb)(*(v.second));
+	}
+}
+
 SvrCon * BaseConMgr::CreateConnectForListener()
 {
 	SvrCon *p = NewConnect();
@@ -69,7 +82,7 @@ void BaseConMgr::OnTimerDelConn()
 	for (const auto &v : m_vwdc)
 	{
 		//LB_DEBUG("run OnTimerDelConn");
-		delete v;
+		DelConnect(v);
 	}
 	m_vwdc.clear();
 }
@@ -130,7 +143,7 @@ bool SvrCon::DisConnect()
 	return m_cn_mgr->PostDelConn(m_id); //延时 delete对象
 }
 
-void SvrCon::onDisconnected()
+void SvrCon::OnDisconnected()
 {
 	m_cn_mgr->PostDelConn(m_id); //延时 delete对象
 }

@@ -27,7 +27,7 @@ namespace {
 				DisConnect(); //调用这里，fd会释放不了。 原因未明 
 				return;
 			}
-			send_data(msg);
+			SendData(msg);
 		}
 		virtual void OnConnected() override
 		{

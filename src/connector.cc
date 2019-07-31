@@ -25,10 +25,10 @@ ConCom::ConCom()
 
 ConCom::~ConCom()
 {
-	free();
+	Free();
 }
 
-void ConCom::free()
+void ConCom::Free()
 {
 	if (m_buf_e)
 	{
@@ -93,8 +93,8 @@ void ConCom::DisConnect()
 		//LB_DEBUG("already disconnect. not need to disconnect.");
 		return;
 	}
-	free();
-	onDisconnected();
+	Free();
+	OnDisconnected();
 }
 
 void ConCom::writecb(struct bufferevent* bev, void* user_data)
@@ -230,7 +230,7 @@ void ConCom::conn_event_callback(bufferevent* bev, short events)
 	}
 }
 
-bool ConCom::send_data(const MsgPack &msg)
+bool ConCom::SendData(const MsgPack &msg)
 {
 	B_COND(m_is_connect, false);
 	//LB_COND(m_is_connect, false, "is disconnect.");
@@ -281,7 +281,7 @@ bool ConCom::send_data(const MsgPack &msg)
 	return true;
 }
 
-bool ConCom::send_data_no_head(const char* data, int len)
+bool ConCom::SendDataNoHead(const char* data, int len)
 {
 	if (!m_is_connect)
 	{
@@ -329,7 +329,7 @@ bool ConCom::send_data_no_head(const char* data, int len)
 	}
 	return true;
 }
-void ConCom::setwatermark(short events, unsigned int lowmark, unsigned int highmark)
+void ConCom::Setwatermark(short events, unsigned int lowmark, unsigned int highmark)
 {
 	B_COND_VOID(m_is_connect);
 	if (0 == m_fd)
@@ -441,4 +441,17 @@ bool ClientCon::TryReconnect()
 		return true; //不需要重连
 	}
 }
+
+bool MsgPack::Serialize(std::string s)
+{
+	if (s.length() >= sizeof(data))
+	{
+		LB_ERROR("pack is too big. size=%d", s.length());
+		return false;
+	}
+	len = s.length();
+	memcpy(data, s.c_str(), s.length());
+	return true;
+}
+
 }//namespace lc //libevent cpp

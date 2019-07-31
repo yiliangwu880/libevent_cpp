@@ -20,7 +20,7 @@ https://github.com/yiliangwu880/libevent_cpp.git
 		{
 			MsgPack msg;
 			...≥ı ºªØmsg
-			send_data(msg);
+			SendData(msg);
 		}
 		virtual void onDisconnected() override
 		{
@@ -46,7 +46,7 @@ https://github.com/yiliangwu880/libevent_cpp.git
 		virtual void OnRecv(const MsgPack &msg) override
 		{
 			LOG_DEBUG("OnRecv %s", &msg.data);
-			send_data(msg);
+			SendData(msg);
 			if (0)
 			{//some time do this destory connect
 				FreeSelf();

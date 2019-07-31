@@ -17,7 +17,7 @@ namespace {
 	private:
 		virtual void OnRecv(const MsgPack &msg) override
 		{
-			send_data(msg);
+			SendData(msg);
 		}
 		virtual void OnConnected() override
 		{

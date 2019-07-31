@@ -36,7 +36,7 @@ private:
 	{
 		SendCnt();
 	}
-	virtual void onDisconnected() override
+	virtual void OnDisconnected() override
 	{
 
 	}
@@ -55,7 +55,7 @@ private:
 		msg.len = sizeof(m_cnt);
 		int *p = (int *)msg.data;
 		*p = m_cnt;
-		send_data(msg);
+		SendData(msg);
 
 		//LOG_DEBUG("SendCnt msg len data %d, %d %d", msg.len, msg.data[0], msg.data[4]);
 
@@ -96,7 +96,7 @@ public:
 	{
 		SendCnt();
 	}
-	virtual void onDisconnected() override
+	virtual void OnDisconnected() override
 	{
 
 	}
@@ -112,7 +112,7 @@ public:
 
 		
 		const char *pMsg = (char *)&m_msg;
-		send_data_no_head(pMsg, 3);
+		SendDataNoHead(pMsg, 3);
 
 		SplitMsgTimer *t = new SplitMsgTimer();
 		t->StartTimer(100, this);
@@ -121,7 +121,7 @@ public:
 	{
 		const char *p = (char *)&m_msg;
 		p = p + 3;
-		send_data_no_head(p, 5);
+		SendDataNoHead(p, 5);
 	}
 	int m_cnt;
 	MsgPack m_msg;
@@ -170,7 +170,7 @@ struct ReConnectClient : public ClientCon
 		{
 			MsgPack msg;
 			msg.len = 1;
-			send_data(msg);
+			SendData(msg);
 		}
 		else if (S_disconnect == state)
 		{
@@ -179,7 +179,7 @@ struct ReConnectClient : public ClientCon
 			state = S_reconnect;
 		}
 	}
-	virtual void onDisconnected() override
+	virtual void OnDisconnected() override
 	{
 		is_cb_disconect = true;
 	}

@@ -26,9 +26,9 @@ private:
 		LB_DEBUG("1 OnConnected, send first msg");
 		MsgPack msg;
 		Str2MsgPack("1 msg", msg);
-		send_data(msg);
+		SendData(msg);
 	}
-	virtual void onDisconnected() override
+	virtual void OnDisconnected() override
 	{
 
 		LB_DEBUG("disconnect");

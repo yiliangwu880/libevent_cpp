@@ -1,6 +1,6 @@
 /*
 使用例子：
-class MyConnectClient1 : public BaseClientCon
+class MyConnectClient1 : public ClientCon
 {
 private:
 	virtual void OnRecv(const MsgPack &msg) override
@@ -13,7 +13,7 @@ private:
 		LOG_DEBUG("1 OnConnected, send first msg");
 		MsgPack msg;
 		Str2MsgPack("1 msg", msg);
-		send_data(msg);
+		SendData(msg);
 	}
 };
 
@@ -48,6 +48,9 @@ namespace lc //libevent cpp
 		{}
 		uint16 len; //data有效字节数
 		char data[MAX_MSG_DATA_LEN];
+
+		bool Serialize(std::string s);
+
 	};
 #pragma pack(pop)
 
@@ -64,8 +67,8 @@ namespace lc //libevent cpp
 		virtual void OnError(short events) {};
 		//被动删除对象回调，对方断开，或者网络错误
 		//被调用的时候， fd, bufferevent 资源已经释放
-		//删除本对象， 不会触发onDisconnected了
-		virtual void onDisconnected() = 0;
+		//删除本对象， 不会触发OnDisconnected了
+		virtual void OnDisconnected() = 0;
 
 
 	};
@@ -88,12 +91,12 @@ namespace lc //libevent cpp
 
 		void DisConnect();
 
-		bool send_data(const MsgPack &msg);
+		bool SendData(const MsgPack &msg);
 		//设置发送最大缓冲大小，超了就断开连接
 		void SetMaxSendBufSize(size_t num) { m_msbs = num; }
 
 		//参考 bufferevent_setwatermark说明
-		void setwatermark(short events, unsigned int lowmark, unsigned int highmark);
+		void Setwatermark(short events, unsigned int lowmark, unsigned int highmark);
 
 		void GetRemoteAddr(std::string &ip, unsigned short &port) const;
 		sockaddr_in GetRemoteAddr() const { return m_addr; }
@@ -102,7 +105,7 @@ namespace lc //libevent cpp
 		bool IsWaitCompleteMsg() const;
 		evutil_socket_t GetFd() { return m_fd; };
 		//测试专用,无消息头,自由发送指定字节数
-		bool send_data_no_head(const char* data, int len);
+		bool SendDataNoHead(const char* data, int len);
 		void SetEventCbLog(bool no_ev_cb_log) { m_no_ev_cb_log = no_ev_cb_log; }
 
 	private:
@@ -114,7 +117,7 @@ namespace lc //libevent cpp
 		void conn_read_callback(bufferevent* bev);
 		void conn_event_callback(bufferevent* bev, short events);
 
-		void free();
+		void Free();
 		bool SetSocketInfo(bufferevent* buf_e, evutil_socket_t fd, struct sockaddr* sa = nullptr);
 		void SetIsConnect(bool is_connect) { m_is_connect = is_connect; }
 		void SetAddr(const char* connect_ip, unsigned short connect_port);
