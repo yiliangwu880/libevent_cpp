@@ -102,8 +102,8 @@ void DefaultLog::Printf(LogLv lv, const char * file, int line, const char *fun, 
 	{
 		char out_str[1000];
 		vsnprintf(out_str, sizeof(out_str), s.c_str(), vp);
-		fprintf(m_file, out_str); //用一次vfprintf，再用vprintf有时候有BUG， vp被 vfprintf修改了，原因未明
-		::printf(out_str);
+		fputs(out_str, m_file); //用一次vfprintf，再用vprintf有时候有BUG， vp被 vfprintf修改了，原因未明
+		::puts(out_str);
 	}
 	else
 	{
