@@ -33,6 +33,8 @@ namespace lc //libevent cpp
 		bool StopDispatch();
 		void RegSignal(int sig_type, void(*SignalCB)(int sig_type));
 
+		//注意：不会释放fs,event等资源
+		void FreeEventBase();
 	private:
 		EventMgr()
 			:m_eb(nullptr)
