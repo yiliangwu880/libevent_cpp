@@ -1,5 +1,5 @@
 /*
-ÁªºÏ²âÊÔ
+è”åˆæµ‹è¯•
 */
 
 #include "include_all.h"
@@ -16,7 +16,7 @@ class KillTimer : public Timer
 private:
 	virtual void OnTimer(void *user_data) override
 	{
-		UNIT_ASSERT(false); //¶ÔÏóÒÑ¾­ÊÍ·Å£¬²»ÄÜµ÷ÓÃ
+		UNIT_ASSERT(false); //å¯¹è±¡å·²ç»é‡Šæ”¾ï¼Œä¸èƒ½è°ƒç”¨
 	};
 };
 
@@ -71,7 +71,7 @@ struct TestStop
 			auto f = std::bind(&TestStop::Fun2, this);
 			UNIT_ASSERT(timer.StartTimer(500, f));
 
-			//¶¨Ê±µ÷ÓÃtimer stop
+			//å®šæ—¶è°ƒç”¨timer stop
 			auto stop_f = std::bind(&TestStop::StopFun2, this);
 			UNIT_ASSERT(stop_timer.StartTimer(100, stop_f));
 		}
@@ -103,7 +103,7 @@ void CheckTimer::OnTimer(void *user_data)
 	LB_DEBUG("=========timer test ok==============");
 }
 
-//std::bindÀı×Ó´úÂë
+//std::bindä¾‹å­ä»£ç 
 struct Foo {
 	void F1(int n1, int n2)
 	{
@@ -124,8 +124,8 @@ struct Foo {
 };
 void TestStdBind()
 {
-	//_1,_2,..  ±íÊ¾Êµ²ÎÓÃÊµ¼Êµ÷ÓÃµÄÊµ²Î
-	//²»Ìî_1µÈ£¬ÌîÊµ¼ÊÖµ£¬std::bind»á´ò°ü½øÈ¥µÄµ±Êµ²ÎÓÃ
+	//_1,_2,..  è¡¨ç¤ºå®å‚ç”¨å®é™…è°ƒç”¨çš„å®å‚
+	//ä¸å¡«_1ç­‰ï¼Œå¡«å®é™…å€¼ï¼Œstd::bindä¼šæ‰“åŒ…è¿›å»çš„å½“å®å‚ç”¨
 	Foo foo;
 	{
 		auto f = std::bind(&Foo::F1, &foo, 1, _1);

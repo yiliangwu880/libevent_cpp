@@ -1,5 +1,5 @@
 /*
-ÁªºÏ²âÊÔ
+è”åˆæµ‹è¯•
 */
 
 
@@ -42,7 +42,7 @@ namespace {
 
 void StartLog()
 {
-	//²âÊÔ¿âÈÕÖ¾Êä³öÉèÖÃ
+	//æµ‹è¯•åº“æ—¥å¿—è¾“å‡ºè®¾ç½®
 	//g_my_log.m_is_run = false;
 	//LogMgr::Obj().SetLogPrinter(g_my_log);
 	//ct.StartTimer(2000);

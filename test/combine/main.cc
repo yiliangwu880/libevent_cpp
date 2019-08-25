@@ -1,5 +1,5 @@
 /*
-ÁªºÏ²âÊÔ
+è”åˆæµ‹è¯•
 */
 #include "stdafx.h"
 #include "version.h"

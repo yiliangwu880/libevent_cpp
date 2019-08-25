@@ -42,7 +42,7 @@ void ConCom::Free()
 		//{
 		//	LB_ERROR("::close fail , fd=%d", m_fd);
 		//}
-		//ÊÍ·Åm_buf_e£¬µÄÊ±ºò£¬¿âÀïÃæ»áÊÍ·Åm_fd
+		//é‡Šæ”¾m_buf_eï¼Œçš„æ—¶å€™ï¼Œåº“é‡Œé¢ä¼šé‡Šæ”¾m_fd
 		m_fd = 0;
 	}
 	m_is_connect = false;
@@ -114,7 +114,7 @@ void ConCom::readcb(struct bufferevent* bev, void* user_data)
 
 void ConCom::conn_write_callback(bufferevent* bev)
 {
-	//Èç¹û²»ÓÃ ¿¼ÂÇÉ¾µô£¬
+	//å¦‚æœä¸ç”¨ è€ƒè™‘åˆ æ‰ï¼Œ
 }
 
 bool ConCom::IsWaitCompleteMsg() const
@@ -130,8 +130,8 @@ void ConCom::conn_read_callback(bufferevent* bev)
 	while (input_len > 0)
 	{
 		char *write_addr = ((char *)&m_msg) + m_msg_write_len;
-		//¸ù¾İ2ÖÖ×´Ì¬È¥×ö²»Í¬¶ÁÈ¡²Ù×÷
-		//×´Ì¬1, msg.lenÃ»¶ÁÍêÕû,µÈ´ı¶ÁÍêÕû¹ı³Ì
+		//æ ¹æ®2ç§çŠ¶æ€å»åšä¸åŒè¯»å–æ“ä½œ
+		//çŠ¶æ€1, msg.lenæ²¡è¯»å®Œæ•´,ç­‰å¾…è¯»å®Œæ•´è¿‡ç¨‹
 		if (m_msg_write_len < HEAD_LEN)
 		{
 			int need_to_read = HEAD_LEN - m_msg_write_len;
@@ -149,11 +149,11 @@ void ConCom::conn_read_callback(bufferevent* bev)
 		//	LB_DEBUG("bufferevent_read, len m_msg_write_len =%d %d", ntohs(m_msg.len), m_msg_write_len);
 			continue;
 		}
-		//×´Ì¬2, msg.lenÍêÕû£¬µÈ´ı¶ÁÈ¡ÍêÕûÏûÏ¢
+		//çŠ¶æ€2, msg.lenå®Œæ•´ï¼Œç­‰å¾…è¯»å–å®Œæ•´æ¶ˆæ¯
 		else
 		{
 			m_msg.len = ntohs(m_msg.len);
-			if (m_msg.len > MAX_MSG_DATA_LEN) //°ü¹ı´ó£¬¶Ï¿ªÁ¬½Ó
+			if (m_msg.len > MAX_MSG_DATA_LEN) //åŒ…è¿‡å¤§ï¼Œæ–­å¼€è¿æ¥
 			{
 				LB_ERROR("rev msg len too big. %d", m_msg.len);
 				DisConnect();
@@ -179,10 +179,10 @@ void ConCom::conn_read_callback(bufferevent* bev)
 			m_msg_write_len += ret_write_len;
 
 			//LB_DEBUG("bufferevent_read data, m_msg_write_len write_addr[0]=%d %d %d %d %d", m_msg_write_len, write_addr[0], write_addr[1], write_addr[2], write_addr[3]);
-			if (need_to_read == ret_write_len)// ½ÓÊÕÍêÕû
+			if (need_to_read == ret_write_len)// æ¥æ”¶å®Œæ•´
 			{
 				OnRecv(m_msg);
-				//ÖØÖÃm_msg,µÈÏÂ´Î½ÓÊÕĞÂÏûÏ¢
+				//é‡ç½®m_msg,ç­‰ä¸‹æ¬¡æ¥æ”¶æ–°æ¶ˆæ¯
 				m_msg.len = 0;
 				m_msg_write_len = 0;
 			}
@@ -225,8 +225,8 @@ void ConCom::conn_event_callback(bufferevent* bev, short events)
 			}
 		}
 		OnError(events);
-		DisConnect(); //ÀïÃæµÄ»Øµ÷º¯Êı£¬¿ÉÒÔ²Ù×÷delete¶ÔÏó
-		return; //ÕâÀï±¾¶ÔÏó¿ÉÄÜÒÑ¾­Ïú»Ù£¬±ğÔÙÒıÓÃ
+		DisConnect(); //é‡Œé¢çš„å›è°ƒå‡½æ•°ï¼Œå¯ä»¥æ“ä½œdeleteå¯¹è±¡
+		return; //è¿™é‡Œæœ¬å¯¹è±¡å¯èƒ½å·²ç»é”€æ¯ï¼Œåˆ«å†å¼•ç”¨
 	}
 }
 
@@ -399,7 +399,7 @@ bool ClientCon::ConnectByAddr()
 		LB_ERROR("socket create fail. fd < 0");
 		return false;
 	}
-	bufferevent* buf_e = bufferevent_socket_new(EventMgr::Obj().GetEventBase(), fd, BEV_OPT_CLOSE_ON_FREE);//ÌáÊ¾ÄãÌá¹©¸øbufferevent_socket_new() µÄÌ×½Ó×ÖÎñ±ØÊÇ·Ç×èÈûÄ£Ê½, Îª´ËLibEvent Ìá¹©ÁË±ãÀûµÄ·½·¨	evutil_make_socket_nonblocking.
+	bufferevent* buf_e = bufferevent_socket_new(EventMgr::Obj().GetEventBase(), fd, BEV_OPT_CLOSE_ON_FREE);//æç¤ºä½ æä¾›ç»™bufferevent_socket_new() çš„å¥—æ¥å­—åŠ¡å¿…æ˜¯éé˜»å¡æ¨¡å¼, ä¸ºæ­¤LibEvent æä¾›äº†ä¾¿åˆ©çš„æ–¹æ³•	evutil_make_socket_nonblocking.
 	if (nullptr == buf_e)
 	{
 		LB_ERROR("nullptr == m_buf_e");
@@ -413,11 +413,11 @@ bool ClientCon::ConnectByAddr()
 	bufferevent_setcb(buf_e, readcb, nullptr, eventcb, this);
 	bufferevent_enable(buf_e, EV_WRITE | EV_READ);
 	
-	if (0 != bufferevent_socket_connect(buf_e, (struct sockaddr*)&addr, sizeof(addr)))//Á¬½ÓÊ§°Ü»áÀïÃæ¹Ø±Õfd
+	if (0 != bufferevent_socket_connect(buf_e, (struct sockaddr*)&addr, sizeof(addr)))//è¿æ¥å¤±è´¥ä¼šé‡Œé¢å…³é—­fd
 	{
-		//Ê§°ÜÇé¿ö£º
-		//µØÖ·²»¶Ô
-		//¿Í»§¶ËÁ¬½Ó8W×óÓÒ£¬ÅÜÁËÕâÀï, Ó¦¸ÃÊÇfdÌ«¶àÁË£¬³¬³öÏµÍ³ÉèÖÃ
+		//å¤±è´¥æƒ…å†µï¼š
+		//åœ°å€ä¸å¯¹
+		//å®¢æˆ·ç«¯è¿æ¥8Wå·¦å³ï¼Œè·‘äº†è¿™é‡Œ, åº”è¯¥æ˜¯fdå¤ªå¤šäº†ï¼Œè¶…å‡ºç³»ç»Ÿè®¾ç½®
 		LB_ERROR("bufferevent_socket_connect fail");
 		return false;
 	}
@@ -438,7 +438,7 @@ bool ClientCon::TryReconnect()
 	}
 	else
 	{
-		return true; //²»ĞèÒªÖØÁ¬
+		return true; //ä¸éœ€è¦é‡è¿
 	}
 }
 

@@ -1,5 +1,5 @@
 /*
-brief:常用基本类型定义
+brief:甯哥敤鍩烘湰绫诲瀷瀹氫箟
 */
 #pragma once
 namespace lc //libevent cpp

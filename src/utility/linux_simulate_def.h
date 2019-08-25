@@ -1,5 +1,5 @@
 /*
-brief: ·½±ã vsÐ´´úÂë¶øÒÑ£¬¶¨ÒåWINÆ½Ì¨Ã»ÓÐµÄlinux¶¨Òå
+brief: æ–¹ä¾¿ vså†™ä»£ç è€Œå·²ï¼Œå®šä¹‰WINå¹³å°æ²¡æœ‰çš„linuxå®šä¹‰
 */
 #pragma once
 
@@ -20,14 +20,14 @@ struct epoll_event {
 	epoll_data_t data; /* User data variable */  
 };  
 
-#define EPOLLIN 1 //£º±íÊ¾¶ÔÓ¦µÄÎÄ¼þÃèÊö·û¿ÉÒÔ¶Á£¨°üÀ¨¶Ô¶ËSOCKETÕý³£¹Ø±Õ£©£»
-#define EPOLLOUT 1 //£º±íÊ¾¶ÔÓ¦µÄÎÄ¼þÃèÊö·û¿ÉÒÔÐ´£»
-#define EPOLLPRI 1 //£º±íÊ¾¶ÔÓ¦µÄÎÄ¼þÃèÊö·ûÓÐ½ô¼±µÄÊý¾Ý¿É¶Á£¨ÕâÀïÓ¦¸Ã±íÊ¾ÓÐ´øÍâÊý¾Ýµ½À´£©£»
-#define EPOLLERR 1 //£º±íÊ¾¶ÔÓ¦µÄÎÄ¼þÃèÊö·û·¢Éú´íÎó£»
-#define EPOLLHUP 1 //£º±íÊ¾¶ÔÓ¦µÄÎÄ¼þÃèÊö·û±»¹Ò¶Ï£»
+#define EPOLLIN 1 //ï¼šè¡¨ç¤ºå¯¹åº”çš„æ–‡ä»¶æè¿°ç¬¦å¯ä»¥è¯»ï¼ˆåŒ…æ‹¬å¯¹ç«¯SOCKETæ­£å¸¸å…³é—­ï¼‰ï¼›
+#define EPOLLOUT 1 //ï¼šè¡¨ç¤ºå¯¹åº”çš„æ–‡ä»¶æè¿°ç¬¦å¯ä»¥å†™ï¼›
+#define EPOLLPRI 1 //ï¼šè¡¨ç¤ºå¯¹åº”çš„æ–‡ä»¶æè¿°ç¬¦æœ‰ç´§æ€¥çš„æ•°æ®å¯è¯»ï¼ˆè¿™é‡Œåº”è¯¥è¡¨ç¤ºæœ‰å¸¦å¤–æ•°æ®åˆ°æ¥ï¼‰ï¼›
+#define EPOLLERR 1 //ï¼šè¡¨ç¤ºå¯¹åº”çš„æ–‡ä»¶æè¿°ç¬¦å‘ç”Ÿé”™è¯¯ï¼›
+#define EPOLLHUP 1 //ï¼šè¡¨ç¤ºå¯¹åº”çš„æ–‡ä»¶æè¿°ç¬¦è¢«æŒ‚æ–­ï¼›
 
-#define EPOLLET 1 //£º ½«EPOLLÉèÎª±ßÔµ´¥·¢(Edge Triggered)Ä£Ê½£¬ÕâÊÇÏà¶ÔÓÚË®Æ½´¥·¢(Level Triggered)À´ËµµÄ¡£
-#define EPOLLONESHOT 1 //£ºÖ»¼àÌýÒ»´ÎÊÂ¼þ£¬µ±¼àÌýÍêÕâ´ÎÊÂ¼þÖ®ºó£¬Èç¹û»¹ÐèÒª¼ÌÐø¼àÌýÕâ¸ösocketµÄ»°£¬ÐèÒªÔÙ´Î°ÑÕâ¸ösocket¼ÓÈëµ½EPOLL¶ÓÁÐÀï
+#define EPOLLET 1 //ï¼š å°†EPOLLè®¾ä¸ºè¾¹ç¼˜è§¦å‘(Edge Triggered)æ¨¡å¼ï¼Œè¿™æ˜¯ç›¸å¯¹äºŽæ°´å¹³è§¦å‘(Level Triggered)æ¥è¯´çš„ã€‚
+#define EPOLLONESHOT 1 //ï¼šåªç›‘å¬ä¸€æ¬¡äº‹ä»¶ï¼Œå½“ç›‘å¬å®Œè¿™æ¬¡äº‹ä»¶ä¹‹åŽï¼Œå¦‚æžœè¿˜éœ€è¦ç»§ç»­ç›‘å¬è¿™ä¸ªsocketçš„è¯ï¼Œéœ€è¦å†æ¬¡æŠŠè¿™ä¸ªsocketåŠ å…¥åˆ°EPOLLé˜Ÿåˆ—é‡Œ
 
 #define snprintf _snprintf_s 
 

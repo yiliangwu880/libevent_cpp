@@ -21,7 +21,7 @@ namespace lc //libevent cpp
 {
 namespace
 {
-	//×¢Òâ£º»Øµ÷º¯ÊıÖĞ½øĞĞLibEvent µÄº¯Êıµ÷ÓÃÊÇ²»°²È«µÄ
+	//æ³¨æ„ï¼šå›è°ƒå‡½æ•°ä¸­è¿›è¡ŒLibEvent çš„å‡½æ•°è°ƒç”¨æ˜¯ä¸å®‰å…¨çš„
 	void LIB_EVENT_LOG(int severity, const char* msg)
 	{
 		switch (severity)
@@ -62,7 +62,7 @@ bool EventMgr::Init(ILogPrinter *iprinter)
 		LogMgr::Obj().SetLogPrinter(*iprinter);
 	}
 
-	event_set_log_callback(LIB_EVENT_LOG); //lib¿âÈÕÖ¾Êä³ö
+	event_set_log_callback(LIB_EVENT_LOG); //libåº“æ—¥å¿—è¾“å‡º
 	event_set_fatal_callback(EVENT_FATAL_CB);
 	//LOG_DEBUG("libevent version:%s", event_get_version());
 	m_eb = event_base_new();
@@ -71,8 +71,8 @@ bool EventMgr::Init(ILogPrinter *iprinter)
 		LB_ERROR("cannot event_base_new libevent ...\n");
 		return false;
 	}
-	//ÎªÁË±ÜÃâ½ø³ÌÍË³ö, ¿ÉÒÔ²¶»ñSIGPIPEĞÅºÅ, »òÕßºöÂÔËü, ¸øËüÉèÖÃSIG_IGNĞÅºÅ´¦Àíº¯Êı:
-	//ÕâÑù, µÚ¶ş´Îµ÷ÓÃwrite·½·¨Ê±, »á·µ»Ø - 1, Í¬Ê±errnoÖÃÎªSIGPIPE.³ÌĞò±ãÄÜÖªµÀ¶Ô¶ËÒÑ¾­¹Ø±Õ.
+	//ä¸ºäº†é¿å…è¿›ç¨‹é€€å‡º, å¯ä»¥æ•è·SIGPIPEä¿¡å·, æˆ–è€…å¿½ç•¥å®ƒ, ç»™å®ƒè®¾ç½®SIG_IGNä¿¡å·å¤„ç†å‡½æ•°:
+	//è¿™æ ·, ç¬¬äºŒæ¬¡è°ƒç”¨writeæ–¹æ³•æ—¶, ä¼šè¿”å› - 1, åŒæ—¶errnoç½®ä¸ºSIGPIPE.ç¨‹åºä¾¿èƒ½çŸ¥é“å¯¹ç«¯å·²ç»å…³é—­.
 	signal(SIGPIPE, SIG_IGN);
 	return true;
 }
@@ -95,7 +95,7 @@ bool EventMgr::StopDispatch()
 		return false;
 	}
 
-	return event_base_loopexit(m_eb, NULL) == 0;//Èç¹ûevent_base µ±Ç°ÕıÔÚÖ´ĞĞ¼¤»îÊÂ¼şµÄ»Øµ÷, Ëü½«ÔÚÖ´ĞĞÍêµ±Ç°ÕıÔÚ´¦ÀíµÄÊÂ¼şºóÁ¢¼´ÍË³ö.
+	return event_base_loopexit(m_eb, NULL) == 0;//å¦‚æœevent_base å½“å‰æ­£åœ¨æ‰§è¡Œæ¿€æ´»äº‹ä»¶çš„å›è°ƒ, å®ƒå°†åœ¨æ‰§è¡Œå®Œå½“å‰æ­£åœ¨å¤„ç†çš„äº‹ä»¶åç«‹å³é€€å‡º.
 }
 
 namespace

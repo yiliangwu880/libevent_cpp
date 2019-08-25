@@ -6,7 +6,7 @@
 #include <unistd.h>
 #include <arpa/inet.h>  
 #include "include_all.h"
-#include "log_file.h" //Ä¿Ç°µ÷ÊÔÓÃ£¬ÒÆÖ²É¾µô
+#include "log_file.h" //ç›®å‰è°ƒè¯•ç”¨ï¼Œç§»æ¤åˆ æ‰
 #include <memory>
 namespace lc //libevent cpp
 {
@@ -41,7 +41,7 @@ bool BaseHttpSvr::Init(unsigned short port/*=80*/, const char* ip /*= nullptr*/)
 	{
 		ip = "0.0.0.0";
 	}
-	//°ó¶¨µ½Ö¸¶¨µØÖ·ÉÏ
+	//ç»‘å®šåˆ°æŒ‡å®šåœ°å€ä¸Š
 	int ret = evhttp_bind_socket(m_evhttp, ip, port);
 	if (ret != 0) {
 		LB_FATAL("init http fail");
@@ -56,13 +56,13 @@ void BaseHttpSvr::Reply(int code, const char *reason, const std::string str/*=""
 {
 	if (nullptr == m_tmp_req)
 	{
-		LB_FATAL("error call, repeated call ReplyError or Reply");//ReplyError »òÕß Reply µ÷ÓÃÁ½´Î»òÕß
+		LB_FATAL("error call, repeated call ReplyError or Reply");//ReplyError æˆ–è€… Reply è°ƒç”¨ä¸¤æ¬¡æˆ–è€…
 		return;
 	}
-	//´´½¨ÒªÊ¹ÓÃµÄbuffer¶ÔÏó
+	//åˆ›å»ºè¦ä½¿ç”¨çš„bufferå¯¹è±¡
 	evbuffer* buf = evbuffer_new();
 	evbuffer_add_printf(buf, "%s", str.c_str());
-	evhttp_send_reply(m_tmp_req, code, reason, buf);//ÊÍ·Å×ÊÔ´
+	evhttp_send_reply(m_tmp_req, code, reason, buf);//é‡Šæ”¾èµ„æº
 	evbuffer_free(buf);
 
 	m_tmp_req = nullptr;
@@ -72,10 +72,10 @@ void BaseHttpSvr::ReplyError(int code, const char *reason)
 {
 	if (nullptr == m_tmp_req)
 	{
-		LB_FATAL("error call, repeated call ReplyError or Reply");//ReplyError »òÕß Reply µ÷ÓÃÁ½´Î»òÕß
+		LB_FATAL("error call, repeated call ReplyError or Reply");//ReplyError æˆ–è€… Reply è°ƒç”¨ä¸¤æ¬¡æˆ–è€…
 		return;
 	}
-	evhttp_send_error(m_tmp_req, code, reason); //ÊÍ·Å×ÊÔ´
+	evhttp_send_error(m_tmp_req, code, reason); //é‡Šæ”¾èµ„æº
 	m_tmp_req = nullptr;
 }
 
@@ -87,8 +87,8 @@ void BaseHttpSvr::RevRequestCB(struct evhttp_request* req, void* arg)
 		LB_FATAL("nullptr != p->m_tmp_req");
 	}
 	p->m_tmp_req = req;
-	p->RevRequest();//ÀïÃæ±ØĞëµ÷ÓÃ evhttp_send_error »òÕß evhttp_send_reply ÊÍ·Å×ÊÔ´
-	if (nullptr != p->m_tmp_req) //ÓÃ»§Ã»µ÷ÓÃÊÍ·Å×ÊÔ´º¯Êı
+	p->RevRequest();//é‡Œé¢å¿…é¡»è°ƒç”¨ evhttp_send_error æˆ–è€… evhttp_send_reply é‡Šæ”¾èµ„æº
+	if (nullptr != p->m_tmp_req) //ç”¨æˆ·æ²¡è°ƒç”¨é‡Šæ”¾èµ„æºå‡½æ•°
 	{
 		evhttp_send_error(p->m_tmp_req, HTTP_SERVUNAVAIL, "svr have error code");
 		p->m_tmp_req = nullptr;
@@ -101,7 +101,7 @@ const char *BaseHttpSvr::GetUri()
 {
 	if (nullptr == m_tmp_req)
 	{
-		LB_ERROR("nullptr == p->m_tmp_req");//±ØĞëÔÚRevRequestÀïÃæ£¬ÏìÓ¦Ç°µ÷ÓÃ£¬
+		LB_ERROR("nullptr == p->m_tmp_req");//å¿…é¡»åœ¨RevRequesté‡Œé¢ï¼Œå“åº”å‰è°ƒç”¨ï¼Œ
 		return nullptr; 
 	}
 	const char *uri = evhttp_request_get_uri(m_tmp_req);
@@ -145,10 +145,10 @@ bool BaseHttpClient::Request(const char *url, evhttp_cmd_type cmd_type, unsigned
 		return false;
 	}
 
-	//½âÎöurl
+	//è§£æurl
 	////////////////////////////////////
 	typedef std::unique_ptr<evhttp_uri, decltype(&::evhttp_uri_free)> HttpUriPtr;
-	HttpUriPtr hu(evhttp_uri_parse(url), ::evhttp_uri_free); //×Ô¶¯ÊÍ·Å×ÊÔ´
+	HttpUriPtr hu(evhttp_uri_parse(url), ::evhttp_uri_free); //è‡ªåŠ¨é‡Šæ”¾èµ„æº
 	if (nullptr == hu.get())
 	{
 		ReplyError(500, "Parse url failed! ");
@@ -176,7 +176,7 @@ bool BaseHttpClient::Request(const char *url, evhttp_cmd_type cmd_type, unsigned
 	/////////////////////////////////////////
 
 
-	// ³õÊ¼»¯evdns_base_new
+	// åˆå§‹åŒ–evdns_base_new
 	m_dnsbase = evdns_base_new(EventMgr::Obj().GetEventBase(), 1);
 	if (!m_dnsbase)
 	{
@@ -192,11 +192,11 @@ bool BaseHttpClient::Request(const char *url, evhttp_cmd_type cmd_type, unsigned
 		delete this;
 		return false;
 	}
-	// ´´½¨Á¬½Ó¶ÔÏó³É¹¦ºó, ÉèÖÃ¹Ø±Õ»Øµ÷º¯Êı
+	// åˆ›å»ºè¿æ¥å¯¹è±¡æˆåŠŸå, è®¾ç½®å…³é—­å›è°ƒå‡½æ•°
 	evhttp_connection_set_closecb(m_connection, connection_close_callback, this);
-	// ´´½¨evhttp_request¶ÔÏó£¬ÉèÖÃ·µ»Ø×´Ì¬ÏìÓ¦µÄ»Øµ÷º¯Êı
-	struct evhttp_request* req = evhttp_request_new(remote_read_callback, this);//request²»ÓÃ×Ô¼ºevhttp_request_free, ½»¸øm_connection¹ÜÀí
-	// Ìí¼ÓhttpÍ·²¿
+	// åˆ›å»ºevhttp_requestå¯¹è±¡ï¼Œè®¾ç½®è¿”å›çŠ¶æ€å“åº”çš„å›è°ƒå‡½æ•°
+	struct evhttp_request* req = evhttp_request_new(remote_read_callback, this);//requestä¸ç”¨è‡ªå·±evhttp_request_free, äº¤ç»™m_connectionç®¡ç†
+	// æ·»åŠ httpå¤´éƒ¨
 	struct evkeyvalq* header = evhttp_request_get_output_headers(req);
 	evhttp_add_header(header, "Host", host);
 	evhttp_add_header(header, "Content-type", "application/json");
@@ -205,9 +205,9 @@ bool BaseHttpClient::Request(const char *url, evhttp_cmd_type cmd_type, unsigned
 	{
 		evbuffer_add(req->output_buffer, post_data, strlen(post_data));
 	}
-	// ·¢ÆğhttpÇëÇó
-	evhttp_make_request(m_connection, req, cmd_type, uri); //µ÷ÓÃºó£¬m_connection¹ÜÀíreqµÄÊÍ·Å
-	evhttp_connection_set_timeout(m_connection, ot_sec);  //ÉèÖÃ³¬Ê±
+	// å‘èµ·httpè¯·æ±‚
+	evhttp_make_request(m_connection, req, cmd_type, uri); //è°ƒç”¨åï¼Œm_connectionç®¡ç†reqçš„é‡Šæ”¾
+	evhttp_connection_set_timeout(m_connection, ot_sec);  //è®¾ç½®è¶…æ—¶
 	//LOG_DEBUG("request ok");
 	return true;
 }
@@ -219,7 +219,7 @@ void BaseHttpClient::remote_read_callback(struct evhttp_request* remote_rsp, voi
 	if (remote_rsp)
 	{
 		int start_num = remote_rsp->response_code / 100;
-		if (start_num != 4 && start_num !=5) //·Ç400,500¿ªÍ·µÄ
+		if (start_num != 4 && start_num !=5) //é400,500å¼€å¤´çš„
 		{
 			//LOG_DEBUG("remote_read_callback Code: %d %s", remote_rsp->response_code, remote_rsp->response_code_line);
 			//LOG_DEBUG("replay:");
@@ -242,7 +242,7 @@ void BaseHttpClient::remote_read_callback(struct evhttp_request* remote_rsp, voi
 		}
 	}
 	else
-	{	//³¬Ê±Ã»ÏìÓ¦£¬»òÕßÁ¬½ÓÊ§°Ü
+	{	//è¶…æ—¶æ²¡å“åº”ï¼Œæˆ–è€…è¿æ¥å¤±è´¥
 		p->ConnectFail();
 		//LOG_ERROR("remote_read_callback remote respond prt == NULL");
 	}
@@ -263,6 +263,6 @@ void BaseHttpClient::connection_close_callback(struct evhttp_connection* connect
 	}
 	p->m_connection = nullptr;
 	//LOG_DEBUG("connection_close_callback");
-	//delete p; ÕâÀï²»ĞèÒª£¬ Ä¿Ç°·¢ÏÖËùÓĞ½áÊøÁ÷³Ì¶¼»áµ÷ÓÃ remote_read_callback£¬ÔÙÄÄÀïÊÍ·Å¾Í¿ÉÒÔÁË¡£
+	//delete p; è¿™é‡Œä¸éœ€è¦ï¼Œ ç›®å‰å‘ç°æ‰€æœ‰ç»“æŸæµç¨‹éƒ½ä¼šè°ƒç”¨ remote_read_callbackï¼Œå†å“ªé‡Œé‡Šæ”¾å°±å¯ä»¥äº†ã€‚
 }
 }//namespace lc //libevent cpp

@@ -1,5 +1,5 @@
 /*
-ÁªºÏ²âÊÔ
+è”åˆæµ‹è¯•
 */
 
 
@@ -71,7 +71,7 @@ private:
 };
 
 
-//·Ö¸î×Ö·û´®·¢ÍøÂçÏûÏ¢
+//åˆ†å‰²å­—ç¬¦ä¸²å‘ç½‘ç»œæ¶ˆæ¯
 class SplitMsgClient : public ClientCon
 {
 public:
@@ -204,15 +204,15 @@ ReConnectClient *reCon;
 
 void StartEchoClient()
 {
-	//²âÊÔÖØ¸´·¢ËÍÏûÏ¢£¬»ØÏÔ¼ìÑéÊÇ·ñÒ»Ñù
+	//æµ‹è¯•é‡å¤å‘é€æ¶ˆæ¯ï¼Œå›æ˜¾æ£€éªŒæ˜¯å¦ä¸€æ ·
 	echo_client = new MyConnectClient();
 	echo_client->ConnectInit(LOCAL_IP, ECHO_SERVER_PORT);
 
-	//²âÊÔÒ»¸ö°ü·Ö¸î·¢ËÍ£¬¼ìÑéÊÇ·ñÕıÈ·
+	//æµ‹è¯•ä¸€ä¸ªåŒ…åˆ†å‰²å‘é€ï¼Œæ£€éªŒæ˜¯å¦æ­£ç¡®
 	split_client = new SplitMsgClient();
 	split_client->ConnectInit(LOCAL_IP, ECHO_SERVER_PORT);
 
-	//²âÊÔ¶Ï¿ªÖØÁ¬
+	//æµ‹è¯•æ–­å¼€é‡è¿
 	reCon = new ReConnectClient();
 	reCon->Start();
 }

@@ -1,12 +1,12 @@
 /*
-Ô´ÂëµØÖ·£º
+æºç åœ°å€ï¼š
 https://github.com/yiliangwu880/libevent_cpp.git
-ÓĞBUG»¶Ó­ÁªÏµ qq 30390012
+æœ‰BUGæ¬¢è¿è”ç³» qq 30390012
 
-Ö»ºÏÊÊµ¥Ïß³ÌÓÃ¡£
-Ê¹ÓÃÊµ¼ÊÀı×Ó¿´ test_server.cc test_client.cc
-Ê¹ÓÃÀı×Ó£º
-¿Í»§¶Ë£º
+åªåˆé€‚å•çº¿ç¨‹ç”¨ã€‚
+ä½¿ç”¨å®é™…ä¾‹å­çœ‹ test_server.cc test_client.cc
+ä½¿ç”¨ä¾‹å­ï¼š
+å®¢æˆ·ç«¯ï¼š
 	#include "../include_all.h"
 
 	class MyConnectClient1 : public BaseConnect
@@ -19,7 +19,7 @@ https://github.com/yiliangwu880/libevent_cpp.git
 		virtual void OnConnected() override
 		{
 			MsgPack msg;
-			...³õÊ¼»¯msg
+			...åˆå§‹åŒ–msg
 			SendData(msg);
 		}
 		virtual void onDisconnected() override
@@ -36,7 +36,7 @@ https://github.com/yiliangwu880/libevent_cpp.git
 		EventMgr::Obj().Dispatch();
 	}
 
-·şÎñÆ÷:
+æœåŠ¡å™¨:
 
 	class Connect2Client : public ListenerConnector
 	{
@@ -59,7 +59,7 @@ https://github.com/yiliangwu880/libevent_cpp.git
 		virtual void onDisconnected() override {}
 	};
 
-	//¼òµ¥Ä£ĞÍ
+	//ç®€å•æ¨¡å‹
 	void main()
 	{
 		EventMgr::Obj().Init();
@@ -70,7 +70,7 @@ https://github.com/yiliangwu880/libevent_cpp.git
 		EventMgr::Obj().Dispatch();
 	}
 
-	//Ö¸¶¨connector¶ÔÏó·ÖÅäÆ÷Ä£Ê½
+	//æŒ‡å®šconnectorå¯¹è±¡åˆ†é…å™¨æ¨¡å¼
 	void main()
 	{
 		class ConnectorMgr : public BaseConMgr

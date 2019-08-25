@@ -1,7 +1,7 @@
 /*
-	Ğ´¿âÊ±ĞèÒª´òÓ¡ÈÕÖ¾£¬Í¬Ê±¸øÊ¹ÓÃ¿âµÄÓÃ»§Ìá¹©¸Ä±äÈÕÖ¾ÊµÏÖµÄÑ¡Ôñ¡£
+	å†™åº“æ—¶éœ€è¦æ‰“å°æ—¥å¿—ï¼ŒåŒæ—¶ç»™ä½¿ç”¨åº“çš„ç”¨æˆ·æä¾›æ”¹å˜æ—¥å¿—å®ç°çš„é€‰æ‹©ã€‚
 
-ÓÃ»§¸Ä±äÈÕÖ¾ÊµÏÖÀı×Ó£º
+ç”¨æˆ·æ”¹å˜æ—¥å¿—å®ç°ä¾‹å­ï¼š
 class MyLog : public ILogPrinter
 {
 public:
@@ -23,17 +23,17 @@ int main(int argc, char* argv[])
 
 enum LogLv
 {
-    //ÓÅÏÈ¼¶´Ó¸ßµ½µ×
+    //ä¼˜å…ˆçº§ä»é«˜åˆ°åº•
     LL_FATAL,
     LL_ERROR,
     LL_WARN,
     LL_DEBUG,
-    //ÏÂÃæµÄ¼¶±ğ£¬²»Êä³öÎÄ¼şÎ»ÖÃĞÅÏ¢
+    //ä¸‹é¢çš„çº§åˆ«ï¼Œä¸è¾“å‡ºæ–‡ä»¶ä½ç½®ä¿¡æ¯
     LL_INFO,
     LL_ANY
 };
 
-//ÓÃ»§ÖØ¶¨Òå´òÓ¡log½Ó¿Ú
+//ç”¨æˆ·é‡å®šä¹‰æ‰“å°logæ¥å£
 class ILogPrinter
 {
 public:
@@ -41,13 +41,13 @@ public:
 	
 };
 
-//È±Ê¡¶¨Òå,´òÓ¡µ½ÎÄ¼şºÍ±ê×¼Êä³ö
+//ç¼ºçœå®šä¹‰,æ‰“å°åˆ°æ–‡ä»¶å’Œæ ‡å‡†è¾“å‡º
 class DefaultLog : public ILogPrinter
 {
 public:
 	virtual void Printf(LogLv lv, const char * file, int line, const char *fun, const char * pattern, va_list vp) override;
 public:
-	//para:const char *fname, ÎÄ¼şÂ·¾¶Ãû
+	//para:const char *fname, æ–‡ä»¶è·¯å¾„å
 	explicit DefaultLog(const char *fname = "log.txt");
 	~DefaultLog();
 	void setShowLv(LogLv lv);
@@ -65,7 +65,7 @@ private:
 };
 
 
-//µ¥Àı
+//å•ä¾‹
 class LogMgr
 {
 public:
@@ -74,7 +74,7 @@ public:
 		static LogMgr d;
 		return d;
 	}
-	void SetLogPrinter(ILogPrinter &iprinter); //¸Ä±äÈÕÖ¾ÊµÏÖ
+	void SetLogPrinter(ILogPrinter &iprinter); //æ”¹å˜æ—¥å¿—å®ç°
 	void Printf(LogLv lv, const char * file, int line, const char *pFun, const char * pattern, ...) ;
 
 private:
@@ -91,7 +91,7 @@ private:
 #define LB_DEBUG(x, ...)  LogMgr::Obj().Printf(LL_DEBUG, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
 #define LB_INFO(x, ...)   LogMgr::Obj().Printf(LL_INFO, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
 
-//¼ò»¯ifÓï¾äĞ´·¨
+//ç®€åŒ–ifè¯­å¥å†™æ³•
 #define LB_COND(cond, ret, x, ...)\
 	do{\
 	if(!(cond)){\

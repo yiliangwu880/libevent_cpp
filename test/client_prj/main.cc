@@ -1,4 +1,4 @@
-//ÁªºÏserver_prj²âÊÔ£¬´óÁ¿¿Í»§¶ËÁ¬½Ó£¬¶¨Ê±·¢ËÍ£¬½ÓÊÕÊı¾İ
+//è”åˆserver_prjæµ‹è¯•ï¼Œå¤§é‡å®¢æˆ·ç«¯è¿æ¥ï¼Œå®šæ—¶å‘é€ï¼Œæ¥æ”¶æ•°æ®
 
 #include "stdafx.h"
 #include "version.h"
@@ -68,9 +68,9 @@ namespace {
 				if (r<10)
 				{
 					//LOG_DEBUG("disconnect");
-					DisConnect(); //µ÷ÓÃÕâÀïµ¹ÊÇFDÔ½À´Ô½¶à£¬ÊÍ·Å²»ÁË£¬Ô­ÒòÎ´Ã÷
+					DisConnect(); //è°ƒç”¨è¿™é‡Œå€’æ˜¯FDè¶Šæ¥è¶Šå¤šï¼Œé‡Šæ”¾ä¸äº†ï¼ŒåŸå› æœªæ˜
 
-								//Ëæ»ú»¯¶¨Ê±Æ÷£¬ÈÃÁ÷³Ì¸üËæ»ú
+								//éšæœºåŒ–å®šæ—¶å™¨ï¼Œè®©æµç¨‹æ›´éšæœº
 					{
 						m_timer.StopTimer();
 						auto f = std::bind(&MyConnectClient::OnTimer, this);
@@ -98,7 +98,7 @@ namespace {
 				UNIT_ASSERT(false);
 			}
 
-			//Ëæ»ú»¯¶¨Ê±Æ÷£¬ÈÃÁ÷³Ì¸üËæ»ú
+			//éšæœºåŒ–å®šæ—¶å™¨ï¼Œè®©æµç¨‹æ›´éšæœº
 			{
 				m_timer.StopTimer();
 				auto f = std::bind(&MyConnectClient::OnTimer, this);
@@ -111,7 +111,7 @@ namespace {
 	Timer log_timer;
 
 
-	//É¾³ı·½Ê½ÖØÁ¬
+	//åˆ é™¤æ–¹å¼é‡è¿
 	struct ClientReconByDel : public ClientCon
 	{
 		int m_cnt;

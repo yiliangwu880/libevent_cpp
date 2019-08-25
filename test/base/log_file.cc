@@ -99,7 +99,7 @@ void DefaultLog::Printf(LogLv lv, const char * file, int line, const char *fun, 
 	{
 		char out_str[1000];
 		vsnprintf(out_str, sizeof(out_str), s.c_str(), vp);
-		fprintf(m_file, out_str); //ÓÃÒ»´Îvfprintf£¬ÔÙÓÃvprintfÓĞÊ±ºòÓĞBUG£¬ vp±» vfprintfĞŞ¸ÄÁË£¬Ô­ÒòÎ´Ã÷
+		fprintf(m_file, out_str); //ç”¨ä¸€æ¬¡vfprintfï¼Œå†ç”¨vprintfæœ‰æ—¶å€™æœ‰BUGï¼Œ vpè¢« vfprintfä¿®æ”¹äº†ï¼ŒåŸå› æœªæ˜
 		::printf(out_str);
 	}
 	else

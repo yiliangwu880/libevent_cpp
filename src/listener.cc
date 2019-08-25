@@ -91,8 +91,8 @@ SvrCon::SvrCon()
 	:m_cn_mgr(nullptr)
 	, m_id(0)
 {
-	//  1ÃëÄÚ£¬²úÉúÉÙÓÚ4ÒÚ¶à(32Î»×î´óÊý)£¬¾ÍÄÜ±£Ö¤Î¨Ò»
-	//Ò»°ã¼¸ÐÐ´úÂë£¬ÖØ¸´ÅÜ4ÒÚ´Î£¬¶¼ÒªÊ®¼¸ÃëÁË¡£ ËùÒÔÊµ¼ÊÇé¿ö²»»áÖØ¸´
+	//  1ç§’å†…ï¼Œäº§ç”Ÿå°‘äºŽ4äº¿å¤š(32ä½æœ€å¤§æ•°)ï¼Œå°±èƒ½ä¿è¯å”¯ä¸€
+	//ä¸€èˆ¬å‡ è¡Œä»£ç ï¼Œé‡å¤è·‘4äº¿æ¬¡ï¼Œéƒ½è¦åå‡ ç§’äº†ã€‚ æ‰€ä»¥å®žé™…æƒ…å†µä¸ä¼šé‡å¤
 	static uint32 seed = 0;
 	time_t sec;
 	time(&sec);
@@ -104,7 +104,7 @@ SvrCon::SvrCon()
 
 SvrCon::~SvrCon()
 {
-	m_cn_mgr = nullptr; //Îö¹¹ºóÇå³ýÖ¸Õë£¬·À´íÎó´úÂë²úÉúÒ°Ö¸Õë¡£
+	m_cn_mgr = nullptr; //æžæž„åŽæ¸…é™¤æŒ‡é’ˆï¼Œé˜²é”™è¯¯ä»£ç äº§ç”Ÿé‡ŽæŒ‡é’ˆã€‚
 }
 
 bool SvrCon::AcceptInit(evutil_socket_t fd, struct sockaddr* sa, const sockaddr_in &svr_addr)
@@ -116,7 +116,7 @@ bool SvrCon::AcceptInit(evutil_socket_t fd, struct sockaddr* sa, const sockaddr_
 		LB_ERROR("repeated init");
 		return false;
 	}
-	bufferevent* buf_e = bufferevent_socket_new(EventMgr::Obj().GetEventBase(), fd, BEV_OPT_CLOSE_ON_FREE); //ÊÍ·Åm_buf_e£¬µÄÊ±ºò£¬¿âÀïÃæ»áÊÍ·Åm_fd
+	bufferevent* buf_e = bufferevent_socket_new(EventMgr::Obj().GetEventBase(), fd, BEV_OPT_CLOSE_ON_FREE); //é‡Šæ”¾m_buf_eï¼Œçš„æ—¶å€™ï¼Œåº“é‡Œé¢ä¼šé‡Šæ”¾m_fd
 	if (!buf_e)
 	{
 		LB_ERROR("cannot bufferevent_socket_new libevent ...\n");
@@ -140,11 +140,11 @@ bool SvrCon::AcceptInit(evutil_socket_t fd, struct sockaddr* sa, const sockaddr_
 bool SvrCon::DisConnect()
 {
 	ConCom::DisConnect();
-	return m_cn_mgr->PostDelConn(m_id); //ÑÓÊ± delete¶ÔÏó
+	return m_cn_mgr->PostDelConn(m_id); //å»¶æ—¶ deleteå¯¹è±¡
 }
 
 void SvrCon::OnDisconnected()
 {
-	m_cn_mgr->PostDelConn(m_id); //ÑÓÊ± delete¶ÔÏó
+	m_cn_mgr->PostDelConn(m_id); //å»¶æ—¶ deleteå¯¹è±¡
 }
 }//namespace lc //libevent cpp

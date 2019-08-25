@@ -1,5 +1,5 @@
 /*
-联合测试
+鑱斿悎娴嬭瘯
 */
 
 
@@ -48,7 +48,7 @@ void StartLog();
 UNITTEST(echo_server)
 {
 
-	//回显服务器，定时关闭
+	//鍥炴樉鏈嶅姟鍣紝瀹氭椂鍏抽棴
 	ct.StartTimer(1000*4);
 	listener = new Listener<Connect2Client>();
 	listener->Init(ECHO_SERVER_PORT);
