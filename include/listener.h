@@ -28,8 +28,8 @@ class Listener;
 
 
 typedef std::function<void(SvrCon &)> SvrConForeachCB;
-//注意，由BaseConnectorMgr管理的 ListenerConnector不用用户代码调用delete.
-//需要断开连接，调用 BaseConnectorMgr::CloseConnect(uint64 id);
+//注意，由BaseConMgr管理的 ListenerConnector不需要用户代码调用delete.
+//需要断开连接，调用 BaseConMgr::CloseConnect(uint64 id);
 class BaseConMgr
 {
 	template<class >
@@ -41,7 +41,7 @@ public:
 	//马上调用delete Connector
 	bool PostDelConn(uint64 id);
 	void OnTimerDelConn(); //真正delele对象
-	//建议获取指针只做局部变量用，不要保存，因为BaseConnectorMgr管理ListenerConnector对象的删除
+	//建议获取指针只做局部变量用，不要保存，因为BaseConMgr管理ListenerConnector对象的删除
 	SvrCon *FindConn(uint64 id);
 
 	void Foreach(const SvrConForeachCB &cb);
@@ -105,8 +105,8 @@ private:
 };
 
 //管理服务器
-//类 成员只管理 m_listener m_addr， 其他链接管理交给 BaseConnectorMgr处理
-//BaseConnectorMgr 实现分离出去，让Listener做更专注于网络逻辑,更简单化。具体管理器让用户选择自定义
+//类 成员只管理 m_listener m_addr， 其他链接管理交给 BaseConMgr处理
+//BaseConMgr 实现分离出去，让Listener做更专注于网络逻辑,更简单化。具体管理器让用户选择自定义
 //@para class Connector 必须为 ListenerConnector派生类
 //有了缺省的NoUseListenerConnector， 你可以这样初始化 Listener<> listener(my_connector_mgr); listener.Init(server_port);
 

@@ -442,7 +442,7 @@ bool ClientCon::TryReconnect()
 	}
 }
 
-bool MsgPack::Serialize(std::string s)
+bool MsgPack::Serialize(const std::string &s)
 {
 	if (s.length() >= sizeof(data))
 	{

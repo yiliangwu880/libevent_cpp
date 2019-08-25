@@ -49,7 +49,7 @@ namespace lc //libevent cpp
 		uint16 len; //data有效字节数
 		char data[MAX_MSG_DATA_LEN];
 
-		bool Serialize(std::string s);
+		bool Serialize(const std::string &s);
 
 	};
 #pragma pack(pop)

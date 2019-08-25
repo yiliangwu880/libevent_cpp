@@ -73,7 +73,7 @@ https://github.com/yiliangwu880/libevent_cpp.git
 	//指定connector对象分配器模式
 	void main()
 	{
-		class ConnectorMgr : public BaseConnectorMgr
+		class ConnectorMgr : public BaseConMgr
 		{
 		private:
 		virtual ListenerConnector *CreateConnect(){...};
