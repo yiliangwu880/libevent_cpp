@@ -75,7 +75,8 @@ function BuildFileExtenal2(path_list, ext_ls)
 	ret={}
 	for _,ext in pairs(ext_ls) do
 		for _,path in pairs(path_list) do
-			s =path..ext
+			s =path.."*."..ext
+			--print("path2="..s)
 			table.insert(ret, s)
 		end	
 	end	
