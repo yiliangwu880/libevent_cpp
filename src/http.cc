@@ -147,7 +147,7 @@ bool BaseHttpClient::Request(const char *url, evhttp_cmd_type cmd_type, unsigned
 
 	//解析url
 	////////////////////////////////////
-	typedef std::unique_ptr<evhttp_uri, decltype(&::evhttp_uri_free)> HttpUriPtr;
+	using HttpUriPtr = std::unique_ptr<evhttp_uri, decltype(&::evhttp_uri_free)> ;
 	HttpUriPtr hu(evhttp_uri_parse(url), ::evhttp_uri_free); //自动释放资源
 	if (nullptr == hu.get())
 	{

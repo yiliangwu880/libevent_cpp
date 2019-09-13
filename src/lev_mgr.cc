@@ -104,7 +104,7 @@ namespace lc //libevent cpp
 		{
 			if (user_data)
 			{
-				typedef  void(*FUN_TYPE)(int sig_type);
+				using FUN_TYPE = void(*)(int sig_type);
 				FUN_TYPE fun = (FUN_TYPE)user_data;
 				fun((int)sig);
 			}

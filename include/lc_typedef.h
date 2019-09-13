@@ -4,12 +4,12 @@ brief:常用基本类型定义
 #pragma once
 namespace lc //libevent cpp
 {
-#ifndef uint32
-	typedef unsigned short uint16;
-	typedef unsigned int uint32;
-	typedef unsigned long long uint64;
-	typedef long long int64;
-	typedef unsigned char uint8;
-	typedef int int32;
-#endif
+
+	using uint16 = unsigned short ;
+	using uint32 = unsigned int ;
+	using uint64 = unsigned long long ;
+	using int64 = long long ;
+	using uint8 = unsigned char ;
+	using int32 = int ;
+
 }

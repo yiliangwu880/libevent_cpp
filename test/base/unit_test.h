@@ -33,7 +33,7 @@ public:
 };
 
 //@para va_list vp, vp不需要回调里面释放
-typedef void (UnitTestPrintf)(bool is_error, const char * file, int line, const char *fun, const char * pattern, va_list vp);
+using UnitTestPrintf = void (*)(bool is_error, const char * file, int line, const char *fun, const char * pattern, va_list vp);
 class UnitTestMgr
 {
 public:

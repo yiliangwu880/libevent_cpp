@@ -5,15 +5,15 @@ brief: 方便 vs写代码而已，定义WIN平台没有的linux定义
 
 #ifdef WIN32
 #include <time.h>
-typedef int __uint32_t;
-typedef long long  __uint64_t;
+using __uint32_t= int ;
+using __uint64_t =long long  ;
 
-typedef union epoll_data {  
+using epoll_data_t = union epoll_data {
 	void *ptr;  
 	int fd;  
 	__uint32_t u32;  
 	__uint64_t u64;  
-} epoll_data_t;  
+} ;  
 
 struct epoll_event {  
 	__uint32_t events; /* Epoll events */  

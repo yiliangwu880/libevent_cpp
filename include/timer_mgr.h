@@ -55,7 +55,7 @@ use excample2:
 
 namespace lc //libevent cpp
 {
-	typedef std::function<void(void)> TimerCB;
+	using TimerCB = std::function<void(void)> ;
 	//里面做创建，销毁定时器，保证不内存泄露, 不回调不存在的Timer
 	class Timer
 	{

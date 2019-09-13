@@ -27,7 +27,7 @@ class Listener;
 
 
 
-typedef std::function<void(SvrCon &)> SvrConForeachCB;
+using SvrConForeachCB =  std::function<void(SvrCon &)> ;
 //注意，由BaseConMgr管理的 ListenerConnector不需要用户代码调用delete.
 //需要断开连接，调用 BaseConMgr::CloseConnect(uint64 id);
 class BaseConMgr
