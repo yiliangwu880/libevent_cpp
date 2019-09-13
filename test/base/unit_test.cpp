@@ -11,7 +11,7 @@ IUnitTest::IUnitTest(const char *unit_name)
 	UnitTestMgr::Obj().Reg(this);
 }
 
-void UnitTestMgr::Start(UnitTestPrintf *printf)
+void UnitTestMgr::Start(UnitTestPrintf printf)
 {
 	m_print = printf;
 	for (auto &var : m_vecUnit)

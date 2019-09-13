@@ -42,7 +42,7 @@ public:
 		static UnitTestMgr d;
 		return d;
 	}
-	void Start(UnitTestPrintf *printf= nullptr);
+	void Start(UnitTestPrintf printf= nullptr);
 	void Reg(IUnitTest *p);
 	void Printf(bool is_error, const char * file, int line, const char *pFun, const char * pattern, ...);
 
@@ -53,7 +53,7 @@ private:
 
 private:
 	std::vector<IUnitTest*> m_vecUnit;
-	UnitTestPrintf *m_print;
+	UnitTestPrintf m_print;
 };
 
 #define UNIT_ERROR(x, ...)  UnitTestMgr::Obj().Printf( true, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
