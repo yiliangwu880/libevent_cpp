@@ -361,9 +361,9 @@ bool ClientCon::ConnectInit(const char* connect_ip, unsigned short connect_port)
 		LB_ERROR("repeated init");
 		return false;
 	}
-	if (nullptr == connect_ip)
+	if (nullptr == connect_ip || 0 == connect_port)
 	{
-		LB_ERROR("nullptr == connect_ip");
+		LB_ERROR("nullptr == connect_ip || 0 == connect_port, error para");
 		return false;
 	}
 

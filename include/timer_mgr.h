@@ -65,7 +65,7 @@ namespace lc //libevent cpp
 		virtual ~Timer();
 
 		//para is_loop true表示循环定时器
-		//return, true成功开始定时器，false 已经开始了，不需要设定(可以先stop,再start)
+		//return, false 表示失败，定时器已经开始了。
 		bool StartTimer(unsigned long long millisecond, void *para = nullptr, bool is_loop = false);
 		bool StartTimer(unsigned long long millisecond, const TimerCB &cb, bool is_loop = false);
 		//停止正在进行的定时器，
