@@ -130,8 +130,8 @@ const char * DefaultLog::GetLogLevelStr(LogLv lv) const
 	case LL_INFO:
 		return "[info]  ";
 		break;
-	case LL_ANY:
-		return "[any]   ";
+	case LL_TRACE:
+		return "[trace]   ";
 		break;
 	}
 	return "[unknow]";

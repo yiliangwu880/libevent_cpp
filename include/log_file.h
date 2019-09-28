@@ -28,11 +28,11 @@ enum LogLv
     //优先级从高到底
     LL_FATAL,
     LL_ERROR,
-    LL_WARN,
+	LL_WARN,
+	LL_INFO,
     LL_DEBUG,
     //下面的级别，不输出文件位置信息
-    LL_INFO,
-    LL_ANY
+	LL_TRACE
 };
 
 //用户重定义打印log接口

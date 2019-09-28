@@ -56,11 +56,18 @@ namespace lc //libevent cpp
 
 	template<class > class Listener;
 
-	class IConnect
-	{
-	public:
-		virtual ~IConnect() {};
+	class ClientCon;
 
+	//管理一个socket链接，bufferevent， fd,消息收发处理
+	//服务器端，客户端端都可复用的功能
+	//要主动关闭连接，删掉对象就可以了。
+	//待完成。 重连，复用对象各种状态，太复杂了。禁用该功能。用户可通过创建新对象实现重连
+	class ConCom 
+	{
+		template<class > friend class Listener;
+		friend class ClientCon;
+		friend class SvrCon;
+	public:
 		//每次接收都是完整消息包
 		virtual void OnRecv(const MsgPack &msg) = 0;
 		virtual void OnConnected() = 0;
@@ -69,21 +76,6 @@ namespace lc //libevent cpp
 		//被调用的时候， fd, bufferevent 资源已经释放
 		//删除本对象， 不会触发OnDisconnected了
 		virtual void OnDisconnected() = 0;
-
-
-	};
-
-	class ClientCon;
-
-	//管理一个socket链接，bufferevent， fd,消息收发处理
-	//服务器端，客户端端都可复用的功能
-	//要主动关闭连接，删掉对象就可以了。
-	//待完成。 重连，复用对象各种状态，太复杂了。禁用该功能。用户可通过创建新对象实现重连
-	class ConCom : public IConnect
-	{
-		template<class > friend class Listener;
-		friend class ClientCon;
-		friend class SvrCon;
 	public:
 		ConCom();
 		virtual ~ConCom();

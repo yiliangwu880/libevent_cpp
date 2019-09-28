@@ -28,9 +28,9 @@ enum LogLv
     LL_ERROR,
     LL_WARN,
     LL_DEBUG,
+	LL_TRACE,
     //下面的级别，不输出文件位置信息
     LL_INFO,
-    LL_ANY
 };
 
 //用户重定义打印log接口
