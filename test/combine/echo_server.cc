@@ -43,6 +43,7 @@ namespace {
 }//namespace {
 
 void StartEchoClient();
+void StartConFailClient();
 
 void StartLog();
 UNITTEST(echo_server)
@@ -53,5 +54,6 @@ UNITTEST(echo_server)
 	listener = new Listener<Connect2Client>();
 	listener->Init(ECHO_SERVER_PORT);
 	StartEchoClient();
+	StartConFailClient();
 	StartLog();
 }

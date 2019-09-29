@@ -18,7 +18,7 @@ static void Printf(bool is_error, const char * file, int line, const char *fun, 
 	} 
 	my_log.Printf(lv, file, line, fun, pattern, vp);
 }
-
+void CheckClientEnd();
 int main(int argc, char* argv[]) 
 {
 	LogMgr::Obj().SetLogPrinter(my_log);
@@ -28,6 +28,7 @@ int main(int argc, char* argv[])
 	UnitTestMgr::Obj().Start(Printf);
 	EventMgr::Obj().Dispatch();
 
+	CheckClientEnd();
 	LB_DEBUG("end run");
 	return 0;
 }

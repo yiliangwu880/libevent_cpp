@@ -79,9 +79,9 @@ namespace lc //libevent cpp
 	public:
 		ConCom();
 		virtual ~ConCom();
+		//true表示等连接请求操作，作为客户端使用的情况有效。
+		bool IsWaitConnectReq() const ;
 		bool IsConnect() const { return m_is_connect; };
-		//true表示有socket了，是连接中状态或者请求连接，等服务器响应
-		bool IsHaveFd() const { return m_fd!=0; }
 		void DisConnect();
 
 		bool SendData(const MsgPack &msg);

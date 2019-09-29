@@ -28,6 +28,11 @@ ConCom::~ConCom()
 	Free();
 }
 
+bool ConCom::IsWaitConnectReq() const
+{
+	return m_fd == 0;
+}
+
 void ConCom::Free()
 {
 	if (m_buf_e)
@@ -89,7 +94,7 @@ void ConCom::SetAddr(const sockaddr_in &svr_addr)
 
 void ConCom::DisConnect()
 {
-	if (!m_is_connect)
+	if (m_fd == 0)
 	{
 		//LB_DEBUG("already disconnect. not need to disconnect.");
 		return;
@@ -225,6 +230,7 @@ void ConCom::conn_event_callback(bufferevent* bev, short events)
 
 			}
 		}
+		//LB_TRACE("--------------------------------------------CONNECT ERROR");
 		OnError(events);
 		DisConnect(); //里面的回调函数，可以操作delete对象
 		return; //这里本对象可能已经销毁，别再引用
@@ -435,14 +441,14 @@ bool ClientCon::ConnectByAddr()
 
 bool ClientCon::TryReconnect()
 {
-	if(!IsConnect() && !IsHaveFd())
+	if(IsWaitConnectReq())
 	{
 		return ConnectByAddr();
 	}
 	else
 	{
-		LB_DEBUG("no need TryReconnect");
-		return true; //不需要重连
+		//LB_TRACE("no need TryReconnect");
+		return false; //不需要重连
 	}
 }
 

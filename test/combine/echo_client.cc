@@ -11,6 +11,8 @@ using namespace std;
 
 static const char *LOCAL_IP = "127.0.0.1";
 
+
+
 namespace{
 
 class MyConnectClient : public ClientCon
@@ -196,9 +198,28 @@ struct ReConnectClient : public ClientCon
 	}
 };
 
+static bool isFailClientOk = false;
+struct ConFailClient : public ClientCon
+{
+	virtual void OnConnected() override
+	{
+		UNIT_ASSERT(false);
+	}
+	virtual void OnDisconnected() override
+	{
+		//UNIT_INFO("OnDisconnected");
+		isFailClientOk = true;
+	}
+	virtual void OnRecv(const MsgPack &msg) override
+	{
+		UNIT_ASSERT(false);
+	}
+
+};
 MyConnectClient *echo_client;
 SplitMsgClient *split_client;
 ReConnectClient *reCon;
+ConFailClient *fail_c = nullptr;
 }//namespace{
 
 
@@ -215,4 +236,16 @@ void StartEchoClient()
 	//测试断开重连
 	reCon = new ReConnectClient();
 	reCon->Start();
+}
+
+//连接失败客户端，服务器不存在
+void StartConFailClient()
+{
+	fail_c = new ConFailClient();
+	fail_c->ConnectInit(LOCAL_IP, 38774);
+}
+
+void CheckClientEnd()
+{
+	UNIT_ASSERT(isFailClientOk);
 }
