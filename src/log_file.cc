@@ -150,7 +150,7 @@ const char * DefaultLog::GetLogLevelStr(LogLv lv) const
 		return "[info]  ";
 		break;
 	case LL_TRACE:
-		return "[any]   ";
+		return "[trace]   ";
 		break;
 	}
 	return "[unknow]";

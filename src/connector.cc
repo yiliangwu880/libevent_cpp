@@ -33,7 +33,7 @@ void ConCom::Free()
 	if (m_buf_e)
 	{
 		bufferevent_free(m_buf_e);
-		//LOG_DEBUG("bufferevent_free(m_buf_e)");
+		//LB_TRACE("bufferevent_free m_buf_e = 0");
 		m_buf_e = 0;
 	}
 	if (m_fd != 0)
@@ -53,12 +53,12 @@ bool ConCom::SetSocketInfo(bufferevent* buf_e, evutil_socket_t fd, struct sockad
 {
 	if (nullptr == buf_e)
 	{
-		//LB_ERROR("SetSocketInfo fail. nullptr == buf_e");
+		LB_ERROR("SetSocketInfo fail. nullptr == buf_e");
 		return false;
 	}
 	if (nullptr != m_buf_e)
 	{
-		//LB_ERROR("SetSocketInfo fail. nullptr != m_buf_e");
+		LB_ERROR("SetSocketInfo fail. nullptr != m_buf_e");
 		return false;
 	}
 
@@ -68,6 +68,7 @@ bool ConCom::SetSocketInfo(bufferevent* buf_e, evutil_socket_t fd, struct sockad
 	}
 	m_buf_e = buf_e;
 	m_fd = fd;
+	//LB_TRACE("SetSocketInfo OK");
 	return true;
 }
 
@@ -424,20 +425,23 @@ bool ClientCon::ConnectByAddr()
 	bool ret= SetSocketInfo(buf_e, fd);
 	if (!ret)
 	{
+		LB_ERROR("SetSocketInfo fail");
 		bufferevent_free(buf_e);
 		return false;
 	}
+
 	return true;
 }
 
 bool ClientCon::TryReconnect()
 {
-	if (!IsConnect())
+	if(!IsConnect() && !IsHaveFd())
 	{
 		return ConnectByAddr();
 	}
 	else
 	{
+		LB_DEBUG("no need TryReconnect");
 		return true; //不需要重连
 	}
 }

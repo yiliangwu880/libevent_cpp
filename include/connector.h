@@ -80,7 +80,8 @@ namespace lc //libevent cpp
 		ConCom();
 		virtual ~ConCom();
 		bool IsConnect() const { return m_is_connect; };
-
+		//true表示有socket了，是连接中状态或者请求连接，等服务器响应
+		bool IsHaveFd() const { return m_fd!=0; }
 		void DisConnect();
 
 		bool SendData(const MsgPack &msg);
@@ -134,17 +135,15 @@ namespace lc //libevent cpp
 	class ClientCon : public ConCom
 	{
 	public:
-		ClientCon() 
-		{}
 		//AConnectInit必须先选其中一个初始化函数调用后，才能使用其他方法
 		//return true代表请求成功，不代表连接成功. 不能连接成功，会回调 onDisconnected  通知
 		bool ConnectInit(const char* connect_ip, unsigned short connect_port);
 		bool ConnectInit(const sockaddr_in &svr_addr);
 		bool TryReconnect();
 
-	
 	private:
 		bool ConnectByAddr();
+
 	};
 
 }//namespace lc //libevent cpp
