@@ -111,8 +111,13 @@ namespace lc //libevent cpp
 		}
 	}
 
-	void EventMgr::RegSignal(int sig_type, void(*SignalCB)(int sig_type))
+	void EventMgr::RegSignal(int sig_type, void (*SignalCB)(int sig_type))
 	{
+		if (!m_eb)
+		{
+			LB_ERROR("LibEventMgr not init\n");
+			return;
+		}
 		event* signal_event = evsignal_new(m_eb, sig_type, signal_cb, (void*)SignalCB);
 		if (!signal_event || event_add(signal_event, NULL) < 0)
 		{

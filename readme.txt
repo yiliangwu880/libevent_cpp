@@ -17,6 +17,7 @@ vs浏览代码：
 
 
 目录结构：
+	bin					     == 执行文件
 	Debug		             ==cmake编译目录
 	include		             ==用户用的头文件
 	lib                      ==用户用的静态库

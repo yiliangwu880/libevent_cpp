@@ -40,7 +40,7 @@ class ILogPrinter
 {
 public:
 	virtual void Printf(LogLv lv, const char * file, int line, const char *fun, const char * pattern, va_list vp) = 0;
-	
+	virtual void flush() {}
 };
 
 //缺省定义,打印到文件和标准输出
@@ -48,14 +48,14 @@ class DefaultLog : public ILogPrinter
 {
 public:
 	virtual void Printf(LogLv lv, const char * file, int line, const char *fun, const char * pattern, va_list vp) override;
+	virtual void flush();
 public:
 	//para:const char *fname, 文件路径名
-	explicit DefaultLog(const char *fname = "log.txt");
+	explicit DefaultLog(const char *fname = "lclog.txt");
 	~DefaultLog();
 	void setShowLv(LogLv lv);
 	//print log in std out.
 	void setStdOut(bool is_std_out);
-	void flush();
 private:
 	const char * GetLogLevelStr(LogLv lv) const;
 
@@ -78,9 +78,10 @@ public:
 	}
 	void SetLogPrinter(ILogPrinter &iprinter); //改变日志实现
 	void Printf(LogLv lv, const char * file, int line, const char *pFun, const char * pattern, ...) ;
-
+	void flush();
 private:
 	LogMgr();
+	~LogMgr();
 	static DefaultLog &GetDefualtLog()
 	{
 		static DefaultLog d("log.txt");

@@ -24,9 +24,25 @@ void LogMgr::Printf(LogLv lv, const char * file, int line, const char *fun, cons
 	va_end(vp);
 }
 
+void LogMgr::flush()
+{
+	if (nullptr != m_iprinter)
+	{
+		m_iprinter->flush();
+	}
+}
+
 LogMgr::LogMgr()
 	:m_iprinter(nullptr)
 {
+}
+
+LogMgr::~LogMgr()
+{
+	if (nullptr != m_iprinter)
+	{
+		m_iprinter->flush();
+	}
 }
 
 void DefaultLog::flush()
