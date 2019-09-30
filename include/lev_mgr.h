@@ -35,6 +35,7 @@ namespace lc //libevent cpp
 
 		//注意：不会释放fs,event等资源
 		void FreeEventBase();
+
 	private:
 		EventMgr()
 			:m_eb(nullptr)

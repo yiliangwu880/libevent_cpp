@@ -84,7 +84,7 @@ private:
 	~LogMgr();
 	static DefaultLog &GetDefualtLog()
 	{
-		static DefaultLog d("log.txt");
+		static DefaultLog d("lc_log.txt");
 		return d;
 	}
 
@@ -92,18 +92,18 @@ private:
 	ILogPrinter *m_iprinter;
 };
 
-#define LB_FATAL(x, ...)  LogMgr::Obj().Printf(LL_FATAL, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
-#define LB_ERROR(x, ...)  LogMgr::Obj().Printf(LL_ERROR, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
-#define LB_WARN(x, ...)   LogMgr::Obj().Printf(LL_WARN, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
-#define LB_INFO(x, ...)   LogMgr::Obj().Printf(LL_INFO, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
-#define LB_DEBUG(x, ...)  LogMgr::Obj().Printf(LL_DEBUG, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
-#define LB_TRACE(x, ...)  LogMgr::Obj().Printf(LL_TRACE, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
+#define LB_FATAL(x, ...)  lc::LogMgr::Obj().Printf(lc::LL_FATAL, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
+#define LB_ERROR(x, ...)  lc::LogMgr::Obj().Printf(lc::LL_ERROR, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
+#define LB_WARN(x, ...)   lc::LogMgr::Obj().Printf(lc::LL_WARN, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
+#define LB_INFO(x, ...)   lc::LogMgr::Obj().Printf(lc::LL_INFO, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
+#define LB_DEBUG(x, ...)  lc::LogMgr::Obj().Printf(lc::LL_DEBUG, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
+#define LB_TRACE(x, ...)  lc::LogMgr::Obj().Printf(lc::LL_TRACE, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
 
 //简化if语句写法
 #define LB_COND(cond, ret, x, ...)\
 	do{\
 	if(!(cond)){\
-	LogMgr::Obj().Printf(LL_ERROR, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__); \
+	lc::LogMgr::Obj().Printf(LL_ERROR, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__); \
 	return ret;\
 	}	\
 	}while(0)
@@ -112,7 +112,7 @@ private:
 	do{\
 	if(!(cond))	\
 	{\
-	LogMgr::Obj().Printf(LL_ERROR, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__); \
+	lc::LogMgr::Obj().Printf(LL_ERROR, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__); \
 		return; \
 	}\
 	}while(0)
@@ -133,7 +133,7 @@ private:
 #define LB_ASSERT(cond)\
 	do{\
 	if(!(cond)){\
-	LogMgr::Obj().Printf(LL_ERROR, __FILE__, __LINE__, __FUNCTION__, "assert error"); \
+	lc::LogMgr::Obj().Printf(LL_ERROR, __FILE__, __LINE__, __FUNCTION__, "assert error"); \
 	}	\
 	}while(0)
 
