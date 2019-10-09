@@ -18,6 +18,7 @@ namespace lc //libevent cpp
 		:m_event(nullptr)
 		, m_state(S_WAIT_START_TIMER)
 		, m_para(nullptr)
+		, m_is_loop(false)
 	{
 	}
 
@@ -33,6 +34,10 @@ namespace lc //libevent cpp
 	void Timer::OnTimerCB(evutil_socket_t, short, void* para)
 	{
 		Timer *p = (Timer *)para;
+		if (!p->m_is_loop)
+		{
+			p->StopTimer();
+		}
 		p->OnTimer(p->m_para);
 	}
 
@@ -64,6 +69,7 @@ namespace lc //libevent cpp
 			LB_ERROR("evtimer_add fail");
 		}
 		m_state = S_WAIT_TIME_OUT;
+		m_is_loop = is_loop;
 		return true;
 	}
 
@@ -72,6 +78,10 @@ namespace lc //libevent cpp
 	void Timer::TimerCB_StdBind(evutil_socket_t, short, void* para)
 	{
 		Timer *p = (Timer *)para;
+		if (!p->m_is_loop)
+		{
+			p->StopTimer();
+		}
 		p->m_cb();
 	}
 
@@ -103,6 +113,7 @@ namespace lc //libevent cpp
 		{
 			LB_ERROR("evtimer_add fail");
 		}
+		m_is_loop = is_loop;
 		m_state = S_WAIT_TIME_OUT;
 		return true;
 	}

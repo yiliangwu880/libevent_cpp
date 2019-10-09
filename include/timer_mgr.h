@@ -70,6 +70,7 @@ namespace lc //libevent cpp
 		bool StartTimer(unsigned long long millisecond, const TimerCB &cb, bool is_loop = false);
 		//停止正在进行的定时器，
 		//return, false 不需要停止. true 成功操作了停止
+		//StartTimer 不是循环时，过期后，对象回自动变成停止状态，再调用 StopTimer会失败。
 		bool StopTimer();
 
 		virtual void OnTimer(void *para) {};
@@ -86,5 +87,6 @@ namespace lc //libevent cpp
 		State m_state;
 		void *m_para;
 		TimerCB m_cb; //选择用，用std::bind方式绑定的回调函数
+		bool m_is_loop;
 	};
 }
