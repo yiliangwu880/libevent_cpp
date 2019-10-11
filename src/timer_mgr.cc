@@ -111,7 +111,8 @@ namespace lc //libevent cpp
 
 		if (0 != event_add(m_event, &t))
 		{
-			LB_ERROR("evtimer_add fail");
+			LB_ERROR("evtimer_add fail"); 
+			return false;
 		}
 		m_is_loop = is_loop;
 		m_state = S_WAIT_TIME_OUT;
