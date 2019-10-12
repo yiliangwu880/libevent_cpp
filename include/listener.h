@@ -13,6 +13,7 @@
 #include <string.h>
 #include <vector>
 #include <map>
+#include <unordered_map>
 #include "connector.h"
 #include <unistd.h>
 #include <arpa/inet.h>  
@@ -54,7 +55,7 @@ private:
 
 private:
 	const static uint32 DELTE_CONNECTOR_INTERVAL = 1000 * 1; //1sec
-	std::map<uint64, SvrCon *> m_all_connector;
+	std::unordered_map<uint64, SvrCon *> m_all_connector;
 	std::vector<SvrCon *> m_vwdc; //vec wait delete connector
 	Timer m_timer;
 };
