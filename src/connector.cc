@@ -288,7 +288,7 @@ bool ConCom::SendData(const MsgPack &msg)
 	return true;
 }
 
-bool ConCom::SendDataNoHead(const char* data, int len)
+bool ConCom::SendData(const char* data, int len)
 {
 	if (!m_is_connect)
 	{
@@ -452,7 +452,19 @@ bool ClientCon::TryReconnect()
 	}
 }
 
-bool MsgPack::Serialize(const std::string &s)
+//bool MsgPack::Serialize(const std::string &s)
+//{
+//	if (s.length() >= sizeof(data))
+//	{
+//		LB_ERROR("pack is too big. size=%d", s.length());
+//		return false;
+//	}
+//	len = s.length();
+//	memcpy(data, s.c_str(), s.length());
+//	return true;
+//}
+
+bool MsgPack::Set(const std::string &s)
 {
 	if (s.length() >= sizeof(data))
 	{

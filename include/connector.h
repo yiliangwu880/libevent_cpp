@@ -49,7 +49,8 @@ namespace lc //libevent cpp
 		uint16 len; //data有效字节数
 		char data[MAX_MSG_DATA_LEN];
 
-		bool Serialize(const std::string &s);
+		//bool Serialize(const std::string &s);//和Set一样，命名不合适，以后删掉
+		bool Set(const std::string &s);
 
 	};
 #pragma pack(pop)
@@ -97,8 +98,8 @@ namespace lc //libevent cpp
 		// true表示已经接收部分字节， 等接受完整消息包.
 		bool IsWaitCompleteMsg() const;
 		evutil_socket_t GetFd() { return m_fd; };
-		//测试专用,无消息头,自由发送指定字节数
-		bool SendDataNoHead(const char* data, int len);
+		//自由发送指定字节数
+		bool SendData(const char* data, int len);
 		void SetEventCbLog(bool no_ev_cb_log) { m_no_ev_cb_log = no_ev_cb_log; }
 
 	private:

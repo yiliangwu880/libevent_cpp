@@ -114,7 +114,7 @@ public:
 
 		
 		const char *pMsg = (char *)&m_msg;
-		SendDataNoHead(pMsg, 3);
+		SendData(pMsg, 3);
 
 		SplitMsgTimer *t = new SplitMsgTimer();
 		t->StartTimer(100, this);
@@ -123,7 +123,7 @@ public:
 	{
 		const char *p = (char *)&m_msg;
 		p = p + 3;
-		SendDataNoHead(p, 5);
+		SendData(p, 5);
 	}
 	int m_cnt;
 	MsgPack m_msg;
