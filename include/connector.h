@@ -86,6 +86,9 @@ namespace lc //libevent cpp
 		void DisConnect();
 
 		bool SendData(const MsgPack &msg);
+		//效果同bool SendData(const MsgPack &msg); 少一次内存cp
+		//发送内容： data, 然后包前面加入uint16 len内如
+		bool SendPack(const char* data, uint16 len);
 		//设置发送最大缓冲大小，超了就断开连接
 		void SetMaxSendBufSize(size_t num) { m_msbs = num; }
 
@@ -98,7 +101,7 @@ namespace lc //libevent cpp
 		// true表示已经接收部分字节， 等接受完整消息包.
 		bool IsWaitCompleteMsg() const;
 		evutil_socket_t GetFd() { return m_fd; };
-		//自由发送指定字节数
+		//自由发送指定字节
 		bool SendData(const char* data, int len);
 		void SetEventCbLog(bool no_ev_cb_log) { m_no_ev_cb_log = no_ev_cb_log; }
 

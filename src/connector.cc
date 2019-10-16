@@ -236,6 +236,57 @@ void ConCom::conn_event_callback(bufferevent* bev, short events)
 		return; //这里本对象可能已经销毁，别再引用
 	}
 }
+bool ConCom::SendPack(const char* data, uint16 len)
+{
+	B_COND(len, false);
+	B_COND(data, false);
+	B_COND(m_is_connect, false);
+	//LB_COND(m_is_connect, false, "is disconnect.");
+
+	if (0 == m_fd)
+	{
+		LB_DEBUG("BaseConnectCom not init. 0 == m_fd");
+		return false;
+	}
+	if (!m_buf_e)
+	{
+		LB_DEBUG("BaseConnectCom not init !m_buf_e");
+		return false;
+	}
+
+	uint16 net_len = htons((int)len);
+
+	if (m_msbs != 0)
+	{
+		struct evbuffer* output = bufferevent_get_output(m_buf_e);
+		if (!output)
+		{
+			LB_FATAL("unknow error");
+			return false;
+		}
+		size_t output_len = evbuffer_get_length(output);
+		if (output_len > m_msbs)
+		{
+			LB_ERROR("too much bytes wait to send %ld", output_len);
+			DisConnect();
+			return false;
+		}
+	}
+
+	//LB_DEBUG("bufferevent_write %d", net_len);
+	if (0 != bufferevent_write(m_buf_e, &net_len, sizeof(net_len)))
+	{
+		LB_ERROR("bufferevent_write fail, len=%d", len + sizeof(len));
+		return false;
+	}
+	if (0 != bufferevent_write(m_buf_e, data, len))
+	{
+		LB_ERROR("bufferevent_write fail, len=%d", len + sizeof(len));
+		return false;
+	}
+	//LB_DEBUG("bufferevent_write data[0] =%d %d %d %d", data[0], data[1], data[2], data[3]);
+	return true;
+}
 
 bool ConCom::SendData(const MsgPack &msg)
 {
@@ -336,6 +387,9 @@ bool ConCom::SendData(const char* data, int len)
 	}
 	return true;
 }
+
+
+
 void ConCom::Setwatermark(short events, unsigned int lowmark, unsigned int highmark)
 {
 	B_COND_VOID(m_is_connect);
