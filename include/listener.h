@@ -27,7 +27,7 @@ template<class >
 class Listener;
 
 
-
+using Id2SvrCon = std::unordered_map<uint64, SvrCon *>;
 using SvrConForeachCB =  std::function<void(SvrCon &)> ;
 //注意，由BaseConMgr管理的 ListenerConnector不需要用户代码调用delete.
 //需要断开连接，调用 BaseConMgr::CloseConnect(uint64 id);
@@ -55,7 +55,7 @@ private:
 
 private:
 	const static uint32 DELTE_CONNECTOR_INTERVAL = 1000 * 1; //1sec
-	std::unordered_map<uint64, SvrCon *> m_all_connector;
+	Id2SvrCon m_all_connector;
 	std::vector<SvrCon *> m_vwdc; //vec wait delete connector
 	Timer m_timer;
 };
@@ -93,7 +93,7 @@ private:
 
 private:
 	BaseConMgr *m_cn_mgr;
-	uint64 m_id;
+	uint64 m_id; //用这个不重复ID来标识，比fd少BUG。 fd容易值重利用，导致野的ID指向新创建的连接。
 	sockaddr_in m_svr_addr;
 };
 
