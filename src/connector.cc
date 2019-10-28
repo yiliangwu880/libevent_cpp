@@ -288,6 +288,12 @@ bool ConCom::SendPack(const char* data, uint16 len)
 	return true;
 }
 
+
+bool ConCom::SendPack(const string &msg)
+{
+	return SendPack(msg.c_str(), msg.length());
+}
+
 bool ConCom::SendData(const MsgPack &msg)
 {
 	B_COND(m_is_connect, false);

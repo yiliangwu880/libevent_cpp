@@ -89,6 +89,7 @@ namespace lc //libevent cpp
 		//效果同bool SendData(const MsgPack &msg); 少一次内存cp
 		//发送内容： data, 然后包前面加入uint16 len内如
 		bool SendPack(const char* data, uint16 len);
+		bool SendPack(const std::string &msg);
 		//设置发送最大缓冲大小，超了就断开连接
 		void SetMaxSendBufSize(size_t num) { m_msbs = num; }
 
