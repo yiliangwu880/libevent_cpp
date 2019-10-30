@@ -53,6 +53,7 @@ SvrCon * BaseConMgr::FindConn(uint64 id)
 
 void BaseConMgr::Foreach(const SvrConForeachCB &cb)
 {
+	vector<SvrCon *> tmp_vec; //避免遍历里面调用到m_all_connector修改函数
 	for (const auto &v : m_all_connector)
 	{
 		if (nullptr == v.second)
@@ -60,7 +61,11 @@ void BaseConMgr::Foreach(const SvrConForeachCB &cb)
 			LB_FATAL("save null ListenerConnector");
 			continue;
 		}
-		(cb)(*(v.second));
+		tmp_vec.push_back(v.second);
+	}
+	for (SvrCon *con: tmp_vec)
+	{
+		(cb)(*con);
 	}
 }
 
