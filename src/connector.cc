@@ -103,6 +103,8 @@ void ConCom::DisConnect()
 	OnDisconnected();
 }
 
+
+
 void ConCom::writecb(struct bufferevent* bev, void* user_data)
 {
 	((ConCom*)user_data)->conn_write_callback(bev);
@@ -122,6 +124,8 @@ void ConCom::conn_write_callback(bufferevent* bev)
 {
 	//如果不用 考虑删掉，
 }
+
+
 
 bool ConCom::IsWaitCompleteMsg() const
 {
@@ -416,6 +420,17 @@ void ConCom::GetRemoteAddr(std::string &ip, unsigned short &port) const
 {
 	ip = inet_ntoa(m_addr.sin_addr);
 	port = ntohs(m_addr.sin_port);
+}
+
+
+const char *ConCom::GetRemoteIp() const
+{
+	return inet_ntoa(m_addr.sin_addr);
+}
+
+uint16 ConCom::GetRemotePort() const
+{
+	return ntohs(m_addr.sin_port);
 }
 
 /////////////////////////////////////////////////////////

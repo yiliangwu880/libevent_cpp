@@ -98,6 +98,8 @@ namespace lc //libevent cpp
 
 		void GetRemoteAddr(std::string &ip, unsigned short &port) const;
 		sockaddr_in GetRemoteAddr() const { return m_addr; }
+		const char *GetRemoteIp() const;
+		uint16 GetRemotePort() const;
 
 		// true表示已经接收部分字节， 等接受完整消息包.
 		bool IsWaitCompleteMsg() const;
