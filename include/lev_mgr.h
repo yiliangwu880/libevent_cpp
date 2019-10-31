@@ -17,6 +17,8 @@ namespace lc //libevent cpp
 {
 	class ILogPrinter;
 	//单件
+	//注意，关闭进程前，这个单件必须是最后释放。 不然本库其他类创建的对象无event_base可能，可能有隐患。
+	//一般项目别用全局变量保存本库类型创建的对象就可以了。全局变量的释放和构造顺序无法确定。
 	class EventMgr
 	{
 	public:
