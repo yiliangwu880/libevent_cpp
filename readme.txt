@@ -7,7 +7,7 @@
 	整个文件夹放到linux目录，安装cmake gcc等。
 
 	cd External/libevent-2.1.8-stable 编译库
-	./configure --prefix=xxxx当前目录/out
+	./configure --prefix=当前目录绝对路径/out
 	make && make install
 
 	当前目录执行：sh clearBuild.sh 完成编译

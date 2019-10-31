@@ -1,7 +1,7 @@
 --lib
 
 --cpp项目缺省扩展名
-DEF_CPP_EXT_LS={"cpp","cc","h", "hpp", "txt", "lua"}
+DEF_CPP_EXT_LS={"cpp","cc","h", "hpp", "txt", "lua", "c"}
 
 
 

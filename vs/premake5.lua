@@ -14,7 +14,8 @@ WorkSpaceInit  "libevent_cpp"
 
 Project "libevent"
 	SrcPath	{ 
-		"../libevent-2.1.8-stable/out/include/**",  --**递归所有子目录，指定目录可用 "cc/*.cpp" 或者  "cc/**.cpp"
+		"../External/libevent-2.1.8-stable/*",  
+		"../External/libevent-2.1.8-stable/out/include/**",
 	}
 	
 Project "src"
