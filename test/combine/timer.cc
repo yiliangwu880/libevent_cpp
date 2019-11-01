@@ -141,13 +141,70 @@ void TestStdBind()
 		f(5,6); // n1 n2 = 5 6
 	}
 }
+//错误示范
+struct TestLambada
+{
+	lc::Timer m_tm;
+	void ff()
+	{
+		UNIT_INFO("ff this=%p", this);
+	}
+	void fun()
+	{
+		UNIT_INFO("this=%p", this);
+		auto f2 = [&]()
+		{
+			UNIT_INFO("f2 this=%p ", this);
+		};
+		auto f = [&]()
+		{
+			//auto f3 = [&]()
+			//{
+			//	UNIT_INFO("f3 this=%p", this);
+			//};
+			UNIT_INFO("f this=%p. ", this);
+			//m_tm.StopTimer();
+			m_tm.StartTimer(1, f2);//这样写，f2里面this被改了
+			//m_tm.StartTimer(500, f3); //这样写正确
+			//m_tm.StartTimer(500, std::bind(&TestLambada::ff, this)); //这样写正确
+		
+		};
+		m_tm.StopTimer();
+		m_tm.StartTimer(1, f);
+	}
+};
 
+struct TestErrorTIme : public lc::Timer
+{
+	TestErrorTIme *m_this;
+	void fun()
+	{
+	UNIT_INFO("fun this=%p", this);
+	UNIT_ASSERT(this == m_this);
+	StartTimer(1);
+	}
+	int i;
+	virtual void OnTimer(void *para) 
+	{
+		UNIT_ASSERT(this == m_this);
+		UNIT_INFO("OnTimer this=%p", this);
+		i++;
+		if (i==2)
+		{
+			return;
+		}
+		StopTimer();
+		StartTimer(1);
+	}
+};
 
-
+TestLambada *g_TestLambada = nullptr;
+TestErrorTIme *g_TestErrorTIme = nullptr;
 }
 
 UNITTEST(timer)
 {
+
 	TestStdBind();
 	KillTimer t;
 	t.StartTimer(10);
@@ -162,4 +219,14 @@ UNITTEST(timer)
 	g_check_t->StartTimer(2 * 1000);
 
 	
+	g_TestErrorTIme = new TestErrorTIme;
+	g_TestErrorTIme->i = 0;
+	g_TestErrorTIme->m_this = g_TestErrorTIme;
+	g_TestErrorTIme->fun();
+
+
+	return;//后面 未明错误测试
+	g_TestLambada = new TestLambada;
+	g_TestLambada->fun();
+
 }

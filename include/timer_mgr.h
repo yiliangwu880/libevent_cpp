@@ -36,6 +36,24 @@ use excample2:
 	MyConnectClient obj;
 	obj.StartTimer();
 
+错误示范：
+	MyClass::Fun()
+	{
+		auto f2 = [&]()
+		{
+			UNIT_INFO("f2 this=%p", this);//这里内存回乱掉。
+
+		};
+		auto f = [&]()
+		{
+			UNIT_INFO("f this=%p", this);
+			m_tm.StopTimer();
+			m_tm.StartTimer(1, f2);
+
+		};
+		m_tm.StopTimer();
+		m_tm.StartTimer(1, f);
+	}
 */
 
 #pragma once
@@ -67,6 +85,7 @@ namespace lc //libevent cpp
 		//para is_loop true表示循环定时器
 		//return, false 表示失败，定时器已经开始了。
 		bool StartTimer(unsigned long long millisecond, void *para = nullptr, bool is_loop = false);
+		//注意，cb为lambda表达式时，TimerOut不能调用 StopTimer StopTimer函数，就可能弄野内存。情况未明，看文件开头描述错误示范。
 		bool StartTimer(unsigned long long millisecond, const TimerCB &cb, bool is_loop = false);
 		//停止正在进行的定时器，
 		//return, false 不需要停止. true 成功操作了停止
