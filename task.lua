@@ -1,4 +1,9 @@
 
+
+http server
+
+websocket 
+
 对用户接口，用facade
 
 实现一间运行自动化测试脚本
