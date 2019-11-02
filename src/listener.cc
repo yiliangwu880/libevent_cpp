@@ -104,7 +104,6 @@ SvrCon::SvrCon()
 	seed++;
 	m_id = sec << 32;
 	m_id = m_id | seed;
-	memset(&m_svr_addr, 0, sizeof(m_svr_addr));
 }
 
 SvrCon::~SvrCon()
@@ -114,8 +113,7 @@ SvrCon::~SvrCon()
 
 bool SvrCon::AcceptInit(evutil_socket_t fd, struct sockaddr* sa, const sockaddr_in &svr_addr)
 {
-	m_svr_addr = svr_addr;
-
+	SetAddr(svr_addr);
 	if (0 != GetFd())
 	{
 		LB_ERROR("repeated init");

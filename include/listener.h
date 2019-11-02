@@ -82,7 +82,6 @@ public:
 	bool AcceptInit(evutil_socket_t fd, struct sockaddr* sa, const sockaddr_in &svr_addr);
 	void SetCnMgr(BaseConMgr *mgr) { m_cn_mgr = mgr; };
 	uint64 GetId() const { return m_id; }
-	sockaddr_in GetSvrAddr() const { return m_svr_addr; }
 	//断开连接，post释放自己
 	//注意，调用后，不会马上释放自己。
 	bool DisConnect();
@@ -94,7 +93,6 @@ private:
 private:
 	BaseConMgr *m_cn_mgr;
 	uint64 m_id; //用这个不重复ID来标识，比fd少BUG。 fd容易值重利用，导致野的ID指向新创建的连接。
-	sockaddr_in m_svr_addr;
 };
 
 
