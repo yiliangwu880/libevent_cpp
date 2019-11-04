@@ -47,6 +47,7 @@ public:
 
 	//遍历所有连接，可以递归调用本类其他公共函数，安全。
 	void Foreach(const SvrConForeachCB &cb);
+	uint32 GetConSize() const { return m_all_connector.size(); }//获取连接数
 private:
 	virtual SvrCon *NewConnect() = 0;
 	virtual void DelConnect(SvrCon *) = 0;
@@ -133,6 +134,7 @@ public:
 	bool Init(const sockaddr_in &addr);
 	sockaddr_in GetAddr(){ return m_addr; }
 	BaseConMgr &GetConnMgr() { return m_cn_mgr; }
+	const BaseConMgr &GetConstConnMgr() const { return m_cn_mgr; }
 
 private:
 	static void accept_error_cb(evconnlistener* listener, void * ctx);

@@ -107,7 +107,9 @@ namespace lc //libevent cpp
 		//自由发送指定字节
 		bool SendData(const char* data, int len);
 		void SetEventCbLog(bool no_ev_cb_log) { m_no_ev_cb_log = no_ev_cb_log; }
-
+		//flush fd read write date.
+		//@return -1 on failure, 0 if no data was produces, 1 if data was produced
+		int Flush();
 	private:
 		static void writecb(struct bufferevent* bev, void* user_data);
 		static void eventcb(struct bufferevent* bev, short events, void* user_data);

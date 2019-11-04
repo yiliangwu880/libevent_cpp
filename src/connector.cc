@@ -400,6 +400,11 @@ bool ConCom::SendData(const char* data, int len)
 
 
 
+int ConCom::Flush()
+{
+	return bufferevent_flush(m_buf_e, EV_READ | EV_WRITE, BEV_NORMAL);
+}
+
 void ConCom::Setwatermark(short events, unsigned int lowmark, unsigned int highmark)
 {
 	B_COND_VOID(m_is_connect);
