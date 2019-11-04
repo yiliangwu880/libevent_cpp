@@ -47,6 +47,11 @@ namespace lc //libevent cpp
 		t.tv_sec = millisecond / 1000;
 		t.tv_usec = (millisecond % 1000) * 1000;
 
+		if (0 == millisecond)
+		{
+			LB_ERROR("Timer::StartTimer para illegal, 0 == millisecond");
+			return false;
+		}
 		if (S_WAIT_START_TIMER != m_state)
 		{
 			LB_ERROR("BaseLeTimer state error, repeated start timer");

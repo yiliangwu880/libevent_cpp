@@ -402,7 +402,13 @@ bool ConCom::SendData(const char* data, int len)
 
 int ConCom::Flush()
 {
-	return bufferevent_flush(m_buf_e, EV_READ | EV_WRITE, BEV_NORMAL);
+	LB_ERROR("unfinished function flush");
+	//都不能马上发送缓冲消息，以后解决
+	//bufferevent_flush(m_buf_e, EV_READ | EV_WRITE, BEV_NORMAL);
+	//bufferevent_trigger(m_buf_e, EV_READ | EV_WRITE, BEV_TRIG_IGNORE_WATERMARKS);
+	//bufferevent_flush(m_buf_e, EV_READ | EV_WRITE, BEV_NORMAL);
+	return 0;
+	//return bufferevent_flush(m_buf_e, EV_READ | EV_WRITE, BEV_NORMAL);
 }
 
 void ConCom::Setwatermark(short events, unsigned int lowmark, unsigned int highmark)
