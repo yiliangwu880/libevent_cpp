@@ -511,7 +511,7 @@ bool ClientCon::ConnectByAddr()
 		//失败情况：
 		//地址不对
 		//客户端连接8W左右，跑了这里, 应该是fd太多了，超出系统设置
-		LB_ERROR("bufferevent_socket_connect fail");
+		LB_ERROR("bufferevent_socket_connect fail. addr=%s %d", GetRemoteIp(), GetRemotePort());
 		return false;
 	}
 	bool ret= SetSocketInfo(buf_e, fd);
