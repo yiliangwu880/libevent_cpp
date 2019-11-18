@@ -1,7 +1,7 @@
 #!/bin/sh
 # make clean, make操作
 
-mkdir Debug
+mkdir -p Debug
 cd Debug
 rm -rf *
 cd ..

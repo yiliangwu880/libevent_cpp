@@ -14,7 +14,7 @@ WorkSpaceInit  "libevent_cpp"
 
 Project "libevent"
 	SrcPath	{ 
-		"../External/libevent-2.1.8-stable/*",  
+		"../External/libevent-2.1.8-stable/**",  
 		"../External/libevent-2.1.8-stable/out/include/**",
 	}
 	

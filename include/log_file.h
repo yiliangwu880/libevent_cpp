@@ -100,19 +100,28 @@ private:
 #define LB_TRACE(x, ...)  lc::LogMgr::Obj().Printf(lc::LL_TRACE, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
 
 //简化if语句写法
-#define LB_COND(cond, ret, x, ...)\
+#define LB_COND(cond, ret, ...)\
 	do{\
 	if(!(cond)){\
-	lc::LogMgr::Obj().Printf(LL_ERROR, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__); \
+	lc::LogMgr::Obj().Printf(LL_ERROR, __FILE__, __LINE__, __FUNCTION__, "condition fail \[" #cond "]. ", ##__VA_ARGS__); \
 	return ret;\
 	}	\
 	}while(0)
 
-#define LB_COND_VOID(cond, x, ...)\
+#define LB_COND_F(cond, ...)\
+	do{\
+	if(!(cond)){\
+	lc::LogMgr::Obj().Printf(LL_ERROR, __FILE__, __LINE__, __FUNCTION__, "condition fail \[" #cond "]. ", ##__VA_ARGS__); \
+	return false;\
+	}	\
+	}while(0)
+
+
+#define LB_COND_VOID(cond, ...)\
 	do{\
 	if(!(cond))	\
 	{\
-	lc::LogMgr::Obj().Printf(LL_ERROR, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__); \
+	lc::LogMgr::Obj().Printf(LL_ERROR, __FILE__, __LINE__, __FUNCTION__, "condition fail \[" #cond "]. ", ##__VA_ARGS__); \
 		return; \
 	}\
 	}while(0)
