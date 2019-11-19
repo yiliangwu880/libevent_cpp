@@ -61,10 +61,10 @@ UNITTEST(mass_con_svr)
 	listener->Init(MASS_CON_SVR_PORT);
 	EventMgr::Obj().Dispatch();
 }
-DefaultLog client_log("log_server_prj.txt");
+DefaultLog my_log("log_server_prj.txt");
 int main(int argc, char* argv[])
 {
-	LogMgr::Obj().SetLogPrinter(client_log);
+	LogMgr::Obj().SetLogPrinter(my_log);
 	LB_DEBUG("\n\n");
 	UnitTestMgr::Obj().Start();
 	return 0;

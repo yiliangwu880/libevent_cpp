@@ -28,7 +28,11 @@ Project "src"
 		"../include/**",
 		"../libevent-2.1.8-stable/out/include/**",
 	}
-	files {"../*.sh",}
+	files {
+	"../*.sh",
+	"../*.txt",
+	
+	}
 	
 Project "test"
 	includedirs { 

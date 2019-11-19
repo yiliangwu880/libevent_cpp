@@ -6,5 +6,6 @@ ADD_SUBDIRECTORY(server_prj)
 ADD_SUBDIRECTORY(client_prj)
 ADD_SUBDIRECTORY(combine)
 ADD_SUBDIRECTORY(exitProcess)
+ADD_SUBDIRECTORY(httpCombine)
 
 

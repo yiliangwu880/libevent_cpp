@@ -222,10 +222,10 @@ UNITTEST(mass_con_client)
 	log_timer.StartTimer(1000 * LOG_INTERVAL_SEC, std::bind(&OnLog), true);
 	EventMgr::Obj().Dispatch();
 }
-DefaultLog client_log("log_client_prj.txt");
+DefaultLog my_log("log_client_prj.txt");
 int main(int argc, char* argv[]) 
 {
-	LogMgr::Obj().SetLogPrinter(client_log);
+	LogMgr::Obj().SetLogPrinter(my_log);
 	LB_DEBUG("start run");
 	UnitTestMgr::Obj().Start();
 	LB_DEBUG("end run");

@@ -44,7 +44,6 @@ namespace lc //libevent cpp
 		evhttp_request *m_cur_req = nullptr; //当前接收请求的evhttp_request对象， nullptr表示不存在。 
 
 	public:
-		BaseHttpSvr();
 		virtual ~BaseHttpSvr();
 		bool Init(const char* ip = nullptr, unsigned short port = 80);
 
