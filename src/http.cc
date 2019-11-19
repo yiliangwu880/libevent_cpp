@@ -306,10 +306,6 @@ namespace lc //libevent cpp
 		m_is_req = false;
 	}
 
-	namespace
-	{
-		static const int MAX_LEN = 1024 * 100;
-	}
 	void BaseHttpClient::remote_read_callback(struct evhttp_request* req, void* arg)
 	{
 		BaseHttpClient *p = (BaseHttpClient *)arg;

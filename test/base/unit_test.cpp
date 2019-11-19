@@ -82,10 +82,13 @@ void UnitTestMgr::Printf(bool is_error, const char * file, int line, const char 
 
 	char out_str[1000 + 1];
 	out_str[1000] = 0;
-	vsnprintf(out_str, sizeof(out_str) - 1, s.c_str(), vp);
+	int r = vsnprintf(out_str, sizeof(out_str) - 1, s.c_str(), vp);
 
 	::puts(out_str);
-
+	if (r > (int)sizeof(out_str))
+	{
+		::printf("....[str too long,len=%d]\n", r);
+	}
 	va_end(vp);
 }
 

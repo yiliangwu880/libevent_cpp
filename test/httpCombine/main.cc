@@ -15,15 +15,14 @@ namespace {
 
 
 }//namespace {
-int main2();
+
 UNITTEST(combine)
 {
-	main2();
-	//return;
+
 	EventMgr::Obj().Init();
 
-	//HttpSvr svr;
-	//svr.Init(nullptr, 15426);
+	HttpSvr svr;
+	svr.Init(nullptr, 15426);
 	HttpClient c;
 	c.Request("http://www.baidu.com/");
 	EventMgr::Obj().Dispatch();
