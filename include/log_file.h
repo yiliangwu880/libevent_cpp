@@ -78,6 +78,7 @@ public:
 	}
 	void SetLogPrinter(ILogPrinter &iprinter); //改变日志实现
 	void Printf(LogLv lv, const char * file, int line, const char *pFun, const char * pattern, ...) ;
+	void PrintfCond(LogLv lv, const char * file, int line, const char *fun, const char * cond, const char * pattern="", ...);
 	void flush();
 private:
 	LogMgr();
@@ -103,7 +104,7 @@ private:
 #define LB_COND(cond, ret, ...)\
 	do{\
 	if(!(cond)){\
-	lc::LogMgr::Obj().Printf(LL_ERROR, __FILE__, __LINE__, __FUNCTION__, "condition fail \[" #cond "]. ", ##__VA_ARGS__); \
+	lc::LogMgr::Obj().PrintfCond(LL_ERROR, __FILE__, __LINE__, __FUNCTION__, "condition fail \[" #cond "]. ", ##__VA_ARGS__); \
 	return ret;\
 	}	\
 	}while(0)
@@ -111,7 +112,7 @@ private:
 #define LB_COND_F(cond, ...)\
 	do{\
 	if(!(cond)){\
-	lc::LogMgr::Obj().Printf(LL_ERROR, __FILE__, __LINE__, __FUNCTION__, "condition fail \[" #cond "]. ", ##__VA_ARGS__); \
+	lc::LogMgr::Obj().PrintfCond(LL_ERROR, __FILE__, __LINE__, __FUNCTION__, "condition fail \[" #cond "]. ", ##__VA_ARGS__); \
 	return false;\
 	}	\
 	}while(0)
@@ -121,7 +122,7 @@ private:
 	do{\
 	if(!(cond))	\
 	{\
-	lc::LogMgr::Obj().Printf(LL_ERROR, __FILE__, __LINE__, __FUNCTION__, "condition fail \[" #cond "]. ", ##__VA_ARGS__); \
+	lc::LogMgr::Obj().PrintfCond(LL_ERROR, __FILE__, __LINE__, __FUNCTION__, "condition fail \[" #cond "]. ", ##__VA_ARGS__); \
 		return; \
 	}\
 	}while(0)

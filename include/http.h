@@ -79,6 +79,7 @@ namespace lc //libevent cpp
 	private:
 		struct evdns_base* m_dnsbase = nullptr;
 		struct evhttp_connection* m_con = nullptr;
+		struct evhttp_uri* http_uri = nullptr;
 		bool m_is_req = false; //true表示已经发出请求，等响应中
 
 	public:
@@ -86,7 +87,7 @@ namespace lc //libevent cpp
 
 		//true表示已经发出请求，等响应中
 		bool IsReq() const { return m_is_req; };
-		bool Request(const char *url, evhttp_cmd_type cmd_type = EVHTTP_REQ_GET, unsigned int ot_sec = 30, const char *post_data = nullptr);
+		bool Request(const char *url, evhttp_cmd_type cmd_type = EVHTTP_REQ_GET, unsigned int ot_sec = 20, const char *post_data = nullptr);
 
 	private:
 		virtual void Respond(const char *str) = 0;

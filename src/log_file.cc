@@ -24,6 +24,16 @@ void LogMgr::Printf(LogLv lv, const char * file, int line, const char *fun, cons
 	va_end(vp);
 }
 
+void LogMgr::PrintfCond(LogLv lv, const char * file, int line, const char *fun, const char * cond, const char * pattern/*=""*/, ...)
+{
+	std::string fmt = cond;
+	fmt.append(pattern);
+	va_list vp;
+	va_start(vp, pattern);
+	m_iprinter->Printf(lv, file, line, fun, fmt.c_str(), vp);
+	va_end(vp);
+}
+
 void LogMgr::flush()
 {
 	if (nullptr != m_iprinter)
