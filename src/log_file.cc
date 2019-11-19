@@ -127,9 +127,14 @@ void DefaultLog::Printf(LogLv lv, const char * file, int line, const char *fun, 
 	if (m_is_std_out)
 	{
 		char out_str[1000];
-		vsnprintf(out_str, sizeof(out_str), s.c_str(), vp);
+		int i = vsnprintf(out_str, sizeof(out_str), s.c_str(), vp);
 		fputs(out_str, m_file); //用一次vfprintf，再用vprintf有时候有BUG， vp被 vfprintf修改了，原因未明
 		::puts(out_str);
+		if (r > (int)sizeof(out_str))
+		{
+			fprintf(m_file, "....[str too long,len=%d]\n", r);
+			::printf("....[str too long,len=%d]\n", r);
+		}
 	}
 	else
 	{
