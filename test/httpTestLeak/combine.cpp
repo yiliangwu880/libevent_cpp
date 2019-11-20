@@ -6,7 +6,7 @@
 using namespace lc;
 using namespace std;
 
-namespace {
+namespace htl{
 
 	struct Test;
 	static const uint16 SVR_PORT = 17567;
@@ -19,8 +19,17 @@ namespace {
 		virtual void RespondError(int err_code, const char *err_str);
 		virtual void ConnectFail();
 	};
-
-
+	class ReleaseClient : public BaseHttpClient
+	{
+	public:
+		lc::Timer m_tm;
+		ReleaseClient();
+		void Destory();
+	private:
+		virtual void Respond(const char *str);
+		virtual void RespondError(int err_code, const char *err_str);
+		virtual void ConnectFail();
+	};
 
 	class Svr : public lc::BaseHttpSvr
 	{
@@ -54,7 +63,34 @@ namespace {
 	};
 
 
+	ReleaseClient::ReleaseClient()
+	{
+		m_tm.StartTimer(6, std::bind(&ReleaseClient::Destory, this));
+	}
 
+	void ReleaseClient::Destory()
+	{
+		UNIT_INFO("Destory");
+		delete this;
+	}
+
+	void ReleaseClient::Respond(const char *str)
+	{
+		UNIT_ASSERT(!IsReq());
+		UNIT_INFO("%s", str);
+		UNIT_ASSERT(string(str) == "post_data");
+	}
+
+	void ReleaseClient::RespondError(int err_code, const char *err_str)
+	{
+		UNIT_ASSERT(err_code == HTTP_BADREQUEST);
+		UNIT_ASSERT(string(err_str) == "HTTP_BADREQUEST");
+	}
+
+	void ReleaseClient::ConnectFail()
+	{
+		UNIT_INFO("ConnectFail");
+	}
 	void Client::Respond(const char *str)
 	{
 		if (WAIT_SVR_CHECK == m_test->m_state)
@@ -162,7 +198,7 @@ namespace {
 			return;
 		}
 		cnt++;
-		if (cnt > 10 )
+		if (false )
 		{
 			m_tm.StopTimer();
 			UNIT_INFO("stop WAIT_RANDOM_REQ, err_cnt, correct_cnt %d %d", error_cnt, correct_cnt);
@@ -175,11 +211,15 @@ namespace {
 		{
 			error_cnt++;
 			m_client.Request("http://127.0.0.1:17567/PATH/abc", EVHTTP_REQ_POST, "error");
+			ReleaseClient *p = new ReleaseClient;
+			p->Request("http://127.0.0.1:17567/PATH/abc", EVHTTP_REQ_POST, "error");
 		}
 		else
 		{
 			correct_cnt++;
 			m_client.Request("http://127.0.0.1:17567/PATH/abc?a=1", EVHTTP_REQ_POST, "post_data");
+			ReleaseClient *p = new ReleaseClient;
+			p->Request("http://127.0.0.1:17567/PATH/abc?a=1", EVHTTP_REQ_POST, "post_data");
 
 		}
 		UNIT_ASSERT(m_client.IsReq());
@@ -196,6 +236,7 @@ namespace {
 
 }
 
+using namespace htl;
 UNITTEST(combine)
 {
 	srand((unsigned int)time(0));
