@@ -146,7 +146,7 @@ namespace lc //libevent cpp
 		return m_cur_req;
 	}
 
-	void BaseHttpSvr::Send(int code, const char *reason, const std::string str/*=""*/)
+	void BaseHttpSvr::Send(const std::string &data /*= ""*/, int code/*= HTTP_OK*/, const char *reason/*="ok"*/)
 	{
 		if (nullptr == m_cur_req)
 		{
@@ -156,18 +156,19 @@ namespace lc //libevent cpp
 		if (HTTP_OK != code)
 		{
 			evhttp_send_error(m_cur_req, code, reason); //释放资源
-
 		}
 		else
 		{
 			//创建要使用的buffer对象
 			evbuffer* buf = evbuffer_new();
-			evbuffer_add_printf(buf, "%s", str.c_str());
+			evbuffer_add_printf(buf, "%s", data.c_str());
 			evhttp_send_reply(m_cur_req, code, reason, buf);//释放资源
 			evbuffer_free(buf);
 		}
 		m_cur_req = nullptr;
 	}
+
+
 
 	void BaseHttpSvr::RevRequestCB(struct evhttp_request* req, void* arg)
 	{
@@ -206,7 +207,7 @@ namespace lc //libevent cpp
 	}
 
 
-	bool BaseHttpClient::Request(const char *url, evhttp_cmd_type cmd_type, unsigned int ot_sec, const char *post_data)
+	bool BaseHttpClient::Request(const char *url, evhttp_cmd_type cmd_type, const char *post_data, unsigned int ot_sec)
 	{
 		LB_COND_F(!m_is_req, "repeated request");
 		LB_COND_F(url);
@@ -239,7 +240,7 @@ namespace lc //libevent cpp
 				snprintf(uri, sizeof(uri) - 1, "%s?%s", path, query);
 			}
 			uri[sizeof(uri) - 1] = '\0';
-			LB_DEBUG("host=%s port=%d", host, port);
+			//LB_DEBUG("host=%s port=%d", host, port);
 		}
 		/////////////////////////////////////////
 
@@ -247,6 +248,7 @@ namespace lc //libevent cpp
 		m_dnsbase = evdns_base_new(EventMgr::Obj().GetEventBase(), EVDNS_BASE_INITIALIZE_NAMESERVERS);
 		if (!m_dnsbase)
 		{
+			LB_ERROR("host=%s port=%d", host, port);
 			LB_ERROR("Create dns base failed!");
 			Free();
 			return false;
@@ -255,6 +257,7 @@ namespace lc //libevent cpp
 		m_con = evhttp_connection_base_new(EventMgr::Obj().GetEventBase(), m_dnsbase, host, port);
 		if (!m_con)
 		{
+			LB_ERROR("host=%s port=%d", host, port);
 			LB_ERROR("Create evhttp connection failed!");
 			Free();
 			return false;
@@ -281,6 +284,7 @@ namespace lc //libevent cpp
 		evhttp_make_request(m_con, req, cmd_type, uri); //调用后，m_connection管理req的释放
 
 		//LOG_DEBUG("request ok");
+		m_is_req = true;
 		return true;
 	}
 
@@ -308,40 +312,42 @@ namespace lc //libevent cpp
 
 	void BaseHttpClient::remote_read_callback(struct evhttp_request* req, void* arg)
 	{
+		LB_COND_VOID(req);
 		BaseHttpClient *p = (BaseHttpClient *)arg;
-		if (req)
-		{
-			int start_num = req->response_code / 100;
-			if (start_num != 4 && start_num != 5) //非400,500开头的
-			{
-				//LOG_DEBUG("remote_read_callback Code: %d %s", remote_rsp->response_code, remote_rsp->response_code_line);
-				//LOG_DEBUG("replay:");
-				char buffer[1000];
-				string data;
-				int nread = 0;
-				LB_DEBUG("rev bytes size %lu", evbuffer_get_length(req->input_buffer));
-
-				while ((nread = evbuffer_remove(req->input_buffer, buffer, sizeof(buffer))) > 0) {
-					data.append(buffer, nread);
-				}
-				p->Respond(data.c_str());
-			}
-			else
-			{
-				p->RespondError(req->response_code, req->response_code_line);
-			}
-		}
-		else
+		LB_COND_VOID(p);
+		if (0 == req->response_code)
 		{	//超时没响应，或者连接失败
+
+			p->Free();
 			p->ConnectFail();
-			//LOG_ERROR("remote_read_callback remote respond prt == NULL");
+			return;
+		}
+		
+		int start_num = req->response_code / 100;
+		if (start_num == 4 || start_num == 5) //400,500开头的
+		{
+			auto code = req->response_code;//不确定Free后是否有效呀。所以先复制
+			string code_line = req->response_code_line;
+			p->Free();
+			p->RespondError(code, code_line.c_str());
+			return;
 		}
 
+		char buffer[1000];
+		string data;
+		int nread = 0;
+		LB_DEBUG("rev bytes size %lu code=%d", evbuffer_get_length(req->input_buffer), req->response_code);
+
+		while ((nread = evbuffer_remove(req->input_buffer, buffer, sizeof(buffer))) > 0) {
+			data.append(buffer, nread);
+		}
 		p->Free();
+		p->Respond(data.c_str());
 	}
 
 	void BaseHttpClient::connection_close_callback(struct evhttp_connection* connection, void* arg)
 	{
+		LB_DEBUG("connection_close_callback");
 		BaseHttpClient *p = (BaseHttpClient *)arg;
 		if (p->m_con != connection)
 		{

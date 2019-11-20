@@ -16,17 +16,18 @@ namespace {
 
 }//namespace {
 
-UNITTEST(combine)
-{
+//UNITTEST(sample_test)
+//{
+//
+//	EventMgr::Obj().Init();
+//
+//	HttpSvr svr;
+//	svr.Init(nullptr, 15426);
+//	HttpClient c;
+//	c.Request("http://www.baidu.com/");
+//	EventMgr::Obj().Dispatch();
+//}
 
-	EventMgr::Obj().Init();
-
-	HttpSvr svr;
-	svr.Init(nullptr, 15426);
-	HttpClient c;
-	c.Request("http://www.baidu.com/");
-	EventMgr::Obj().Dispatch();
-}
 DefaultLog my_log("httpCombineLog.txt");
 int main(int argc, char* argv[])
 {

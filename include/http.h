@@ -65,7 +65,7 @@ namespace lc //libevent cpp
 
 		//@code 状态码，成功200 参考 HTTP_OK 宏定义
 		//@reason 状态码描述，比如"ok"
-		void Send(int code, const char *reason, const std::string str = "");
+		void Send(const std::string &data = "", int code= HTTP_OK, const char *reason="ok");
 		//---------------------------------------------------------------------------------------------
 
 	private:
@@ -87,7 +87,7 @@ namespace lc //libevent cpp
 
 		//true表示已经发出请求，等响应中
 		bool IsReq() const { return m_is_req; };
-		bool Request(const char *url, evhttp_cmd_type cmd_type = EVHTTP_REQ_GET, unsigned int ot_sec = 20, const char *post_data = nullptr);
+		bool Request(const char *url, evhttp_cmd_type cmd_type = EVHTTP_REQ_GET, const char *post_data = nullptr, unsigned int ot_sec = 5);
 
 	private:
 		virtual void Respond(const char *str) = 0;
@@ -102,8 +102,8 @@ namespace lc //libevent cpp
 		//情况：
 		//服务器连不通
 		static void remote_read_callback(struct evhttp_request* remote_rsp, void* arg);
-		//待测试, 调用情况：
-		//超时(服务器接收连接，但不超时响应的 情况先调用这个，后调用remote_read_callback)
+		//调用情况：
+		//关闭连接就会调用
 		static void connection_close_callback(struct evhttp_connection* connection, void* arg);
 
 	};
