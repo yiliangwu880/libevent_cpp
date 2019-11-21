@@ -146,6 +146,13 @@ namespace lc //libevent cpp
 		return m_cur_req;
 	}
 
+
+	void BaseHttpSvr::AddHeader(const std::string &name, const std::string &value)
+	{
+		struct evkeyvalq* header = evhttp_request_get_output_headers(GetCurReq());
+		evhttp_add_header(header, name.c_str(), value.c_str());
+	}
+
 	void BaseHttpSvr::Send(const std::string &data /*= ""*/, int code/*= HTTP_OK*/, const char *reason/*="ok"*/)
 	{
 		if (nullptr == m_cur_req)

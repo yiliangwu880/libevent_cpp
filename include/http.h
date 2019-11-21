@@ -63,6 +63,8 @@ namespace lc //libevent cpp
 		//当前请求的 evhttp_request，如何使用请查 libevent说明
 		evhttp_request *GetCurReq();
 
+		//发送消息前加头
+		void AddHeader(const std::string &name, const std::string &value);
 		//@code 状态码，成功200 参考 HTTP_OK 宏定义
 		//@reason 状态码描述，比如"ok"
 		void Send(const std::string &data = "", int code= HTTP_OK, const char *reason="ok");
