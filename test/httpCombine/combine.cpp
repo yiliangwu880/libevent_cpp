@@ -100,9 +100,9 @@ namespace {
 			UNIT_ASSERT(GetMethod() == EVHTTP_REQ_POST);
 			UNIT_INFO("GetUri=%s", GetUri());
 			UNIT_ASSERT(string(GetUri()) == "/PATH/abc?a=1");
-			UNIT_ASSERT(string(GetUriQuery()) == "a=1");
-			UNIT_INFO("GetPath=%s", GetPath());
-			UNIT_ASSERT(string(GetPath()) == "/PATH/abc");
+			UNIT_ASSERT(GetUriQuery() == "a=1");
+			UNIT_INFO("GetPath=%s", GetPath().c_str());
+			UNIT_ASSERT(GetPath() == "/PATH/abc");
 			string data;
 			GetData(data);
 			UNIT_ASSERT(data == "post_data");

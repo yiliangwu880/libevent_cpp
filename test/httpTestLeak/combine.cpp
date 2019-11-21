@@ -78,7 +78,7 @@ namespace htl{
 	{
 		UNIT_ASSERT(!IsReq());
 		UNIT_INFO("%s", str);
-		UNIT_ASSERT(string(str) == "post_data");
+		//UNIT_ASSERT(string(str) == "post_data");
 	}
 
 	void ReleaseClient::RespondError(int err_code, const char *err_str)
@@ -111,7 +111,7 @@ namespace htl{
 		{
 			UNIT_ASSERT(!IsReq());
 			UNIT_INFO("%s", str);
-			UNIT_ASSERT(string(str) == "post_data");
+			//UNIT_ASSERT(string(str) == "post_data");
 		}
 	}
 
@@ -137,7 +137,7 @@ namespace htl{
 			UNIT_INFO("GetUri=%s", GetUri());
 			UNIT_ASSERT(string(GetUri()) == "/PATH/abc?a=1");
 			UNIT_ASSERT(string(GetUriQuery()) == "a=1");
-			UNIT_INFO("GetPath=%s", GetPath());
+			UNIT_INFO("GetPath=%s", GetPath().c_str());
 			UNIT_ASSERT(string(GetPath()) == "/PATH/abc");
 			string data;
 			GetData(data);
@@ -156,7 +156,18 @@ namespace htl{
 		{
 			UNIT_ASSERT(m_test->m_client.IsReq());
 			string data;
-			GetData(data);
+			for (uint32 i = 0; i < 1000; ++i)
+			{
+				GetMethod();
+				GetUri();
+				GetUriQuery();
+				GetPath();
+				GetCurReq();
+				GetData(data);
+				string v(1024, 'a');
+				AddHeader("df", v.c_str());
+			}
+			UNIT_INFO("rev WAIT_RANDOM_REQ");
 			if (data == "error")
 			{
 				Send("HTTP_BADREQUEST", HTTP_BADREQUEST, "HTTP_BADREQUEST");
@@ -207,19 +218,23 @@ namespace htl{
 		}
 		
 		int r = rand() % 2;
+		static string post_data(10, 'a');
+		string uri_end;
+		uri_end.append("http://127.0.0.1:17567/PATH/abc");
+		uri_end.append(1024, 'a');
 		if (r == 0)
 		{
 			error_cnt++;
-			m_client.Request("http://127.0.0.1:17567/PATH/abc", EVHTTP_REQ_POST, "error");
+			m_client.Request(uri_end.c_str(), EVHTTP_REQ_POST, post_data.c_str());
 			ReleaseClient *p = new ReleaseClient;
-			p->Request("http://127.0.0.1:17567/PATH/abc", EVHTTP_REQ_POST, "error");
+			p->Request("http://127.0.0.1:17567/PATH/abc", EVHTTP_REQ_POST, post_data.c_str());
 		}
 		else
 		{
 			correct_cnt++;
-			m_client.Request("http://127.0.0.1:17567/PATH/abc?a=1", EVHTTP_REQ_POST, "post_data");
+			m_client.Request(uri_end.c_str(), EVHTTP_REQ_POST, post_data.c_str());
 			ReleaseClient *p = new ReleaseClient;
-			p->Request("http://127.0.0.1:17567/PATH/abc?a=1", EVHTTP_REQ_POST, "post_data");
+			p->Request("http://127.0.0.1:17567/PATH/abc?a=1", EVHTTP_REQ_POST, post_data.c_str());
 
 		}
 		UNIT_ASSERT(m_client.IsReq());

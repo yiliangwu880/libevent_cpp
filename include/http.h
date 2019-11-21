@@ -32,6 +32,7 @@ private:
 #include <string>
 #include <functional>
 #include "lc_typedef.h"
+#include <memory>
 
 namespace lc //libevent cpp
 {
@@ -53,9 +54,9 @@ namespace lc //libevent cpp
 		const char *GetUri() const;
 
 		//获取uri “?”后面的字符串
-		const char *GetUriQuery() const;
+		std::string GetUriQuery() const;
 
-		const char *GetPath() const;
+		std::string GetPath() const;
 
 		//get http req body data.
 		void GetData(std::string &data) const;
@@ -73,6 +74,11 @@ namespace lc //libevent cpp
 	private:
 		virtual void RevRequest() = 0;
 		static void RevRequestCB(struct evhttp_request* req, void* arg);
+
+		using URI_PRT = std::unique_ptr<evhttp_uri, decltype(&::evhttp_uri_free)>;
+		//安全地调用 evhttp_uri_parse
+		URI_PRT safe_evhttp_uri_parse(const char *uri) const;
+
 	};
 
 
@@ -81,7 +87,6 @@ namespace lc //libevent cpp
 	private:
 		struct evdns_base* m_dnsbase = nullptr;
 		struct evhttp_connection* m_con = nullptr;
-		struct evhttp_uri* http_uri = nullptr;
 		bool m_is_req = false; //true表示已经发出请求，等响应中
 
 	public:

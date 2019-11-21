@@ -1,6 +1,8 @@
 
 
-
+ BaseHttpSvr::GetUriQuery() 没测试，可能泄漏
+ 
+ 
 websocket 
 
 对用户接口，用facade

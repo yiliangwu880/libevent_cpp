@@ -7,7 +7,7 @@
 #include <arpa/inet.h>  
 #include "include_all.h"
 #include "log_file.h" //目前调试用，移植删掉
-#include <memory>
+
 
 using namespace std;
 
@@ -63,37 +63,39 @@ namespace lc //libevent cpp
 		return evhttp_request_get_command(m_cur_req);
 	}
 
-	const char * BaseHttpSvr::GetUriQuery() const
+	std::string BaseHttpSvr::GetUriQuery() const
 	{
 		if (nullptr == m_cur_req)
 		{
 			LB_ERROR("invaild req, on GetUriQuery");
-			return nullptr;
+			return "";
 		}
 		const char *uri = evhttp_request_get_uri(m_cur_req);
 		if (nullptr == uri)
 		{
 			LB_ERROR("no uri");
-			return nullptr;
+			return "";
 		}
 
 		/* Decode the URI */
-		struct evhttp_uri *decoded = evhttp_uri_parse(uri);
-		if (!decoded) {
+
+		using URI_PRT = std::unique_ptr<evhttp_uri, decltype(&::evhttp_uri_free)>;
+		URI_PRT decoded(evhttp_uri_parse(uri), ::evhttp_uri_free);
+		if (!decoded.get()) {
 			LB_ERROR("It's not a good URI. Sending BADREQUEST\n");
-			return nullptr;
+			return "";
 		}
 		//解析URL中method参数
-		const char *query_part = evhttp_uri_get_query(decoded);
-		if (!query_part)
+		const char *p = evhttp_uri_get_query(decoded.get());
+		if (nullptr == p)
 		{
-			return nullptr;
+			return "";
 		}
-		return query_part;
+		return string(p);
 	}
 
 
-	const char * BaseHttpSvr::GetPath() const
+	string BaseHttpSvr::GetPath() const
 	{
 		if (nullptr == m_cur_req)
 		{
@@ -108,17 +110,17 @@ namespace lc //libevent cpp
 		}
 
 		/* Decode the URI */
-		struct evhttp_uri *decoded = evhttp_uri_parse(uri);
-		if (!decoded) {
+		URI_PRT decoded = safe_evhttp_uri_parse(uri);
+		if (!decoded.get()) {
 			LB_ERROR("It's not a good URI. Sending BADREQUEST\n");
 			return nullptr;
 		}
-		const char *path = evhttp_uri_get_path(decoded);
+		const char *path = evhttp_uri_get_path(decoded.get());
 		if (nullptr == path)
 		{
 			return "/";
 		}
-		return path;
+		return string(path);
 	}
 
 
@@ -195,6 +197,12 @@ namespace lc //libevent cpp
 		}
 	}
 
+	BaseHttpSvr::URI_PRT BaseHttpSvr::safe_evhttp_uri_parse(const char *uri) const
+	{
+		URI_PRT decoded(evhttp_uri_parse(uri), ::evhttp_uri_free);
+		return decoded;
+	}
+
 	const char *BaseHttpSvr::GetUri() const
 	{
 		if (nullptr == m_cur_req)
@@ -213,12 +221,16 @@ namespace lc //libevent cpp
 		Free();
 	}
 
-
+	namespace
+	{
+		void
+			nouse(struct evhttp_uri *uri)
+		{}
+	}
 	bool BaseHttpClient::Request(const char *url, evhttp_cmd_type cmd_type, const char *post_data, unsigned int ot_sec)
 	{
 		LB_COND_F(!m_is_req, "repeated request");
 		LB_COND_F(url);
-		LB_COND_F(nullptr == http_uri);
 		LB_COND_F(nullptr == m_con);
 		LB_COND_F(nullptr == m_dnsbase);
 
@@ -227,19 +239,21 @@ namespace lc //libevent cpp
 		char uri[256];
 		//解析url
 		////////////////////////////////////
+		using URI_PRT = std::unique_ptr<evhttp_uri, decltype(&::evhttp_uri_free)>;
+		URI_PRT uri_obj(evhttp_uri_parse(url), ::evhttp_uri_free);
 		{
-			http_uri = evhttp_uri_parse(url); //自动释放资源
-			LB_COND_F(http_uri, "Parse url failed! ");
-			host = evhttp_uri_get_host(http_uri);
+
+			LB_COND_F(uri_obj.get(), "Parse url failed! ");
+			host = evhttp_uri_get_host(uri_obj.get());
 			LB_COND_F(host, "Parse host failed! url=%s", url);
-			port = evhttp_uri_get_port(http_uri);
+			port = evhttp_uri_get_port(uri_obj.get());
 			if (port < 0) port = 80;
-			const char* path = evhttp_uri_get_path(http_uri);
+			const char* path = evhttp_uri_get_path(uri_obj.get());
 			if (strlen(path) == 0)
 			{
 				path = "/";
 			}
-			const char *query = evhttp_uri_get_query(http_uri);
+			const char *query = evhttp_uri_get_query(uri_obj.get());
 			if (query == NULL) {
 				snprintf(uri, sizeof(uri) - 1, "%s", path);
 			}
@@ -308,11 +322,6 @@ namespace lc //libevent cpp
 		{
 			evhttp_connection_free(m_con);
 			m_con = nullptr;
-		}
-		if (nullptr != http_uri)
-		{
-			evhttp_uri_free(http_uri);
-			http_uri = nullptr;
 		}
 		m_is_req = false;
 	}
