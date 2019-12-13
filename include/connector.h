@@ -15,6 +15,11 @@ private:
 		Str2MsgPack("1 msg", msg);
 		SendData(msg);
 	}
+
+	virtual void OnDisconnected() override
+	{
+
+	}
 };
 
 BaseSvrCon 使用参考listener.h说明
