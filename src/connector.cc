@@ -246,6 +246,11 @@ bool ConCom::SendPack(const char* data, uint16 len)
 	B_COND(data, false);
 	B_COND(m_is_connect, false);
 	//LB_COND(m_is_connect, false, "is disconnect.");
+	if (len > MAX_MSG_DATA_LEN) //包过大，断开连接
+	{
+		LB_ERROR("send msg len too big. %d。 remote addr: %s %d", m_msg.len, GetRemoteIp(), GetRemotePort());
+		return false;
+	}
 
 	if (0 == m_fd)
 	{
@@ -302,6 +307,11 @@ bool ConCom::SendData(const MsgPack &msg)
 {
 	B_COND(m_is_connect, false);
 	//LB_COND(m_is_connect, false, "is disconnect.");
+	if (msg.len > MAX_MSG_DATA_LEN) //包过大，断开连接
+	{
+		LB_ERROR("send msg len too big. %d。 remote addr: %s %d", m_msg.len, GetRemoteIp(), GetRemotePort());
+		return false;
+	}
 
 	if (0 == m_fd)
 	{
