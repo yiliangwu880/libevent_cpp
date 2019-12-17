@@ -165,7 +165,7 @@ void ConCom::conn_read_callback(bufferevent* bev)
 			m_msg.len = ntohs(m_msg.len);
 			if (m_msg.len > MAX_MSG_DATA_LEN) //包过大，断开连接
 			{
-				LB_ERROR("rev msg len too big. %d", m_msg.len);
+				LB_ERROR("rev msg len too big. %d。 remote addr: %s %d", m_msg.len, GetRemoteIp(), GetRemotePort());
 				DisConnect();
 				return;
 			}
