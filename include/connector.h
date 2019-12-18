@@ -130,7 +130,7 @@ namespace lc //libevent cpp
 		void SetAddr(const char* connect_ip, unsigned short connect_port);
 		void SetAddr(const sockaddr_in &svr_addr);
 	private:
-		static const size_t MAX_MAX_SEND_BUF_SIZE = 1024 * 64;
+		static const size_t MAX_MAX_SEND_BUF_SIZE = 1024 * 1024;
 		bufferevent* m_buf_e;
 		sockaddr_in m_addr;			//对方地址
 		evutil_socket_t m_fd;
