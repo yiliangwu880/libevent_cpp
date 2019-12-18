@@ -80,7 +80,7 @@ function test_httpCombine()
 if [ $# -lt 1 ];then
 	echo "run all"
 	Init
-	#test_combine
+	test_combine
 	test_httpCombine
 else
     echo "run submodue" $1

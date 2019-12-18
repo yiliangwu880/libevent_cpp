@@ -156,13 +156,16 @@ void ConCom::conn_read_callback(bufferevent* bev)
 			input_len -= ret_write_len;
 			m_msg_write_len += ret_write_len;
 
-		//	LB_DEBUG("bufferevent_read, len m_msg_write_len =%d %d", ntohs(m_msg.len), m_msg_write_len);
+			if (m_msg_write_len >= HEAD_LEN)
+			{
+				m_msg.len = ntohs(m_msg.len);
+				//LB_DEBUG("bufferevent_read, len m_msg_write_len =%d %d", m_msg.len, m_msg_write_len);
+			}
 			continue;
 		}
 		//状态2, msg.len完整，等待读取完整消息
 		else
 		{
-			m_msg.len = ntohs(m_msg.len);
 			if (m_msg.len > MAX_MSG_DATA_LEN) //包过大，断开连接
 			{
 				LB_ERROR("rev msg len too big. %d。 remote addr: %s %d", m_msg.len, GetRemoteIp(), GetRemotePort());

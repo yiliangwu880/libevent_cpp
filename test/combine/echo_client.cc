@@ -76,9 +76,14 @@ private:
 //分割字符串发网络消息
 class SplitMsgClient : public ClientCon
 {
+
+	string m_str;
+	MsgPack m_msg;
+	lc::Timer m_tm;
+	bool m_is_ok = false;
 public:
+
 	SplitMsgClient()
-		:m_cnt(0)
 	{
 
 	}
@@ -89,10 +94,11 @@ public:
 
 	virtual void OnRecv(const MsgPack &msg) override
 	{
-		int *p = (int *)msg.data;
-		UNIT_ASSERT(*p == m_cnt);
-		UNIT_ASSERT(msg.len == sizeof(m_cnt));
-		LB_DEBUG("SplitMsgClient rev ok. m_cnt=%d", m_cnt);
+		UNIT_ASSERT(m_str == msg.data);
+		UNIT_ASSERT(msg.len == m_str.length());
+
+		LB_DEBUG("SplitMsgClient rev ok. ");
+		m_is_ok = true;
 	}
 	virtual void OnConnected() override
 	{
@@ -104,35 +110,48 @@ public:
 	}
 	void SendCnt()
 	{
-		++m_cnt;
-		//LOG_DEBUG("SendCnt %d", m_cnt);
+		m_str.append("1111111111111111111", 17);
+		UNIT_ASSERT(17 == m_str.length());
 		memset(&m_msg, 0, sizeof(m_msg));
-		m_msg.len = sizeof(m_cnt);
+		m_msg.len = m_str.length();
 		m_msg.len = htons((int)m_msg.len);
-		int *p = (int *)m_msg.data;
-		*p = m_cnt;
+		memcpy(m_msg.data, m_str.c_str(), m_str.length());
+		UNIT_INFO("send %s", m_msg.data);
+
 
 		
 		const char *pMsg = (char *)&m_msg;
 		SendData(pMsg, 3);
 
-		SplitMsgTimer *t = new SplitMsgTimer();
-		t->StartTimer(100, this);
+		m_tm.StartTimer(100, std::bind(&SplitMsgClient::send_remain1, this));
 	}
-	void send_remain()
+	void send_remain1()
 	{
 		const char *p = (char *)&m_msg;
 		p = p + 3;
-		SendData(p, 5);
+		SendData(p, 1);
+		UNIT_INFO("send_remain1");
+
+		m_tm.StartTimer(100, std::bind(&SplitMsgClient::send_remain2, this));
 	}
-	int m_cnt;
-	MsgPack m_msg;
+	void send_remain2()
+	{
+		const char *p = (char *)&m_msg;
+		p = p + 4;
+		SendData(p, 17+2-4);
+		UNIT_INFO("send_remain2");
+		m_tm.StartTimer(300, std::bind(&SplitMsgClient::CheckRevOk, this));
+	}
+	void CheckRevOk()
+	{
+		UNIT_ASSERT(m_is_ok);
+	}
 };
 
 void SplitMsgTimer::OnTimer(void *user_data)
 {
 	SplitMsgClient *p = (SplitMsgClient *)user_data;
-	p->send_remain();
+	p->send_remain1();
 	delete this;
 }
 
