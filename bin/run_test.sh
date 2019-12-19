@@ -59,6 +59,21 @@ function test_combine()
 	grep "ERROR\|error" ./test/log_combine.txt >>  error.txt 
 }
 
+function test_combine2()
+{
+	KillProcess "combine"
+	sleep 1
+	
+	cd test
+	./combine2 > OutLog.txt
+	cd -
+	
+	KillProcess "combine"
+	
+	grep "ERROR\|error" ./test/OutLog.txt >>  error.txt  #追加
+	grep "ERROR\|error" ./test/log_combine.txt >>  error.txt 
+}
+
 function test_httpCombine()
 {
 	KillProcess "httpCombine"
@@ -82,6 +97,7 @@ if [ $# -lt 1 ];then
 	Init
 	test_combine
 	test_httpCombine
+	test_combine2
 else
     echo "run submodue" $1
 	Init

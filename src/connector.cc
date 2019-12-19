@@ -200,6 +200,11 @@ void ConCom::conn_read_callback(bufferevent* bev)
 				//重置m_msg,等下次接收新消息
 				m_msg.len = 0;
 				m_msg_write_len = 0;
+				//OnRecv期间断开了连接，缓存部分丢弃处理
+				if (IsWaitConnectReq())
+				{
+					return;
+				}
 			}
 			continue;
 		}
