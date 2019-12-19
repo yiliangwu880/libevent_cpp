@@ -73,6 +73,18 @@ namespace lc //libevent cpp
 		template<class > friend class Listener;
 		friend class ClientCon;
 		friend class SvrCon;
+
+	private:
+		static const size_t MAX_MAX_SEND_BUF_SIZE = 1024 * 1024;
+		bufferevent* m_buf_e;
+		sockaddr_in m_addr;			//对方地址
+		evutil_socket_t m_fd;
+		size_t m_msbs;				//max send buf size发送最大缓冲大小，超了就断开
+		bool m_is_connect;			//true表示已经连接
+		MsgPack m_msg;				//每个接收消息包。
+		int m_msg_write_len;		//m_msg内存写入的字节数
+		bool m_no_ev_cb_log;		//true表示不打印事件回调错误
+
 	public:
 		//每次接收都是完整消息包
 		virtual void OnRecv(const MsgPack &msg) = 0;
@@ -129,16 +141,6 @@ namespace lc //libevent cpp
 		void SetIsConnect(bool is_connect) { m_is_connect = is_connect; }
 		void SetAddr(const char* connect_ip, unsigned short connect_port);
 		void SetAddr(const sockaddr_in &svr_addr);
-	private:
-		static const size_t MAX_MAX_SEND_BUF_SIZE = 1024 * 1024;
-		bufferevent* m_buf_e;
-		sockaddr_in m_addr;			//对方地址
-		evutil_socket_t m_fd;
-		size_t m_msbs;				//max send buf size发送最大缓冲大小，超了就断开
-		bool m_is_connect;			//true表示已经连接
-		MsgPack m_msg;				//每个接收消息包。
-		int m_msg_write_len;		//m_msg内存写入的字节数
-		bool m_no_ev_cb_log;		//true表示不打印事件回调错误
 	};
 
 

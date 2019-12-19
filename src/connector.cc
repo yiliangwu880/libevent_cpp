@@ -51,6 +51,8 @@ void ConCom::Free()
 		m_fd = 0;
 	}
 	m_is_connect = false;
+	m_msg.len = 0;
+	m_msg_write_len = 0;
 }
 
 
