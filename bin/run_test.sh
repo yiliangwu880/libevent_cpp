@@ -71,7 +71,7 @@ function test_combine2()
 	KillProcess "combine"
 	
 	grep "ERROR\|error" ./test/OutLog.txt >>  error.txt  #追加
-	grep "ERROR\|error" ./test/log_combine.txt >>  error.txt 
+	grep "ERROR\|error" ./test/log_combine2.txt >>  error.txt 
 }
 
 function test_httpCombine()

@@ -9,5 +9,6 @@ ADD_SUBDIRECTORY(exitProcess)
 ADD_SUBDIRECTORY(httpCombine)
 ADD_SUBDIRECTORY(httpTestLeak)
 ADD_SUBDIRECTORY(combine2)
+ADD_SUBDIRECTORY(efficient)
 
 

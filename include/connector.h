@@ -81,9 +81,8 @@ namespace lc //libevent cpp
 		evutil_socket_t m_fd;
 		size_t m_msbs;				//max send buf size发送最大缓冲大小，超了就断开
 		bool m_is_connect;			//true表示已经连接
-		MsgPack m_msg;				//每个接收消息包。
-		int m_msg_write_len;		//m_msg内存写入的字节数
 		bool m_no_ev_cb_log;		//true表示不打印事件回调错误
+		uint16 m_rev_pack_len = 0; 
 
 	public:
 		//每次接收都是完整消息包
@@ -118,8 +117,6 @@ namespace lc //libevent cpp
 		const char *GetRemoteIp() const;
 		uint16 GetRemotePort() const;
 
-		// true表示已经接收部分字节， 等接受完整消息包.
-		bool IsWaitCompleteMsg() const;
 		evutil_socket_t GetFd() { return m_fd; };
 		//自由发送指定字节
 		bool SendData(const char* data, int len);
@@ -135,6 +132,28 @@ namespace lc //libevent cpp
 		void conn_write_callback(bufferevent* bev);//如果不用 考虑删掉，
 		void conn_read_callback(bufferevent* bev);
 		void conn_event_callback(bufferevent* bev, short events);
+
+		//同 conn_read_callback，很大减少内存复制
+
+		//未优化前： total bytes=6907 Mb, 266 Mbps
+		//perf top -g -p xxx 效果
+		//  +13.87%     1.46%  efficient[.] bufferevent_readcb
+		//	+ 12.41%     0.21%  efficient[.] lc::ConCom::readcb
+		//	+ 10.11%     4.36%  efficient[.] lc::ConCom::conn_read_callback
+		//	+ 9.04%     9.04%  libc - 2.17.so[.] __memcpy_ssse3_back
+		//	+ 6.75%     6.75%[kernel][.] sysret_check
+		//	+ 5.16%     5.16%  libc - 2.17.so[.] _int_malloc
+		//	+ 4.19%     4.19%  efficient[.] evbuffer_add
+
+
+		//优化后： total bytes=23943 Mb, 266 Mbps
+		//perf top -g -p xxx效果
+		//  +12.99%     1.71%  efficient[.] bufferevent_readcb
+		//	+ 11.31%     0.37%  efficient[.] lc::ConCom::readcb
+		//	+ 8.67%     3.33%  efficient[.] lc::ConCom::conn_read_callback_no_cp
+		//	+ 7.57%     7.57%[kernel][.] sysret_check
+		//	+ 5.88%     5.88%  libc - 2.17.so[.] _int_malloc
+		void conn_read_callback_no_cp(bufferevent* bev);
 
 		void Free();
 		bool SetSocketInfo(bufferevent* buf_e, evutil_socket_t fd, struct sockaddr* sa = nullptr);

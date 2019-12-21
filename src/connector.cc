@@ -17,7 +17,6 @@ ConCom::ConCom()
 	, m_fd(0)
 	, m_msbs(MAX_MAX_SEND_BUF_SIZE)
 	, m_is_connect(false)
-	, m_msg_write_len(0)
 	, m_no_ev_cb_log(false)
 {
 	memset(&m_addr, 0, sizeof(m_addr));
@@ -51,8 +50,7 @@ void ConCom::Free()
 		m_fd = 0;
 	}
 	m_is_connect = false;
-	m_msg.len = 0;
-	m_msg_write_len = 0;
+	m_rev_pack_len = 0;
 }
 
 
@@ -119,7 +117,7 @@ void ConCom::eventcb(struct bufferevent* bev, short events, void* user_data)
 
 void ConCom::readcb(struct bufferevent* bev, void* user_data)
 {
-	((ConCom*)user_data)->conn_read_callback(bev);
+	((ConCom*)user_data)->conn_read_callback_no_cp(bev);
 }
 
 void ConCom::conn_write_callback(bufferevent* bev)
@@ -129,89 +127,64 @@ void ConCom::conn_write_callback(bufferevent* bev)
 
 
 
-bool ConCom::IsWaitCompleteMsg() const
-{
-	return 0 != m_msg_write_len;
-}
 
-void ConCom::conn_read_callback(bufferevent* bev)
+
+void ConCom::conn_read_callback_no_cp(bufferevent* bev)
 {
 	const static int HEAD_LEN = sizeof(MsgPack::len);
-	int input_len = evbuffer_get_length(bufferevent_get_input(bev));
+	evbuffer *buf = bufferevent_get_input(bev);
 
-	while (input_len > 0)
+	while (true)
 	{
-		char *write_addr = ((char *)&m_msg) + m_msg_write_len;
-		//根据2种状态去做不同读取操作
-		//状态1, msg.len没读完整,等待读完整过程
-		if (m_msg_write_len < HEAD_LEN)
+		//开始 流程
+		int input_len = evbuffer_get_length(buf);
+		if (input_len < HEAD_LEN)//头没接收完整
 		{
-			int need_to_read = HEAD_LEN - m_msg_write_len;
-			int write_len = min(input_len, need_to_read);
-			int ret_write_len = bufferevent_read(bev, write_addr, write_len);
-			if (ret_write_len != write_len)
-			{
-				LB_FATAL("ret_write_len != write_len");
-				DisConnect();
-				return;
-			}
-			input_len -= ret_write_len;
-			m_msg_write_len += ret_write_len;
-
-			if (m_msg_write_len >= HEAD_LEN)
-			{
-				m_msg.len = ntohs(m_msg.len);
-				//LB_DEBUG("bufferevent_read, len m_msg_write_len =%d %d", m_msg.len, m_msg_write_len);
-			}
-			continue;
+			return;
 		}
-		//状态2, msg.len完整，等待读取完整消息
-		else
+		
+		//case >= HEAD_LEN
+		if (0 == m_rev_pack_len) //消息头 长度没处理
 		{
-			if (m_msg.len > MAX_MSG_DATA_LEN) //包过大，断开连接
-			{
-				LB_ERROR("rev msg len too big. %d。 remote addr: %s %d", m_msg.len, GetRemoteIp(), GetRemotePort());
-				DisConnect();
-				return;
-			}
-
-			int need_to_read = m_msg.len + HEAD_LEN - m_msg_write_len;
-			if (need_to_read < 0)
-			{
-				LB_FATAL("need_to_read < 0");
-				DisConnect();
-				return;
-			}
-			int write_len = min(input_len, need_to_read);
-			int ret_write_len = bufferevent_read(bev, write_addr, write_len);
-			if (ret_write_len != write_len)
-			{
-				LB_FATAL("ret_write_len != write_len");
-				DisConnect();
-				return;
-			}
-			input_len -= ret_write_len;
-			m_msg_write_len += ret_write_len;
-
-			//LB_DEBUG("bufferevent_read data, m_msg_write_len write_addr[0]=%d %d %d %d %d", m_msg_write_len, write_addr[0], write_addr[1], write_addr[2], write_addr[3]);
-			if (need_to_read == ret_write_len)// 接收完整
-			{
-				OnRecv(m_msg);
-				//重置m_msg,等下次接收新消息
-				m_msg.len = 0;
-				m_msg_write_len = 0;
-				//OnRecv期间断开了连接，缓存部分丢弃处理
-				if (IsWaitConnectReq())
-				{
-					return;
-				}
-			}
-			continue;
+			uint16 *mem = (uint16 *)evbuffer_pullup(buf, sizeof(uint16));
+			*mem = ntohs(*mem);
+			m_rev_pack_len = *mem;
 		}
+
+		if (m_rev_pack_len > MAX_MSG_DATA_LEN || 0 == m_rev_pack_len) //包过大，断开连接
+		{
+			LB_ERROR("rev msg len too big. %d。 remote addr: %s %d", m_rev_pack_len, GetRemoteIp(), GetRemotePort());
+			DisConnect();
+			return;
+		}
+
+		int finish_pack_len = m_rev_pack_len + HEAD_LEN;//完整包长度
+
+		if (input_len < finish_pack_len)// 接收不完整
+		{
+			return; //退出处理，等网络接收更多字节,再继续
+		}
+
+		//case have a finish pack
+		MsgPack *pMsg = (MsgPack *)evbuffer_pullup(buf, finish_pack_len);
+		if (nullptr == pMsg)
+		{
+			LB_ERROR("evbuffer_pullup fail, pack_len=%d, buf len=%d", finish_pack_len, evbuffer_get_length(buf));
+			DisConnect();
+			return;
+		}
+		OnRecv(*pMsg);
+		//OnRecv期间断开了连接，缓存部分丢弃处理
+		if (IsWaitConnectReq())
+		{
+			return;
+		}
+		evbuffer_drain(buf, finish_pack_len); //删除已处理内存
+		//重置
+		m_rev_pack_len = 0;
+		continue;
 	}
 }
-
-
 void ConCom::conn_event_callback(bufferevent* bev, short events)
 {
 	if (events & BEV_EVENT_CONNECTED)
@@ -258,7 +231,7 @@ bool ConCom::SendPack(const char* data, uint16 len)
 	//LB_COND(m_is_connect, false, "is disconnect.");
 	if (len > MAX_MSG_DATA_LEN) //包过大，断开连接
 	{
-		LB_ERROR("send msg len too big. %d。 remote addr: %s %d", m_msg.len, GetRemoteIp(), GetRemotePort());
+		LB_ERROR("send msg len too big. %d。 remote addr: %s %d", len, GetRemoteIp(), GetRemotePort());
 		return false;
 	}
 
@@ -319,7 +292,7 @@ bool ConCom::SendData(const MsgPack &msg)
 	//LB_COND(m_is_connect, false, "is disconnect.");
 	if (msg.len > MAX_MSG_DATA_LEN) //包过大，断开连接
 	{
-		LB_ERROR("send msg len too big. %d。 remote addr: %s %d", m_msg.len, GetRemoteIp(), GetRemotePort());
+		LB_ERROR("send msg len too big. %d。 remote addr: %s %d", msg.len, GetRemoteIp(), GetRemotePort());
 		return false;
 	}
 
