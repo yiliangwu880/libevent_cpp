@@ -19,21 +19,5 @@ void Connect2Client::OnRecv(const MsgPack &msg)
 Listener<Connect2Client> *g_listener = nullptr;
 lc::Timer g_server_tm;
 
-namespace
-{
-	void DelServer()
-	{
-		LB_DEBUG("del g_listener");
-		delete g_listener;
-	}
 
-}
 
-UNITTEST(echo_server)
-{
-	g_listener = new Listener<Connect2Client>();
-	g_listener->Init(ECHO_SERVER_PORT);
-	//回显服务器，定时关闭
-	g_server_tm.StartTimer(1 * 1000, DelServer);
-	ReConClient::StartClient();
-}

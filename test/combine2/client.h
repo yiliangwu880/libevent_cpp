@@ -2,7 +2,7 @@
 联合测试
 */
 
-
+#pragma once
 #include "include_all.h"
 
 
@@ -25,7 +25,7 @@ private:
 	
 };
 
-
+extern ReConClient *g_ReConClient ;
 
 
 

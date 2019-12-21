@@ -11,6 +11,14 @@ path_list={ "../lib_prj/**"}
 
 WorkSpaceInit  "libevent_cpp"
 
+Project "prj"
+	files {
+	"../*.sh",
+	"../*.txt",
+	"../vs/*.lua",
+	"../bin/**.sh",
+	"../bin/**.txt",
+	}
 
 Project "libevent"
 	SrcPath	{ 

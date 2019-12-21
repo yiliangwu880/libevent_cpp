@@ -2,7 +2,7 @@
 
 */
 
-
+#pragma once
 #include "include_all.h"
 #include "log_file.h"
 
@@ -21,7 +21,8 @@ private:
 	}
 };
 
-
+extern Listener<Connect2Client> *g_listener ;
+extern lc::Timer g_server_tm;
 
 
 
