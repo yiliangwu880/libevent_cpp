@@ -1,4 +1,8 @@
 /*
+author:yiliangwu880
+brief:
+	这里实现不是最新的了。要复制使用清参考更好最新的写法：来源 https://github.com/yiliangwu880/svr_util.git 里面的log_file.h
+
 	写库时需要打印日志，同时给使用库的用户提供改变日志实现的选择。
 
 用户改变日志实现例子：
