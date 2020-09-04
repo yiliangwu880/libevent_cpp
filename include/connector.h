@@ -160,6 +160,10 @@ namespace lc //libevent cpp
 		void SetIsConnect(bool is_connect) { m_is_connect = is_connect; }
 		void SetAddr(const char* connect_ip, unsigned short connect_port);
 		void SetAddr(const sockaddr_in &svr_addr);
+
+		//Noncopyable
+		ConCom(const ConCom&);
+		ConCom & operator= (const ConCom &);
 	};
 
 
