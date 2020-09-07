@@ -113,18 +113,24 @@ private:
 template<class Connector = NoUseListenerConnector>
 class Listener 
 {
+private:
+	ConnectorMgr<Connector> m_default_cn_mgr; //必需放前面，供别的成员引用
+	evconnlistener *m_listener;
+	sockaddr_in m_addr;
+	BaseConMgr &m_cn_mgr; 
+
 public:
 	//para cn_mgr 生存期必须比 Listener长
 	Listener(BaseConMgr &cn_mgr)
-		:m_listener(nullptr)
-		, m_default_cn_mgr()
+		: m_default_cn_mgr()
+		, m_listener(nullptr)
 		, m_cn_mgr(cn_mgr)
 	{
 		memset(&m_addr, 0, sizeof(m_addr)); 
 	}
 	Listener()
-		:m_listener(nullptr)
-		, m_default_cn_mgr()
+		:m_default_cn_mgr()
+		, m_listener(nullptr)
 		, m_cn_mgr(m_default_cn_mgr)
 	{
 		memset(&m_addr, 0, sizeof(m_addr));
@@ -139,12 +145,6 @@ public:
 private:
 	static void accept_error_cb(evconnlistener* listener, void * ctx);
 	static void listener_cb(struct evconnlistener* listener, evutil_socket_t fd, struct sockaddr* sa, int socklen, void* user_data);
-
-private:
-	evconnlistener *m_listener;
-	ConnectorMgr<Connector> m_default_cn_mgr;
-	sockaddr_in m_addr;
-	BaseConMgr &m_cn_mgr; 
 };
 
 
