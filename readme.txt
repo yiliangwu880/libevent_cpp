@@ -7,7 +7,7 @@
 	整个文件夹放到linux目录，安装cmake gcc等。
 
 	cd External/libevent-2.1.8-stable 编译库
-	./configure --prefix=当前目录绝对路径/out
+	sh configure.sh     --可以遇到执行权限问题或者文档格式问题。用 chmod 和 dos2unix 命令解决
 	make && make install
 
 	当前目录执行：sh clearBuild.sh 完成编译
