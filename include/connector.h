@@ -36,6 +36,7 @@ BaseSvrCon 使用参考listener.h说明
 #include <string>
 #include <vector>
 #include <limits>
+#include <functional>
 #include "lev_mgr.h"
 #include "lc_typedef.h"
 
@@ -60,6 +61,7 @@ namespace lc //libevent cpp
 	};
 #pragma pack(pop)
 
+
 	template<class > class Listener;
 
 	class ClientCon;
@@ -83,6 +85,7 @@ namespace lc //libevent cpp
 		bool m_is_connect;			//true表示已经连接
 		bool m_no_ev_cb_log;		//true表示不打印事件回调错误
 		uint16 m_rev_pack_len = 0; 
+		bool m_isRawReadCb = false;
 
 	public:
 		//每次接收都是完整消息包
@@ -93,9 +96,13 @@ namespace lc //libevent cpp
 		//被调用的时候， fd, bufferevent 资源已经释放
 		//删除本对象， 不会触发OnDisconnected了
 		virtual void OnDisconnected() = 0;
+		//@param pMsg, len  网络缓存字节
+		//return 返回已经读取的字节数
+		virtual int OnRawRecv(const char *pMsg, int len) { return 0; };
 	public:
 		ConCom();
 		virtual ~ConCom();
+		void SetRawReadCb(bool isRawCb);
 		//true表示等连接请求操作，作为客户端使用的情况有效。
 		bool IsWaitConnectReq() const ;
 		bool IsConnect() const { return m_is_connect; };
