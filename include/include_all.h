@@ -9,7 +9,7 @@ https://github.com/yiliangwu880/libevent_cpp.git
 客户端：
 	#include "../include_all.h"
 
-	class MyConnectClient1 : public BaseConnect
+	class MyConnectClient1 : public ClientCon
 	{
 	private:
 		virtual void OnRecv(const MsgPack &msg) override
@@ -18,11 +18,11 @@ https://github.com/yiliangwu880/libevent_cpp.git
 		}
 		virtual void OnConnected() override
 		{
-			MsgPack msg;
-			...初始化msg
-			SendData(msg);
+			//MsgPack msg;
+			//...初始化msg
+			//	SendData(msg);
 		}
-		virtual void onDisconnected() override
+		virtual void OnDisconnected() override
 		{
 		}
 	};

@@ -27,6 +27,12 @@ ConCom::~ConCom()
 	Free();
 }
 
+
+void ConCom::SetRawReadCb(bool isRawCb)
+{
+	m_isRawReadCb = isRawCb;
+}
+
 bool ConCom::IsWaitConnectReq() const
 {
 	return m_fd == 0;
@@ -115,9 +121,21 @@ void ConCom::eventcb(struct bufferevent* bev, short events, void* user_data)
 	((ConCom*)user_data)->conn_event_callback(bev, events);
 }
 
+
+
 void ConCom::readcb(struct bufferevent* bev, void* user_data)
 {
-	((ConCom*)user_data)->conn_read_callback_no_cp(bev);
+	ConCom* p = (ConCom*)user_data;
+	if (p->m_isRawReadCb)
+	{
+		evbuffer *buf = bufferevent_get_input(bev);
+		int input_len = evbuffer_get_length(buf);
+		char *pMsg = (char*)evbuffer_pullup(buf, input_len);
+		int readLen = p->OnRawRecv(pMsg, input_len);
+		evbuffer_drain(buf, readLen); //删除已处理内存
+		return;
+	}
+	p->conn_read_callback_no_cp(bev);
 }
 
 void ConCom::conn_write_callback(bufferevent* bev)
