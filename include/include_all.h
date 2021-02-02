@@ -38,7 +38,7 @@ https://github.com/yiliangwu880/libevent_cpp.git
 
 服务器:
 
-	class Connect2Client : public ListenerConnector
+	class Connect2Client : public SvrCon
 	{
 	public:
 
@@ -76,7 +76,7 @@ https://github.com/yiliangwu880/libevent_cpp.git
 		class ConnectorMgr : public BaseConMgr
 		{
 		private:
-		virtual ListenerConnector *CreateConnect(){...};
+		virtual SvrCon *CreateConnect(){...};
 
 		};
 		EventMgr::Obj().Init();

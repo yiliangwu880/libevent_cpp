@@ -58,7 +58,7 @@ void BaseConMgr::Foreach(const SvrConForeachCB &cb)
 	{
 		if (nullptr == v.second)
 		{
-			LB_FATAL("save null ListenerConnector");
+			LB_FATAL("save null SvrCon");
 			continue;
 		}
 		tmp_vec.push_back(v.second);
