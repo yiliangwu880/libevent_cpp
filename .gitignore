@@ -1,3 +1,5 @@
 /vs/vs2013
 vs2017
 /libevent-2.1.8-stable/.vs
+.vs
+version.h
