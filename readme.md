@@ -13,9 +13,7 @@
 	当前目录执行：sh clearBuild.sh 完成编译
 	执行 combine_lib.sh 合并成一个静态库 libcevent_cpp.a
 	
-vs浏览代码：
-	执行libevent_cpp\vs\run.bat,生成sln文件
-
+典型使用例子参考: https://github.com/yiliangwu880/simple_web_svr.git
 
 目录结构：
 	bin					             == 执行文件
