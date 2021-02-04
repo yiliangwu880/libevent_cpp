@@ -10,7 +10,7 @@ UNITTEST(t1)
 {
 	UTIL_ASSERT(1 == 11);
 
-	LOG_DEBUG("run t1");
+	LB_DEBUG("run t1");
 }
 
 int main()

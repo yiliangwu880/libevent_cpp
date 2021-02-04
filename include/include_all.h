@@ -45,7 +45,7 @@ https://github.com/yiliangwu880/libevent_cpp.git
 	private:
 		virtual void OnRecv(const MsgPack &msg) override
 		{
-			LOG_DEBUG("OnRecv %s", &msg.data);
+			LB_DEBUG("OnRecv %s", &msg.data);
 			SendData(msg);
 			if (0)
 			{//some time do this destory connect
@@ -54,7 +54,7 @@ https://github.com/yiliangwu880/libevent_cpp.git
 		}
 		virtual void OnConnected() override
 		{
-			LOG_DEBUG("OnConnected");
+			LB_DEBUG("OnConnected");
 		}
 		virtual void onDisconnected() override {}
 	};

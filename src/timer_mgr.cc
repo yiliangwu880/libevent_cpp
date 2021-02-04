@@ -54,7 +54,7 @@ namespace lc //libevent cpp
 		}
 		if (S_WAIT_START_TIMER != m_state)
 		{
-			LB_ERROR("BaseLeTimer state error, repeated start timer");
+			LB_ERROR("Timer state error, repeated start timer");
 			return false;
 		}
 		if (nullptr != m_event)
@@ -98,7 +98,7 @@ namespace lc //libevent cpp
 
 		if (S_WAIT_START_TIMER != m_state)
 		{
-			LB_ERROR("BaseLeTimer state error, repeated start timer");
+			LB_ERROR("Timer state error, repeated start timer");
 			return false;
 		}
 		if (nullptr != m_event)

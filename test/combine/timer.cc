@@ -44,7 +44,7 @@ struct Test
 	}
 	void Fun()
 	{
-		//LOG_DEBUG("run");
+		//LB_DEBUG("run");
 		is_fun_run = true;
 	}
 	void Fun2(int n)

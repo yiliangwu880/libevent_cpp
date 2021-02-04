@@ -64,13 +64,14 @@ namespace lc //libevent cpp
 
 		event_set_log_callback(LIB_EVENT_LOG); //lib库日志输出
 		event_set_fatal_callback(EVENT_FATAL_CB);
-		//LOG_DEBUG("libevent version:%s", event_get_version());
+		//LB_DEBUG("libevent version:%s", event_get_version());
 		m_eb = event_base_new();
 		if (!m_eb)
 		{
 			LB_ERROR("cannot event_base_new libevent ...\n");
 			return false;
 		}
+		LB_DEBUG("m_eb= %p", m_eb);
 		//为了避免进程退出, 可以捕获SIGPIPE信号, 或者忽略它, 给它设置SIG_IGN信号处理函数:
 		//这样, 第二次调用write方法时, 会返回 - 1, 同时errno置为SIGPIPE.程序便能知道对端已经关闭.
 		signal(SIGPIPE, SIG_IGN);

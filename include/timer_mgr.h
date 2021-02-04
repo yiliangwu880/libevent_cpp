@@ -4,7 +4,7 @@
 
 
 use excample:
-	class MyTimer : public BaseLeTimer
+	class MyTimer : public Timer
 	{
 	private:
 	virtual void OnTimer(void *user_data) override{};
@@ -31,7 +31,7 @@ use excample2:
 			m_timer.StartTimer(1000, f);
 		}
 
-		BaseLeTimer m_timer;
+		Timer m_timer;
 	};
 	MyConnectClient obj;
 	obj.StartTimer();

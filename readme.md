@@ -13,6 +13,12 @@
 	当前目录执行：sh clearBuild.sh 完成编译
 	执行 combine_lib.sh 合并成一个静态库 libcevent_cpp.a
 	
+使用方法：
+	引入库 libcevent_cpp.a
+	设置include path:
+	libevent_cpp/include/
+	libevent_cpp/External/libevent-2.1.8-stable/out/include/
+
 典型使用例子参考: https://github.com/yiliangwu880/simple_web_svr.git
 
 目录结构：

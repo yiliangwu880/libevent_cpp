@@ -27,7 +27,7 @@ private:
 	virtual void OnRecv(const MsgPack &msg) override
 	{
 
-		//LOG_DEBUG("OnRecv len data %d, %d %d", msg.len, msg.data[0], msg.data[4]);
+		//LB_DEBUG("OnRecv len data %d, %d %d", msg.len, msg.data[0], msg.data[4]);
 		int *p = (int *)msg.data;
 		UNIT_ASSERT(*p == m_cnt);
 		UNIT_ASSERT(msg.len == sizeof(m_cnt));
@@ -51,7 +51,7 @@ private:
 			delete this;
 			return;
 		}
-		//LOG_DEBUG("SendCnt %d", m_cnt);
+		//LB_DEBUG("SendCnt %d", m_cnt);
 		MsgPack msg;
 		memset(&msg, 0, sizeof(msg));
 		msg.len = sizeof(m_cnt);
@@ -59,7 +59,7 @@ private:
 		*p = m_cnt;
 		SendData(msg);
 
-		//LOG_DEBUG("SendCnt msg len data %d, %d %d", msg.len, msg.data[0], msg.data[4]);
+		//LB_DEBUG("SendCnt msg len data %d, %d %d", msg.len, msg.data[0], msg.data[4]);
 
 	}
 	int m_cnt;

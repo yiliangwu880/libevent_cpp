@@ -5,12 +5,12 @@ class MyConnectClient1 : public ClientCon
 private:
 	virtual void OnRecv(const MsgPack &msg) override
 	{
-		LOG_DEBUG("1 OnRecv %s", &msg.data);
+		LB_DEBUG("1 OnRecv %s", &msg.data);
 
 	}
 	virtual void OnConnected() override
 	{
-		LOG_DEBUG("1 OnConnected, send first msg");
+		LB_DEBUG("1 OnConnected, send first msg");
 		MsgPack msg;
 		Str2MsgPack("1 msg", msg);
 		SendData(msg);

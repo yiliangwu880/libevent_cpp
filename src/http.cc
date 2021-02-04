@@ -304,7 +304,7 @@ namespace lc //libevent cpp
 		// 发起http请求
 		evhttp_make_request(m_con, req, cmd_type, uri); //调用后，m_connection管理req的释放
 
-		//LOG_DEBUG("request ok");
+		//LB_DEBUG("request ok");
 		m_is_req = true;
 		return true;
 	}

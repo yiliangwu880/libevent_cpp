@@ -27,6 +27,11 @@ namespace lc //libevent cpp
 			static EventMgr d;
 			return d;
 		}
+		static EventMgr &Ins()
+		{
+			static EventMgr d;
+			return d;
+		}
 		//使用libevent 任何功能前，必须先调用这个初始化函数
 		bool Init(ILogPrinter *iprinter = nullptr);
 

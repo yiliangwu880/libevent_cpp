@@ -43,7 +43,7 @@ namespace {
 
 			UNIT_ASSERT(msg.len == sizeof(m_cnt));
 			total_rev_cnt++;
-			//LOG_DEBUG("OnRecv");
+			//LB_DEBUG("OnRecv");
 		}
 		virtual void OnConnected() override
 		{
@@ -67,7 +67,7 @@ namespace {
 				int r = ::rand() % 100;
 				if (r<10)
 				{
-					//LOG_DEBUG("disconnect");
+					//LB_DEBUG("disconnect");
 					DisConnect(); //调用这里倒是FD越来越多，释放不了，原因未明
 
 								//随机化定时器，让流程更随机
@@ -89,7 +89,7 @@ namespace {
 			}
 			else if (S_DisConnect == m_state)
 			{
-				//LOG_DEBUG("TryReconnect");
+				//LB_DEBUG("TryReconnect");
 				total_recon_cnt++;
 				TryReconnect();
 			}
@@ -125,7 +125,7 @@ namespace {
 		{
 			UNIT_ASSERT(msg.len == sizeof(m_cnt));
 			total_rev_cnt++;
-			//LOG_DEBUG("OnRecv");
+			//LB_DEBUG("OnRecv");
 		}
 		virtual void OnConnected() override
 		{
@@ -184,12 +184,12 @@ namespace {
 			if (nullptr == m_client)
 			{
 				 CreateClient();
-				// LOG_DEBUG("CreateClient");
+				// LB_DEBUG("CreateClient");
 			} 
 			else
 			{
 				DelClient();
-			//	LOG_DEBUG("DelClient");
+			//	LB_DEBUG("DelClient");
 			}
 		}
 
