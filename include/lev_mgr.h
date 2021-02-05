@@ -24,8 +24,7 @@ namespace lc //libevent cpp
 	public:
 		static EventMgr &Obj()
 		{
-			static EventMgr d;
-			return d;
+			return Ins();
 		}
 		static EventMgr &Ins()
 		{
