@@ -30,7 +30,7 @@ namespace lc //libevent cpp
 			LB_FATAL("repeated init");
 			return false;
 		}
-		m_evhttp = evhttp_new(EventMgr::Obj().GetEventBase());
+		m_evhttp = evhttp_new(EventMgr::Ins().GetEventBase());
 		if (nullptr == m_evhttp) {
 			LB_FATAL("init http fail");
 			return false;
@@ -266,7 +266,7 @@ namespace lc //libevent cpp
 		/////////////////////////////////////////
 
 		// 初始化evdns_base_new
-		m_dnsbase = evdns_base_new(EventMgr::Obj().GetEventBase(), EVDNS_BASE_INITIALIZE_NAMESERVERS);
+		m_dnsbase = evdns_base_new(EventMgr::Ins().GetEventBase(), EVDNS_BASE_INITIALIZE_NAMESERVERS);
 		if (!m_dnsbase)
 		{
 			LB_ERROR("host=%s port=%d", host, port);
@@ -275,7 +275,7 @@ namespace lc //libevent cpp
 			return false;
 		}
 
-		m_con = evhttp_connection_base_new(EventMgr::Obj().GetEventBase(), m_dnsbase, host, port);
+		m_con = evhttp_connection_base_new(EventMgr::Ins().GetEventBase(), m_dnsbase, host, port);
 		if (!m_con)
 		{
 			LB_ERROR("host=%s port=%d", host, port);

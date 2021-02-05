@@ -165,7 +165,7 @@ template<class Connector /*= NoUseConnector*/>
 bool Listener<Connector>::Init(const sockaddr_in &addr)
 {
 	m_addr = addr;
-	m_listener = evconnlistener_new_bind(EventMgr::Obj().GetEventBase(), Listener::listener_cb, (void*)this, LEV_OPT_REUSEABLE | LEV_OPT_CLOSE_ON_FREE, -1, (struct sockaddr*)&addr, sizeof(addr));
+	m_listener = evconnlistener_new_bind(EventMgr::Ins().GetEventBase(), Listener::listener_cb, (void*)this, LEV_OPT_REUSEABLE | LEV_OPT_CLOSE_ON_FREE, -1, (struct sockaddr*)&addr, sizeof(addr));
 	if (!m_listener)
 	{
 		LB_ERROR("evconnlistener_new_bind fail,port=%d", ntohs(addr.sin_port));
@@ -194,7 +194,7 @@ void Listener<Connector>::accept_error_cb(evconnlistener* listener, void * ctx)
 {
 	int err = EVUTIL_SOCKET_ERROR();
 	LB_ERROR("Got an error %d (%s) on the listener. \n", err, evutil_socket_error_to_string(err));
-	//EventMgr::Obj().StopDispatch();
+	//EventMgr::Ins().StopDispatch();
 }
 
 

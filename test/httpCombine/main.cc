@@ -19,21 +19,21 @@ namespace {
 //UNITTEST(sample_test)
 //{
 //
-//	EventMgr::Obj().Init();
+//	EventMgr::Ins().Init();
 //
 //	HttpSvr svr;
 //	svr.Init(nullptr, 15426);
 //	HttpClient c;
 //	c.Request("http://www.baidu.com/");
-//	EventMgr::Obj().Dispatch();
+//	EventMgr::Ins().Dispatch();
 //}
 
 DefaultLog my_log("httpCombineLog.txt");
 int main(int argc, char* argv[])
 {
-	LogMgr::Obj().SetLogPrinter(my_log);
+	LogMgr::Ins().SetLogPrinter(my_log);
 	LB_DEBUG("\n\n");
-	UnitTestMgr::Obj().Start();
+	UnitTestMgr::Ins().Start();
 	return 0;
 }
 

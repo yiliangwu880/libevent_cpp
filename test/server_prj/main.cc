@@ -55,18 +55,18 @@ namespace {
 UNITTEST(mass_con_svr)
 {
 
-	EventMgr::Obj().Init();
+	EventMgr::Ins().Init();
 	//ct.StartTimer(1000 * 60);
 	listener = new Listener<Connect2Client>();
 	listener->Init(MASS_CON_SVR_PORT);
-	EventMgr::Obj().Dispatch();
+	EventMgr::Ins().Dispatch();
 }
 DefaultLog my_log("log_server_prj.txt");
 int main(int argc, char* argv[])
 {
-	LogMgr::Obj().SetLogPrinter(my_log);
+	LogMgr::Ins().SetLogPrinter(my_log);
 	LB_DEBUG("\n\n");
-	UnitTestMgr::Obj().Start();
+	UnitTestMgr::Ins().Start();
 	return 0;
 }
 

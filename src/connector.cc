@@ -503,7 +503,7 @@ bool ClientCon::ConnectByAddr()
 		LB_ERROR("socket create fail. fd < 0");
 		return false;
 	}
-	bufferevent* buf_e = bufferevent_socket_new(EventMgr::Obj().GetEventBase(), fd, BEV_OPT_CLOSE_ON_FREE);//提示你提供给bufferevent_socket_new() 的套接字务必是非阻塞模式, 为此LibEvent 提供了便利的方法	evutil_make_socket_nonblocking.
+	bufferevent* buf_e = bufferevent_socket_new(EventMgr::Ins().GetEventBase(), fd, BEV_OPT_CLOSE_ON_FREE);//提示你提供给bufferevent_socket_new() 的套接字务必是非阻塞模式, 为此LibEvent 提供了便利的方法	evutil_make_socket_nonblocking.
 	if (nullptr == buf_e)
 	{
 		LB_ERROR("nullptr == m_buf_e");

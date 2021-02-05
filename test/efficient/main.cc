@@ -20,12 +20,12 @@ static void Printf(bool is_error, const char * file, int line, const char *fun, 
 
 int main(int argc, char* argv[]) 
 {
-	LogMgr::Obj().SetLogPrinter(my_log);
+	LogMgr::Ins().SetLogPrinter(my_log);
 	LB_DEBUG("start run");
 
-	EventMgr::Obj().Init();
-	UnitTestMgr::Obj().Start(Printf);
-	EventMgr::Obj().Dispatch();
+	EventMgr::Ins().Init();
+	UnitTestMgr::Ins().Start(Printf);
+	EventMgr::Ins().Dispatch();
 
 
 	LB_DEBUG("end run");

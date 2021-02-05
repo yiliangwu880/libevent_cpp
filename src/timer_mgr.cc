@@ -67,7 +67,7 @@ namespace lc //libevent cpp
 		{
 			ev_type = EV_PERSIST;
 		}
-		m_event = event_new(EventMgr::Obj().GetEventBase(), -1, ev_type, OnTimerCB, this);
+		m_event = event_new(EventMgr::Ins().GetEventBase(), -1, ev_type, OnTimerCB, this);
 
 		if (0 != event_add(m_event, &t))
 		{
@@ -113,7 +113,7 @@ namespace lc //libevent cpp
 			ev_type = EV_PERSIST;
 		}
 
-		m_event = event_new(EventMgr::Obj().GetEventBase(), -1, ev_type, TimerCB_StdBind, this);
+		m_event = event_new(EventMgr::Ins().GetEventBase(), -1, ev_type, TimerCB_StdBind, this);
 
 		if (0 != event_add(m_event, &t))
 		{

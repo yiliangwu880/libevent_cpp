@@ -38,7 +38,7 @@ namespace {
 	void CloseTimer::OnTimer(void *user_data)
 	{
 		LB_DEBUG("OnTimer");
-		//lc::LogMgr::Obj().flush();
+		//lc::LogMgr::Ins().flush();
 
 
 		//LB_DEBUG("del listener");
@@ -56,24 +56,24 @@ void SIGRTMIN_CB(int sig_type)
 	LB_DEBUG("SIGRTMIN_CB %d", sig_type);
 	if (SIGUSR1 == sig_type)
 	{
-		EventMgr::Obj().StopDispatch();
+		EventMgr::Ins().StopDispatch();
 	}
 }
 
 UNITTEST(echo_server)
 {
-	LogMgr::Obj().SetLogPrinter(my_log);
+	LogMgr::Ins().SetLogPrinter(my_log);
 	LB_DEBUG("start run");
 
-	EventMgr::Obj().Init();
-	EventMgr::Obj().RegSignal(SIGUSR1, SIGRTMIN_CB);
+	EventMgr::Ins().Init();
+	EventMgr::Ins().RegSignal(SIGUSR1, SIGRTMIN_CB);
 
 	ct.StartTimer(1000*2, nullptr, true);
 	listener = new Listener<Connect2Client>();
 	listener->Init(ECHO_SERVER_PORT);
 
-	EventMgr::Obj().Dispatch();
+	EventMgr::Ins().Dispatch();
 	LB_DEBUG("-----end dispatch------");
-	//LogMgr::Obj().flush();
+	//LogMgr::Ins().flush();
 
 }

@@ -12,11 +12,11 @@ use excample:
 
 	main()
 	{
-		EventMgr::Obj().Init();
+		EventMgr::Ins().Init();
 		MyTimer o;
 		o.StartTimer(1000, &user_data);
 
-		EventMgr::Obj().Dispatch();
+		EventMgr::Ins().Dispatch();
 	}
 
 use excample2:

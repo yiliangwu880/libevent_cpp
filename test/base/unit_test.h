@@ -15,7 +15,7 @@ UNITTEST(t1)
 
 int main()
 {
-UnitTestMgr::Obj().Start();
+UnitTestMgr::Ins().Start();
 }
 
 */
@@ -37,7 +37,7 @@ using UnitTestPrintf = void (*)(bool is_error, const char * file, int line, cons
 class UnitTestMgr
 {
 public:
-	static UnitTestMgr &Obj()
+	static UnitTestMgr &Ins()
 	{
 		static UnitTestMgr d;
 		return d;
@@ -56,8 +56,8 @@ private:
 	UnitTestPrintf m_print;
 };
 
-#define UNIT_ERROR(x, ...)  UnitTestMgr::Obj().Printf( true, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
-#define UNIT_INFO(x, ...)  UnitTestMgr::Obj().Printf( false, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
+#define UNIT_ERROR(x, ...)  UnitTestMgr::Ins().Printf( true, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
+#define UNIT_INFO(x, ...)  UnitTestMgr::Ins().Printf( false, __FILE__, __LINE__, __FUNCTION__, x, ##__VA_ARGS__);
 
 #define UNIT_ASSERT(expression) do{  \
 				if(!(expression))                                                              \

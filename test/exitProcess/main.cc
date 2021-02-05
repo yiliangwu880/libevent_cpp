@@ -14,7 +14,7 @@ using namespace lc;
 int main(int argc, char* argv[]) 
 {
 
-	UnitTestMgr::Obj().Start();
+	UnitTestMgr::Ins().Start();
 	LB_DEBUG("end run");
 	return 0;
 }

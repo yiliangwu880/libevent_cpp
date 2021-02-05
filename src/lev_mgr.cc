@@ -59,7 +59,7 @@ namespace lc //libevent cpp
 		}
 		if (nullptr != iprinter)
 		{
-			LogMgr::Obj().SetLogPrinter(*iprinter);
+			LogMgr::Ins().SetLogPrinter(*iprinter);
 		}
 
 		event_set_log_callback(LIB_EVENT_LOG); //lib库日志输出

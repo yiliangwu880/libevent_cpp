@@ -119,7 +119,7 @@ bool SvrCon::AcceptInit(evutil_socket_t fd, struct sockaddr* sa, const sockaddr_
 		LB_ERROR("repeated init");
 		return false;
 	}
-	bufferevent* buf_e = bufferevent_socket_new(EventMgr::Obj().GetEventBase(), fd, BEV_OPT_CLOSE_ON_FREE); //释放m_buf_e，的时候，库里面会释放m_fd
+	bufferevent* buf_e = bufferevent_socket_new(EventMgr::Ins().GetEventBase(), fd, BEV_OPT_CLOSE_ON_FREE); //释放m_buf_e，的时候，库里面会释放m_fd
 	if (!buf_e)
 	{
 		LB_ERROR("cannot bufferevent_socket_new libevent ...\n");

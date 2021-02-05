@@ -42,12 +42,12 @@ private:
 
 int main(int argc, char* argv[]) 
 {
-	EventMgr::Obj().Init();
+	EventMgr::Ins().Init();
 
 	Listener<Connect2Client> listener;
 	listener.Init(server_port);
 
-	EventMgr::Obj().Dispatch();
+	EventMgr::Ins().Dispatch();
 	return 0;
 }
 

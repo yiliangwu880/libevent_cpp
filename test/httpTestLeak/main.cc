@@ -14,7 +14,7 @@ using namespace std;
 int main(int argc, char* argv[])
 {
 	LB_DEBUG("\n\n");
-	UnitTestMgr::Obj().Start();
+	UnitTestMgr::Ins().Start();
 	return 0;
 }
 

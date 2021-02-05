@@ -206,7 +206,7 @@ void OnLog()
 
 UNITTEST(mass_con_client)
 {
-	EventMgr::Obj().Init();
+	EventMgr::Ins().Init();
 	for (uint32 i=0; i< MAX_CON_NUM/2; ++i)
 	{
 		MyConnectClient *client = new MyConnectClient();
@@ -220,14 +220,14 @@ UNITTEST(mass_con_client)
 		UNIT_ASSERT(nullptr != ctrl);
 	}
 	log_timer.StartTimer(1000 * LOG_INTERVAL_SEC, std::bind(&OnLog), true);
-	EventMgr::Obj().Dispatch();
+	EventMgr::Ins().Dispatch();
 }
 DefaultLog my_log("log_client_prj.txt");
 int main(int argc, char* argv[]) 
 {
-	LogMgr::Obj().SetLogPrinter(my_log);
+	LogMgr::Ins().SetLogPrinter(my_log);
 	LB_DEBUG("start run");
-	UnitTestMgr::Obj().Start();
+	UnitTestMgr::Ins().Start();
 	LB_DEBUG("end run");
 	return 0;
 }

@@ -126,7 +126,7 @@ namespace htl{
 	{
 		UNIT_ASSERT(WAIT_CONNECT_FAIL == m_test->m_state);
 		UNIT_INFO("TEST END");
-		EventMgr::Obj().StopDispatch();
+		EventMgr::Ins().StopDispatch();
 	}
 
 	void Svr::RevRequest()
@@ -255,10 +255,10 @@ using namespace htl;
 UNITTEST(combine)
 {
 	srand((unsigned int)time(0));
-	EventMgr::Obj().Init();
+	EventMgr::Ins().Init();
 	Test t;
 	t.Start();
-	EventMgr::Obj().Dispatch();
+	EventMgr::Ins().Dispatch();
 	UNIT_INFO("------combine end---------");
 }
 

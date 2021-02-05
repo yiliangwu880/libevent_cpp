@@ -44,7 +44,7 @@ void StartLog()
 {
 	//测试库日志输出设置
 	//g_my_log.m_is_run = false;
-	//LogMgr::Obj().SetLogPrinter(g_my_log);
+	//LogMgr::Ins().SetLogPrinter(g_my_log);
 	//ct.StartTimer(2000);
 
 }

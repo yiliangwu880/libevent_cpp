@@ -37,12 +37,12 @@ private:
 
 int main(int argc, char* argv[]) 
 {
-	EventMgr::Obj().Init();
+	EventMgr::Ins().Init();
 
 	MyConnectClient c;
 	c.ConnectInit(ip, server_port);
 
-	EventMgr::Obj().Dispatch();
+	EventMgr::Ins().Dispatch();
 	return 0;
 }
 
