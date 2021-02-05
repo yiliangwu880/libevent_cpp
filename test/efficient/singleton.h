@@ -38,7 +38,7 @@ protected:
 	virtual ~Singleton() {}
 
 public:
-	static T& Obj()
+	static T& Ins()
 	{
 		if (!m_obj)
 			m_obj = new T;
