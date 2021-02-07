@@ -65,7 +65,7 @@ UNITTEST(echo_server)
 	LogMgr::Ins().SetLogPrinter(my_log);
 	LB_DEBUG("start run");
 
-	EventMgr::Ins().Init();
+	
 	EventMgr::Ins().RegSignal(SIGUSR1, SIGRTMIN_CB);
 
 	ct.StartTimer(1000*2, nullptr, true);

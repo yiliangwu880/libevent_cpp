@@ -206,7 +206,7 @@ void OnLog()
 
 UNITTEST(mass_con_client)
 {
-	EventMgr::Ins().Init();
+	
 	for (uint32 i=0; i< MAX_CON_NUM/2; ++i)
 	{
 		MyConnectClient *client = new MyConnectClient();

@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
 	LogMgr::Ins().SetLogPrinter(my_log);
 	LB_DEBUG("start run");
 
-	EventMgr::Ins().Init();
+	
 	UnitTestMgr::Ins().Start(Printf);
 	EventMgr::Ins().Dispatch();
 

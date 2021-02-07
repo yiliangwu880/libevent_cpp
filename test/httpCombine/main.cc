@@ -19,7 +19,7 @@ namespace {
 //UNITTEST(sample_test)
 //{
 //
-//	EventMgr::Ins().Init();
+//	
 //
 //	HttpSvr svr;
 //	svr.Init(nullptr, 15426);

@@ -199,7 +199,7 @@ namespace {
 UNITTEST(combine)
 {
 	srand((unsigned int)time(0));
-	EventMgr::Ins().Init();
+	
 	Test t;
 	t.Start();
 	EventMgr::Ins().Dispatch();

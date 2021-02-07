@@ -42,7 +42,7 @@ private:
 
 int main(int argc, char* argv[]) 
 {
-	EventMgr::Ins().Init();
+	
 
 	Listener<Connect2Client> listener;
 	listener.Init(server_port);

@@ -27,8 +27,6 @@ namespace lc //libevent cpp
 			static EventMgr d;
 			return d;
 		}
-		//使用libevent 任何功能前，必须先调用这个初始化函数
-		bool Init(ILogPrinter *iprinter = nullptr);
 
 		void Dispatch();
 		event_base *GetEventBase() { return m_eb; };
@@ -39,10 +37,7 @@ namespace lc //libevent cpp
 		void FreeEventBase();
 
 	private:
-		EventMgr()
-			:m_eb(nullptr)
-		{
-		}
+		EventMgr();
 		~EventMgr();
 
 	private:

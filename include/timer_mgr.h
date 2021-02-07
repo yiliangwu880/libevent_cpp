@@ -12,7 +12,7 @@ use excample:
 
 	main()
 	{
-		EventMgr::Ins().Init();
+		
 		MyTimer o;
 		o.StartTimer(1000, &user_data);
 

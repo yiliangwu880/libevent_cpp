@@ -55,7 +55,7 @@ namespace {
 UNITTEST(mass_con_svr)
 {
 
-	EventMgr::Ins().Init();
+	
 	//ct.StartTimer(1000 * 60);
 	listener = new Listener<Connect2Client>();
 	listener->Init(MASS_CON_SVR_PORT);

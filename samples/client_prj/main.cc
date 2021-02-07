@@ -37,7 +37,7 @@ private:
 
 int main(int argc, char* argv[]) 
 {
-	EventMgr::Ins().Init();
+	
 
 	MyConnectClient c;
 	c.ConnectInit(ip, server_port);
