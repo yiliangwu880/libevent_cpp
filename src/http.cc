@@ -328,9 +328,9 @@ namespace lc //libevent cpp
 
 	void BaseHttpClient::remote_read_callback(struct evhttp_request* req, void* arg)
 	{
-		LB_COND_VOID(req);
+		LB_COND_V(req);
 		BaseHttpClient *p = (BaseHttpClient *)arg;
-		LB_COND_VOID(p);
+		LB_COND_V(p);
 		if (0 == req->response_code)
 		{	//超时没响应，或者连接失败
 

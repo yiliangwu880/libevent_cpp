@@ -424,7 +424,7 @@ int ConCom::Flush()
 
 void ConCom::Setwatermark(short events, unsigned int lowmark, unsigned int highmark)
 {
-	B_COND_VOID(m_is_connect);
+	B_COND_V(m_is_connect);
 	if (0 == m_fd)
 	{
 		LB_ERROR("BaseConnectCom not init. 0 == m_fd");
