@@ -122,7 +122,7 @@ private:
 	}while(0)
 
 
-#define LB_COND_VOID(cond, ...)\
+#define LB_COND_V(cond, ...)\
 	do{\
 	if(!(cond))	\
 	{\
@@ -138,7 +138,7 @@ private:
 	}	\
 	}while(0)
 
-#define B_COND_VOID(cond)\
+#define B_COND_V(cond)\
 	do{\
 	if(!(cond))	\
 	return; \
