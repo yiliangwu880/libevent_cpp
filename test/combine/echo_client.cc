@@ -242,16 +242,53 @@ ConFailClient *fail_c = nullptr;
 }//namespace{
 
 
+class SplitMsgClient2 : public ClientCon
+{
+
+	string m_str;
+	MsgPack m_msg;
+	lc::Timer m_tm;
+	bool m_is_ok = false;
+public:
+
+	SplitMsgClient2()
+	{
+
+	}
+	virtual ~SplitMsgClient2() override
+	{
+		LB_DEBUG("del SplitMsgClient");
+	}
+	virtual void OnRecv(const MsgPack &msg) override
+	{
+
+	}
+	virtual void OnConnected() override
+	{
+	}
+	virtual void OnDisconnected() override
+	{
+
+	}
+};
+
 void StartEchoClient()
 {
 	//测试重复发送消息，回显检验是否一样
-	echo_client = new MyConnectClient();
-	echo_client->ConnectInit(LOCAL_IP, ECHO_SERVER_PORT);
+	{
+		std::map<int, MyConnectClient> m;
+		auto it = m.emplace(1, MyConnectClient()).first;
+		echo_client = &(it->second);
+		echo_client->ConnectInit(LOCAL_IP, ECHO_SERVER_PORT);
+	}
 
 	//测试一个包分割发送，检验是否正确
-	split_client = new SplitMsgClient();
-	split_client->ConnectInit(LOCAL_IP, ECHO_SERVER_PORT);
-
+	{
+		std::map<int, SplitMsgClient2> m; //改为 MyConnectClient就编译通过？
+		auto it = m.emplace(1, SplitMsgClient2()).first;
+		split_client = new SplitMsgClient();
+		split_client->ConnectInit(LOCAL_IP, ECHO_SERVER_PORT);
+	}
 	//测试断开重连
 	reCon = new ReConnectClient();
 	reCon->Start();

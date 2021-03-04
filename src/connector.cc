@@ -22,6 +22,11 @@ ConCom::ConCom()
 	memset(&m_addr, 0, sizeof(m_addr));
 }
 
+ConCom::ConCom(ConCom &&src)
+{
+
+}
+
 ConCom::~ConCom()
 {
 	Free();

@@ -41,7 +41,6 @@ public:
 	virtual ~BaseConMgr();
 	//马上调用delete Connector, 对象定时器删除，避免写出野对象代码
 	bool PostDelConn(uint64 id);
-	void OnTimerDelConn(); //真正delele对象
 	//建议获取指针只做局部变量用，不要保存，因为BaseConMgr管理SvrCon对象的删除
 	SvrCon *FindConn(uint64 id);
 
@@ -52,6 +51,7 @@ private:
 	virtual SvrCon *NewConnect() = 0;
 	virtual void DelConnect(SvrCon *) = 0;
 
+	void OnTimerDelConn(); //真正delele对象
 	SvrCon *CreateConnectForListener();
 
 private:

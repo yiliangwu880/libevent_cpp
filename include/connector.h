@@ -101,6 +101,8 @@ namespace lc //libevent cpp
 		virtual int OnRawRecv(const char *pMsg, int len) { return 0; };
 	public:
 		ConCom();
+		//ConCom(const ConCom &) = delete;
+		ConCom(ConCom &&src);
 		virtual ~ConCom();
 		void SetRawReadCb(bool isRawCb);
 		//true表示等连接请求操作，作为客户端使用的情况有效。
@@ -168,9 +170,7 @@ namespace lc //libevent cpp
 		void SetAddr(const char* connect_ip, unsigned short connect_port);
 		void SetAddr(const sockaddr_in &svr_addr);
 
-		//Noncopyable
-		ConCom(const ConCom&);
-		ConCom & operator= (const ConCom &);
+		ConCom & operator= (const ConCom &) = delete;
 	};
 
 
@@ -181,6 +181,8 @@ namespace lc //libevent cpp
 	class ClientCon : public ConCom
 	{
 	public:
+		ClientCon(){}
+		ClientCon(ClientCon &&src) :ConCom(std::move(src)){}
 		//AConnectInit必须先选其中一个初始化函数调用后，才能使用其他方法
 		//return true代表请求成功，不代表连接成功. 不能连接成功，会回调 onDisconnected  通知
 		bool ConnectInit(const char* connect_ip, unsigned short connect_port);
