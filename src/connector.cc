@@ -22,7 +22,7 @@ ConCom::ConCom()
 	memset(&m_addr, 0, sizeof(m_addr));
 }
 
-ConCom::ConCom(ConCom &&src)
+ConCom::ConCom(ConCom &&src):ConCom() //只合适初始化后移动构造，有状态改变了不合适
 {
 
 }
