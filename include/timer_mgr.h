@@ -39,10 +39,10 @@ use excample2:
 错误示范：
 	MyClass::Fun()
 	{
-	//f1 f2都是局部对象呀，带出函数外调用，就崩溃
+	//f2是局部对象呀，带出函数外引用就是野对象了。
 		auto f2 = [&]()
 		{
-			UNIT_INFO("f2 this=%p", this);//这里内存回乱掉。
+			UNIT_INFO("f2 this=%p", this);//这里内存会乱掉。
 
 		};
 		auto f = [&]()
