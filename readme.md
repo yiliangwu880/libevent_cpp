@@ -8,6 +8,7 @@
 
 	cd External/libevent-2.1.8-stable 编译库
 	sh configure.sh     --可以遇到执行权限问题或者文档格式问题。用 chmod 和 dos2unix 命令解决
+	                    --dos2unix -f ./config.sub configure.sh ./configure ./config.guess
 	make && make install
 
 	当前目录执行：sh clearBuild.sh 完成编译
