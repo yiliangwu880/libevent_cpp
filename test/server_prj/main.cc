@@ -36,18 +36,18 @@ namespace {
 
 
 	Listener<Connect2Client> *listener=nullptr;
-	class CloseTimer : public Timer
-	{
-	private:
-		virtual void OnTimer(void *user_data) override;
-	};
+	//class CloseTimer : public Timer
+	//{
+	//private:
+	//	virtual void OnTimer(void *user_data) override;
+	//};
 
-	void CloseTimer::OnTimer(void *user_data)
-	{
-		LB_DEBUG("del svr");
-		delete listener;
-	}
-	CloseTimer ct;
+	//void CloseTimer::OnTimer(void *user_data)
+	//{
+	//	LB_DEBUG("del svr");
+	//	delete listener;
+	//}
+	//CloseTimer ct;
 
 
 }//namespace {

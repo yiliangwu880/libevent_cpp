@@ -37,8 +37,15 @@ namespace {
 	Listener<Connect2Client> *listener;
 	class CloseTimer : public Timer
 	{
+	public:
+		bool StartTimer(unsigned long long millisecond, void *p=nullptr, bool is_loop = false)
+		{
+			TimerCB f = std::bind(&CloseTimer::OnTimer, this, p);
+			return Timer::StartTimer(millisecond, f, is_loop);
+		}
+
 	private:
-		virtual void OnTimer(void *user_data) override;
+		void OnTimer(void *user_data);
 	};
 
 	void CloseTimer::OnTimer(void *user_data)

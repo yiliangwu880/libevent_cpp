@@ -74,7 +74,13 @@ namespace {
 	class SplitMsgTimer : public Timer
 	{
 	private:
-		virtual void OnTimer(void *user_data) override;
+		bool StartTimer(unsigned long long millisecond, void *p=nullptr, bool is_loop = false)
+		{
+			TimerCB f = std::bind(&SplitMsgTimer::OnTimer, this, p);
+			return Timer::StartTimer(millisecond, f, is_loop);
+		}
+
+		void OnTimer(void *user_data);
 	};
 
 
@@ -316,5 +322,7 @@ void StartConFailClient()
 void CheckClientEnd()
 {
 	UNIT_ASSERT(isFailClientOk);
+	m2SplitMsgClient.clear();
+	m2MyConnectClient.clear();
 }
 

@@ -13,8 +13,14 @@ using std::placeholders::_3;
 namespace{
 class KillTimer : public Timer
 {
+public:
+	bool StartTimer(unsigned long long millisecond, void *p=nullptr, bool is_loop = false)
+	{
+		TimerCB f = std::bind(&KillTimer::OnTimerAdpater, this, p);
+		return Timer::StartTimer(millisecond, f, is_loop);
+	}
 private:
-	virtual void OnTimer(void *user_data) override
+	void OnTimerAdpater(void *user_data)
 	{
 		UNIT_ASSERT(false); //对象已经释放，不能调用
 	};
@@ -22,7 +28,13 @@ private:
 
 struct CheckTimer : public Timer
 {
-	virtual void OnTimer(void *user_data) override;
+	bool StartTimer(unsigned long long millisecond, void *p = nullptr, bool is_loop = false)
+	{
+		TimerCB f = std::bind(&CheckTimer::OnTimer, this, p);
+		return Timer::StartTimer(millisecond, f, is_loop);
+	}
+
+	void OnTimer(void *user_data);
 };
 
 struct Test 
@@ -176,6 +188,13 @@ struct TestLambada
 
 struct TestErrorTIme : public lc::Timer
 {
+public:
+	bool StartTimer(unsigned long long millisecond, void *p = nullptr, bool is_loop = false)
+	{
+		TimerCB f = std::bind(&TestErrorTIme::OnTimer, this, p);
+		return Timer::StartTimer(millisecond, f, is_loop);
+	}
+
 	TestErrorTIme *m_this;
 	void fun()
 	{
@@ -184,7 +203,7 @@ struct TestErrorTIme : public lc::Timer
 	StartTimer(1);
 	}
 	int i;
-	virtual void OnTimer(void *para) 
+ void OnTimer(void *para) 
 	{
 		UNIT_ASSERT(this == m_this);
 		UNIT_INFO("OnTimer this=%p", this);
