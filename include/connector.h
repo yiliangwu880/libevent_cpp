@@ -52,7 +52,7 @@ namespace lc //libevent cpp
 	{
 		MsgPack():len(0)
 		{}
-		uint16 len; //data有效字节数
+		uint32_t len; //data有效字节数
 		char data[MAX_MSG_DATA_LEN];
 
 		//bool Serialize(const std::string &s);//和Set一样，命名不合适，以后删掉
@@ -84,7 +84,7 @@ namespace lc //libevent cpp
 		size_t m_msbs;				//max send buf size发送最大缓冲大小，超了就断开
 		bool m_is_connect;			//true表示已经连接
 		bool m_no_ev_cb_log;		//true表示不打印事件回调错误
-		uint16 m_rev_pack_len = 0; 
+		decltype(MsgPack::len) m_rev_pack_len = 0;
 		bool m_isRawReadCb = false;
 
 	public:
@@ -114,7 +114,7 @@ namespace lc //libevent cpp
 		bool SendData(const MsgPack &msg);
 		//效果同bool SendData(const MsgPack &msg); 少一次内存cp
 		//发送内容： data, 然后包前面加入uint16 len内如
-		bool SendPack(const char* data, uint16 len);
+		bool SendPack(const char* data, decltype(MsgPack::len) len);
 		bool SendPack(const std::string &msg);
 		//设置发送最大缓冲大小，超了就断开连接
 		void SetMaxSendBufSize(size_t num) { m_msbs = num; }
@@ -199,6 +199,36 @@ namespace lc //libevent cpp
 
 	};
 
+	template<typename T>
+	inline T auto_hton(T t)
+	{//不返回，不让它使用
+	}
+
+	template<>
+	inline uint16_t auto_hton(uint16_t t)
+	{
+		return htons(t);
+	}
+	template<>
+	inline uint32_t auto_hton<uint32_t>(uint32_t t)
+	{
+		return htonl(t);
+	}
+
+	template<typename T>
+	inline T auto_ntoh(T t)
+	{
+	}
+	template<>
+	inline uint16_t auto_ntoh(uint16_t t)
+	{
+		return ntohs(t);
+	}
+	template<>
+	inline uint32_t auto_ntoh<uint32_t>(uint32_t t)
+	{
+		return ntohl(t);
+	}
 }//namespace lc //libevent cpp
 
 

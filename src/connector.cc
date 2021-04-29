@@ -93,7 +93,7 @@ void ConCom::SetAddr(const char* connect_ip, unsigned short connect_port)
 	memset(&m_addr, 0, sizeof(m_addr));
 	m_addr.sin_family = AF_INET;
 	m_addr.sin_addr.s_addr = inet_addr(connect_ip);
-	m_addr.sin_port = htons(connect_port);
+	m_addr.sin_port = auto_hton(connect_port);
 }
 
 void ConCom::SetAddr(const sockaddr_in &svr_addr)
@@ -169,8 +169,8 @@ void ConCom::conn_read_callback_no_cp(bufferevent* bev)
 		//case >= HEAD_LEN
 		if (0 == m_rev_pack_len) //消息头 长度没处理
 		{
-			uint16 *mem = (uint16 *)evbuffer_pullup(buf, sizeof(uint16));
-			*mem = ntohs(*mem);
+			decltype(m_rev_pack_len) *mem = (decltype(m_rev_pack_len) *)evbuffer_pullup(buf, sizeof(m_rev_pack_len));
+			*mem = auto_ntoh(*mem);
 			m_rev_pack_len = *mem;
 		}
 
@@ -246,7 +246,7 @@ void ConCom::conn_event_callback(bufferevent* bev, short events)
 		return; //这里本对象可能已经销毁，别再引用
 	}
 }
-bool ConCom::SendPack(const char* data, uint16 len)
+bool ConCom::SendPack(const char* data, decltype(MsgPack::len) len)
 {
 	B_COND(len, false);
 	B_COND(data, false);
@@ -269,7 +269,7 @@ bool ConCom::SendPack(const char* data, uint16 len)
 		return false;
 	}
 
-	uint16 net_len = htons((int)len);
+	decltype(MsgPack::len) net_len = auto_hton(len);
 
 	if (m_msbs != 0)
 	{
@@ -331,7 +331,7 @@ bool ConCom::SendData(const MsgPack &msg)
 	}
 
 	const char* data = (const char*)&(msg.data);
-	uint16 net_len = htons((int)msg.len);
+	decltype(msg.len) net_len = auto_hton(msg.len);
 
 	if (m_msbs != 0)
 	{
@@ -446,7 +446,7 @@ void ConCom::Setwatermark(short events, unsigned int lowmark, unsigned int highm
 void ConCom::GetRemoteAddr(std::string &ip, unsigned short &port) const
 {
 	ip = inet_ntoa(m_addr.sin_addr);
-	port = ntohs(m_addr.sin_port);
+	port = auto_ntoh(m_addr.sin_port);
 }
 
 
@@ -457,7 +457,7 @@ const char *ConCom::GetRemoteIp() const
 
 uint16 ConCom::GetRemotePort() const
 {
-	return ntohs(m_addr.sin_port);
+	return auto_ntoh(m_addr.sin_port);
 }
 
 /////////////////////////////////////////////////////////

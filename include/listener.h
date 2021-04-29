@@ -168,7 +168,7 @@ bool Listener<Connector>::Init(const sockaddr_in &addr)
 	m_listener = evconnlistener_new_bind(EventMgr::Ins().GetEventBase(), Listener::listener_cb, (void*)this, LEV_OPT_REUSEABLE | LEV_OPT_CLOSE_ON_FREE, -1, (struct sockaddr*)&addr, sizeof(addr));
 	if (!m_listener)
 	{
-		LB_ERROR("evconnlistener_new_bind fail,port=%d", ntohs(addr.sin_port));
+		LB_ERROR("evconnlistener_new_bind fail,port=%d", auto_ntoh(addr.sin_port));
 		return false;
 	}
 	evconnlistener_set_error_cb(m_listener, Listener::accept_error_cb);
@@ -181,7 +181,7 @@ bool Listener<Connector>::Init(unsigned short listen_port, const char *listen_ip
 	sockaddr_in addr;
 	memset(&addr, 0, sizeof(addr));
 	addr.sin_family = AF_INET;
-	addr.sin_port = htons(listen_port);
+	addr.sin_port = auto_hton(listen_port);
 	if (nullptr != listen_ip)
 	{
 		addr.sin_addr.s_addr = inet_addr(listen_ip);

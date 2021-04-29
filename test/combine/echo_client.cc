@@ -127,7 +127,8 @@ namespace {
 			UNIT_ASSERT(17 == m_str.length());
 			memset(&m_msg, 0, sizeof(m_msg));
 			m_msg.len = m_str.length();
-			m_msg.len = htons((int)m_msg.len);
+			m_msg.len = auto_hton(m_msg.len);
+			
 			memcpy(m_msg.data, m_str.c_str(), m_str.length());
 			UNIT_INFO("send %s", m_msg.data);
 
@@ -144,7 +145,7 @@ namespace {
 		{
 			const char *p = (char *)&m_msg;
 			p = p + 4;
-			SendData(p, 17 + 2 - 4);
+			SendData(p, 17 + sizeof(m_msg.len) - 4);
 			UNIT_INFO("send_remain2");
 			m_tm.StartTimer(300, std::bind(&SplitMsgClient::CheckRevOk, this));
 		}
