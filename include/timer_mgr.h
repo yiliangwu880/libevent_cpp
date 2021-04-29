@@ -77,6 +77,10 @@ namespace lc //libevent cpp
 
 		//注意，cb为lambda表达式时，注意时局部对象，带出函数就崩溃。看文件开头描述错误示范。
 		bool StartTimer(unsigned long long millisecond, const TimerCB &cb, bool is_loop = false);
+		bool StartTimerSec(unsigned long long sec, const TimerCB &cb, bool is_loop = false) 
+		{
+			return StartTimer(sec * 1000, cb, is_loop);
+		}
 		//停止正在进行的定时器，
 		//return, false 不需要停止. true 成功操作了停止
 		//StartTimer 不是循环时，过期后，对象回自动变成停止状态，再调用 StopTimer会失败。

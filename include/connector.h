@@ -45,7 +45,7 @@ namespace lc //libevent cpp
 	class BaseConMgr;
 
 	 
-	const static uint16 MAX_MSG_DATA_LEN = 1024 * 4; //4k
+	const static uint32_t MAX_MSG_DATA_LEN = 1024 * 1024 *1; //1M
 #pragma pack(push)
 #pragma pack(1)
 	struct MsgPack
