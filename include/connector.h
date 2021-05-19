@@ -3,7 +3,7 @@
 class MyConnectClient1 : public ClientCon
 {
 private:
-	virtual void OnRecv(const MsgPack &msg) override
+	virtual void OnRecv(const lc::MsgPack &msg) override
 	{
 		LB_DEBUG("1 OnRecv %s", &msg.data);
 
@@ -89,7 +89,7 @@ namespace lc //libevent cpp
 
 	public:
 		//每次接收都是完整消息包
-		virtual void OnRecv(const MsgPack &msg) = 0;
+		virtual void OnRecv(const lc::MsgPack &msg) = 0;
 		virtual void OnConnected() = 0;
 		virtual void OnError(short events) {};
 		//被动删除对象回调，对方断开，或者网络错误
