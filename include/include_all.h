@@ -38,12 +38,12 @@ https://github.com/yiliangwu880/libevent_cpp.git
 
 服务器:
 
-	class Connect2Client : public SvrCon
+	class Connect2Client : public lc::SvrCon
 	{
 	public:
 
 	private:
-		virtual void OnRecv(const MsgPack &msg) override
+		virtual void OnRecv(const lc::MsgPack &msg) override
 		{
 			LB_DEBUG("OnRecv %s", &msg.data);
 			SendData(msg);
@@ -56,7 +56,6 @@ https://github.com/yiliangwu880/libevent_cpp.git
 		{
 			LB_DEBUG("OnConnected");
 		}
-		virtual void onDisconnected() override {}
 	};
 
 	//简单模型
