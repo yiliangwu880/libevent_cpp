@@ -58,7 +58,7 @@ namespace {
 			}
 			//LB_DEBUG("SendCnt %d", m_cnt);
 			MsgPack msg;
-			memset(&msg, 0, sizeof(msg));
+			memset(msg.data, 0, sizeof(msg.data));
 			msg.len = sizeof(m_cnt);
 			int *p = (int *)msg.data;
 			*p = m_cnt;
@@ -125,7 +125,7 @@ namespace {
 		{
 			m_str.append("1111111111111111111", 17);
 			UNIT_ASSERT(17 == m_str.length());
-			memset(&m_msg, 0, sizeof(m_msg));
+			memset(m_msg.data, 0, sizeof(m_msg.data));
 			m_msg.len = m_str.length();
 			m_msg.len = auto_hton(m_msg.len);
 			

@@ -50,11 +50,9 @@ namespace lc //libevent cpp
 #pragma pack(1)
 	struct MsgPack
 	{
-		MsgPack():len(0)
-		{}
-		uint32_t len; //data有效字节数
+		uint32_t len=0; //data有效字节数
 		char data[MAX_MSG_DATA_LEN];
-
+	
 		//bool Serialize(const std::string &s);//和Set一样，命名不合适，以后删掉
 		bool Set(const std::string &s);
 
