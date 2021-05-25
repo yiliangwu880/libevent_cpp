@@ -81,7 +81,7 @@ namespace {
 				}
 				++m_cnt;
 				MsgPack msg;
-				memset(&msg, 0, sizeof(msg));
+				memset(msg.data, 0, sizeof(msg.data));
 				msg.len = sizeof(m_cnt);
 				int *p = (int *)msg.data;
 				*p = m_cnt;
@@ -131,7 +131,7 @@ namespace {
 		{
 			++m_cnt;
 			MsgPack msg;
-			memset(&msg, 0, sizeof(msg));
+			memset(msg.data, 0, sizeof(msg.data));
 			msg.len = sizeof(m_cnt);
 			int *p = (int *)msg.data;
 			*p = m_cnt;
