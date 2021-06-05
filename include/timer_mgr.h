@@ -11,6 +11,8 @@ use excample:
 		{
 			auto f = std::bind(&MyConnectClient::Fun, this);
 			m_timer.StartTimer(1000, f);
+			//or 
+			m_timer.StartTimerSec(1, &MyConnectClient::Fun, this);
 		}
 
 		Timer m_timer;
@@ -81,6 +83,14 @@ namespace lc //libevent cpp
 		{
 			return StartTimer(sec * 1000, cb, is_loop);
 		}
+
+		//简化std::bind书写。需要 _1,_2等不支持，还是手动敲出来吧
+		template< class MemFun, class T>
+		inline bool StartTimerSec(unsigned long long sec, MemFun fun, T *ins, bool is_loop = false)
+		{
+			return StartTimer(sec * 1000, std::bind(fun, ins), is_loop);
+		}
+
 		//停止正在进行的定时器，
 		//return, false 不需要停止. true 成功操作了停止
 		//StartTimer 不是循环时，过期后，对象回自动变成停止状态，再调用 StopTimer会失败。
