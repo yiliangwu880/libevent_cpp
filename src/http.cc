@@ -170,6 +170,7 @@ namespace lc //libevent cpp
 		{
 			//创建要使用的buffer对象
 			evbuffer* buf = evbuffer_new();
+			LB_COND_V(buf);
 			evbuffer_add_printf(buf, "%s", data.c_str());
 			evhttp_send_reply(m_cur_req, code, reason, buf);//释放资源
 			evbuffer_free(buf);
@@ -288,7 +289,7 @@ namespace lc //libevent cpp
 		evhttp_connection_set_closecb(m_con, connection_close_callback, this);
 		// 创建evhttp_request对象，设置返回状态响应的回调函数
 		struct evhttp_request* req = evhttp_request_new(remote_read_callback, this);//request不用自己evhttp_request_free, 交给m_con管理
-
+		LB_COND_F(req);
 		struct evkeyvalq* header = evhttp_request_get_output_headers(req);
 		evhttp_add_header(header, "Host", host);
 		//evhttp_add_header(header, "Content-type", "application/json");
