@@ -93,4 +93,5 @@ https://github.com/yiliangwu880/libevent_cpp.git
 #include "listener.h"
 #include "connector.h"
 #include "timer_mgr.h"
+#include "stdin.h"
 
