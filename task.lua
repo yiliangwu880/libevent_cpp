@@ -1,4 +1,8 @@
 
+lc库，链接关闭流程复杂。优化代码结构
+EventMgr::Init 取消，创建对象就初始化，简化调用。
+多加个日志改变接口 
+
  BaseHttpSvr::GetUriQuery() 没测试，可能泄漏
  
  
