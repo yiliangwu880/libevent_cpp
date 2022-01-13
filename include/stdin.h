@@ -1,5 +1,6 @@
 /*
-libevent 实现的标准输入
+可当标准输入控制进程用。
+用网络接收的方式，直接接收字符串，（当标准输入用， 用户写client,发字符串到服务，服务器用下面例子写处理字符串内容）。
 use example:
 void Read(const char*pMsg, int len)
 {
