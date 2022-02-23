@@ -78,7 +78,7 @@ class SvrCon : public ConCom
 {
 public:
 	SvrCon();
-	~SvrCon();
+	virtual ~SvrCon();
 
 	bool AcceptInit(evutil_socket_t fd, struct sockaddr* sa, const sockaddr_in &svr_addr);
 	void SetCnMgr(BaseConMgr *mgr) { m_cn_mgr = mgr; };
